@@ -1,0 +1,3091 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackathon Autopilot - Dashboard de Conocimiento</title>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Outfit', 'sans-serif'],
+                        title: ['Outfit', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: #030508;
+            min-height: 100vh;
+            color: #f3f4f6;
+            position: relative;
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .background-glows {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .glow-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.85;
+            mix-blend-mode: screen;
+            animation: floatBlob 25s infinite alternate ease-in-out;
+        }
+        .glow-blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 55vw;
+            height: 55vw;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.55) 0%, rgba(139, 92, 246, 0.15) 50%, transparent 80%);
+            animation-delay: 0s;
+        }
+        .glow-blob-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.45) 0%, rgba(59, 130, 246, 0.12) 50%, transparent 80%);
+            animation-delay: -5s;
+        }
+        .glow-blob-3 {
+            top: 35%;
+            left: 55%;
+            width: 45vw;
+            height: 45vw;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, rgba(239, 68, 68, 0.08) 50%, transparent 80%);
+            animation-delay: -10s;
+        }
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate(4%, 8%) scale(1.08) rotate(180deg); }
+            100% { transform: translate(-4%, -4%) scale(0.92) rotate(360deg); }
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(147, 51, 234, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(147, 51, 234, 0.3);
+        }
+        .text-glow {
+            text-shadow: 0 0 15px rgba(147, 51, 234, 0.6);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(147, 51, 234, 0.4);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(147, 51, 234, 0.7);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+    <!-- Glow background elements -->
+    <div class="background-glows">
+        <div class="glow-blob glow-blob-1"></div>
+        <div class="glow-blob glow-blob-2"></div>
+        <div class="glow-blob glow-blob-3"></div>
+    </div>
+    
+    <!-- Background Canvas for circuit/stars effect -->
+    <canvas id="bg-canvas" class="fixed inset-0 pointer-events-none z-10 opacity-20"></canvas>
+    
+    <div class="flex flex-col min-h-screen relative z-20 overflow-x-hidden w-full max-w-full">
+        
+        <!-- Header -->
+        <header class="glass-panel sticky top-0 z-40 px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-900/50">
+                    <span class="text-white font-bold text-xl font-title">A</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold font-title bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 text-glow id-lang" data-key="app-title">
+                        Hackathon Autopilot
+                    </h1>
+                    <p class="text-xs text-gray-400 font-medium tracking-wide id-lang" data-key="app-subtitle">CACHÉ DE CONOCIMIENTO LOCAL</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button id="btn-lang" onclick="toggleLanguage()" class="px-3.5 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-semibold rounded-xl border border-white/10 transition duration-300 flex items-center gap-1.5 shadow-lg shadow-purple-900/20">
+                    <span id="lang-text">EN</span>
+                </button>
+                <button id="btn-scrape" onclick="runScraper()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-sm font-semibold rounded-xl shadow-lg shadow-purple-900/20 hover:shadow-purple-900/40 transition duration-300 flex items-center gap-2">
+                    <svg id="scrape-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.306 7M7 9h8V1"></path>
+                    </svg>
+                    <span id="scrape-text" class="id-lang" data-key="btn-scrape">Actualizar Minería</span>
+                </button>
+                <form action="/api/auth/logout" method="POST" style="margin: 0;">
+                    <button type="submit" class="px-3.5 py-2 bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-semibold rounded-xl border border-red-500/20 transition duration-300">
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </header>
+
+        <!-- Main Body -->
+        <main class="flex-1 flex flex-col lg:flex-row p-6 gap-6 min-w-0 overflow-x-hidden">
+            
+            <!-- Sidebar (Stats) -->
+            <section class="w-full lg:w-80 flex flex-col gap-6">
+                <!-- Stats Box -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col gap-6 border border-purple-500/10 shadow-lg shadow-purple-950/20">
+                    <h2 class="text-lg font-bold font-title text-purple-300 tracking-wide border-b border-white/5 pb-3 id-lang" data-key="stats-title">Resumen de Datos</h2>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div onclick="switchTab('codebases')" class="bg-white/5 hover:bg-gradient-to-br hover:from-purple-950/40 hover:to-indigo-950/40 rounded-xl p-3 flex flex-col cursor-pointer transition border border-white/5 hover:border-purple-500/40 hover:shadow-lg hover:-translate-y-0.5">
+                            <span class="text-2xl font-extrabold text-white font-title" id="stat-repos">0</span>
+                            <span class="text-[10px] text-gray-400 mt-1 id-lang" data-key="stats-codebases-ref">Codebases (Ref)</span>
+                        </div>
+                        <div onclick="const el = document.getElementById('hackathons-list'); if (el) { el.scrollIntoView({behavior: 'smooth'}); }" class="bg-white/5 hover:bg-gradient-to-br hover:from-indigo-950/40 hover:to-purple-950/40 rounded-xl p-3 flex flex-col cursor-pointer transition border border-white/5 hover:border-indigo-500/40 hover:shadow-lg hover:-translate-y-0.5">
+                            <span class="text-2xl font-extrabold text-white font-title" id="stat-hackathons">0</span>
+                            <span class="text-[10px] text-gray-400 mt-1 id-lang" data-key="stats-active-contests">Concursos Activos</span>
+                        </div>
+                        <div onclick="switchTab('community'); toggleCommunityFilter('ih');" class="bg-white/5 hover:bg-gradient-to-br hover:from-orange-950/40 hover:to-red-950/40 rounded-xl p-3 flex flex-col cursor-pointer transition border border-white/5 hover:border-orange-500/40 hover:shadow-lg hover:-translate-y-0.5">
+                            <span class="text-2xl font-extrabold text-white font-title" id="stat-ih">0</span>
+                            <span class="text-[10px] text-gray-400 mt-1 id-lang" data-key="stats-ih">Indie Hackers</span>
+                        </div>
+                        <div onclick="switchTab('community'); toggleCommunityFilter('hn');" class="bg-white/5 hover:bg-gradient-to-br hover:from-emerald-950/40 hover:to-teal-950/40 rounded-xl p-3 flex flex-col cursor-pointer transition border border-white/5 hover:border-emerald-500/40 hover:shadow-lg hover:-translate-y-0.5">
+                            <span class="text-2xl font-extrabold text-white font-title" id="stat-hn">0</span>
+                            <span class="text-[10px] text-gray-400 mt-1 id-lang" data-key="stats-hn">Show HN</span>
+                        </div>
+                        <div onclick="toggleNotificationsModal()" class="bg-white/5 hover:bg-gradient-to-br hover:from-amber-950/40 hover:to-yellow-950/40 rounded-xl p-3 flex items-center justify-between col-span-2 cursor-pointer transition border border-white/5 hover:border-amber-500/40 hover:shadow-lg hover:-translate-y-0.5 relative">
+                            <div class="flex flex-col">
+                                <span class="text-2xl font-extrabold text-white font-title" id="stat-notifs">0</span>
+                                <span class="text-[10px] text-gray-400 mt-1 id-lang" data-key="stats-alerts-pwa">Alertas Celular / PWA</span>
+                            </div>
+                            <div class="relative">
+                                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                </svg>
+                                <span id="notif-badge" class="absolute -top-1 -right-1 flex h-2 w-2 hidden">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technologies Box -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col gap-4">
+                    <h2 class="text-lg font-bold font-title text-indigo-300 border-b border-white/5 pb-3 id-lang" data-key="eco-title">Ecosistema Más Usado</h2>
+                    <div id="tech-list" class="flex flex-col gap-3 max-h-72 overflow-y-auto pr-2">
+                        <!-- Tech elements with progress bars will go here -->
+                        <span class="text-xs text-gray-400 font-sans id-lang" data-key="loading-techs">Cargando tecnologías...</span>
+                    </div>
+                </div>
+
+                <!-- Central de Agentes (Sleek Compact Badge Tooltip Box) -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col gap-4 border border-purple-500/10 shadow-lg shadow-purple-950/20">
+                    <h2 class="text-lg font-bold font-title text-purple-300 border-b border-white/5 pb-3 id-lang" data-key="agents-title">🤖 Central de Agentes IA (CrewAI)</h2>
+                    <div id="agents-list" class="flex flex-wrap gap-2">
+                        <!-- Small badge list, hovered to show tooltips -->
+                        <span class="text-xs text-gray-400 font-sans id-lang" data-key="loading-agents">Cargando agentes...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Content Area -->
+            <section class="flex-1 flex flex-col gap-6 min-w-0">
+                <!-- Tabs and Search -->
+                <div class="glass-panel rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 max-w-full min-w-0">
+                    <!-- Tab list -->
+                    <div class="flex flex-col gap-1 w-full md:w-auto max-w-full min-w-0">
+                        <div class="flex bg-black/30 p-1.5 rounded-xl border border-white/5 overflow-x-auto max-w-full">
+                            <button onclick="switchTab('ai')" id="tab-ai" class="flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-lg transition duration-200 bg-purple-600 text-white whitespace-nowrap id-lang" data-key="tab-ai">
+                                Copiloto IA
+                            </button>
+                            <button onclick="switchTab('codebases')" id="tab-codebases" class="flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-lg text-gray-400 hover:text-white transition duration-200 whitespace-nowrap id-lang" data-key="tab-codebases">
+                                Banco de Código (Ref)
+                            </button>
+                            <button onclick="switchTab('searchcode')" id="tab-searchcode" class="flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-lg text-gray-400 hover:text-white transition duration-200 whitespace-nowrap id-lang" data-key="tab-searchcode">
+                                Buscar Código (GitHub)
+                            </button>
+                            <button onclick="switchTab('community')" id="tab-community" class="flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-lg text-gray-400 hover:text-white transition duration-200 whitespace-nowrap id-lang" data-key="tab-community">
+                                Comunidad (IH & HN)
+                            </button>
+                            <button onclick="switchTab('strategist')" id="tab-strategist" class="flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-lg text-gray-400 hover:text-white transition duration-200 whitespace-nowrap id-lang" data-key="tab-strategist">
+                                Estratega de Hackatón
+                            </button>
+                            <button onclick="switchTab('funds')" id="tab-funds" class="flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-lg text-gray-400 hover:text-white transition duration-200 whitespace-nowrap id-lang" data-key="tab-funds">
+                                Radar de Fondos
+                            </button>
+                            <button onclick="switchTab('notion')" id="tab-notion" class="flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-lg text-gray-400 hover:text-white transition duration-200 whitespace-nowrap id-lang" data-key="tab-notion">
+                                Extractores y Fuentes
+                            </button>
+                            <button onclick="switchTab('logs')" id="tab-logs" class="flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-lg text-gray-400 hover:text-white transition duration-200 whitespace-nowrap id-lang" data-key="tab-logs">
+                                Terminal de Logs
+                            </button>
+                        </div>
+                        <div class="text-[9px] text-gray-500 flex items-center gap-1.5 font-mono px-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="id-lang" data-key="live-scraping-status">Raspando en vivo: Devpost, Lablab.ai, GitHub API, Taikai, HackerEarth, BeMyApp, Showcode</span>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="relative w-full md:w-80" id="search-wrapper">
+                        <input type="text" id="search-input" oninput="handleSearch()" placeholder="Buscar por tecnología, premio o palabra..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition duration-300 id-lang" data-key="search-placeholder">
+                    </div>
+                </div>
+
+                <!-- Quick Tech Filters (Toggled programmatically, hidden on other tabs) -->
+                <div id="tech-filters-wrapper" class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                    <span class="text-xs text-gray-400 whitespace-nowrap font-medium">Filtrar por:</span>
+                    <button onclick="toggleTechFilter('')" class="tech-pill px-3 py-1 rounded-full text-xs font-semibold bg-purple-600 text-white border border-purple-500/20 transition">Todos</button>
+                    <button onclick="toggleTechFilter('react')" class="tech-pill px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10 transition">React</button>
+                    <button onclick="toggleTechFilter('next.js')" class="tech-pill px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10 transition">Next.js</button>
+                    <button onclick="toggleTechFilter('fastapi')" class="tech-pill px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10 transition">FastAPI</button>
+                    <button onclick="toggleTechFilter('python')" class="tech-pill px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10 transition">Python</button>
+                    <button onclick="toggleTechFilter('ollama')" class="tech-pill px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10 transition">Ollama</button>
+                    <button onclick="toggleTechFilter('langchain')" class="tech-pill px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10 transition">LangChain</button>
+                    <button onclick="toggleTechFilter('crewai')" class="tech-pill px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10 transition">CrewAI</button>
+                    <button onclick="toggleTechFilter('bright data')" class="tech-pill px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10 transition">Bright Data</button>
+                </div>
+
+                <!-- Quick Source Filters (Toggled programmatically) -->
+                <div id="source-filters-wrapper" class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none hidden">
+                    <span class="text-xs text-gray-400 whitespace-nowrap font-medium">Fuente:</span>
+                    <button id="src-filter-all" onclick="toggleSourceFilter('all')" class="src-pill px-3 py-1 rounded-full text-xs font-semibold bg-purple-600 text-white border border-purple-500/20 transition">Todos</button>
+                    <button id="src-filter-github" onclick="toggleSourceFilter('github')" class="src-pill px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10 transition">GitHub (Ref)</button>
+                    <button id="src-filter-ih" onclick="toggleSourceFilter('ih')" class="src-pill px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10 transition">Indie Hackers</button>
+                    <button id="src-filter-hn" onclick="toggleSourceFilter('hn')" class="src-pill px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-gray-300 border border-white/5 hover:bg-white/10 transition">Show HN</button>
+                </div>
+
+                <!-- AI Assistant Panel (Default Active Tab) -->
+                <div id="ai-container" class="relative flex flex-col md:flex-row gap-6 items-stretch">
+                    
+                    <!-- Sidebar de Conversaciones -->
+                    <div id="conversations-sidebar" class="hidden absolute left-0 top-0 bottom-0 z-40 w-[280px] flex flex-col gap-4 bg-[#140e28]/95 backdrop-blur-xl rounded-2xl p-4 border border-purple-500/20 shadow-2xl transition duration-300">
+                        <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                            <span class="text-xs font-bold text-purple-300 font-title uppercase tracking-wider">Historial de Chats</span>
+                            <button onclick="createNewConversation()" class="p-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded transition" title="Nueva Conversación">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="conversations-list" class="flex flex-col gap-2 max-h-[450px] overflow-y-auto pr-1 custom-scrollbar">
+                            <!-- Hilos de conversación cargados dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Panel Principal del Chat -->
+                    <div class="flex-1 flex flex-col gap-6">
+                        <!-- Historial del Chat Integrado -->
+                        <div id="chat-history-container" class="glass-panel rounded-2xl p-6 border border-purple-500/10 shadow-lg flex flex-col gap-4">
+                            <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                                <h4 class="text-sm font-bold text-purple-300 font-title uppercase tracking-wider id-lang" data-key="chat-history-title">Conversación con Ralphi IA</h4>
+                                <div class="flex items-center gap-2">
+                                    <!-- Ver Historial Button -->
+                                    <button onclick="toggleSidebar()" class="px-2.5 py-1 bg-white/5 hover:bg-purple-600/30 text-[10px] font-semibold text-purple-300 rounded border border-white/10 transition flex items-center gap-1 shadow" title="Ver historial de chats">
+                                        <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                                        </svg>
+                                        <span class="id-lang" data-key="btn-chats-history">Chats (Historial)</span>
+                                    </button>
+                                    <!-- Iniciar Audio (Mic) Button -->
+                                    <button id="btn-voice-input-header" onclick="toggleVoiceInput()" class="px-2.5 py-1 bg-white/5 hover:bg-purple-600/30 text-[10px] font-semibold text-purple-300 rounded border border-white/10 transition flex items-center gap-1 shadow" title="Iniciar micrófono para hablar">
+                                        <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                                        </svg>
+                                        <span class="id-lang" data-key="btn-start-audio">Iniciar Audio</span>
+                                    </button>
+                                    <!-- Detener Audio Button -->
+                                    <button onclick="window.speechSynthesis.cancel()" class="px-2.5 py-1 bg-white/5 hover:bg-red-600/30 text-[10px] font-semibold text-red-300 rounded border border-white/10 transition flex items-center gap-1 shadow" title="Detener la voz del asistente">
+                                        <svg class="w-3.5 h-3.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path>
+                                        </svg>
+                                        <span class="id-lang" data-key="btn-stop-audio">Detener Audio</span>
+                                    </button>
+                                    <!-- Limpiar Historial Button -->
+                                    <button onclick="clearActiveChatHistory()" class="px-2.5 py-1 bg-white/5 hover:bg-purple-600/30 text-[10px] font-semibold text-purple-300 rounded border border-white/10 transition flex items-center gap-1 shadow" title="Borrar historial de esta conversación">
+                                        <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                        <span class="id-lang" data-key="btn-clear-chat">Limpiar Chat</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="chat-history" class="flex flex-col gap-4 max-h-[50vh] min-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                                <!-- Mensaje de bienvenida inicial -->
+                                <div class="flex flex-col items-start gap-1.5 self-start max-w-[85%]">
+                                    <span class="text-[10px] text-purple-400 font-semibold font-mono">RALPHI IA</span>
+                                    <div id="welcome-message" class="bg-white/5 text-gray-200 rounded-2xl rounded-tl-none px-4 py-3 border border-white/5 text-sm leading-relaxed whitespace-pre-wrap id-lang" data-key="welcome-msg">¡Hola! Soy Ralphi IA, tu asistente de desarrollo y automatización de operaciones local de InnerOS. 
+
+Tengo conexión directa a tus bases de datos de hackatones, facturas e inventario en MongoDB, y puedo ejecutar búsquedas avanzadas en tiempo real de repositorios de código en GitHub o tutoriales de Lablab.ai. Además, cuento con los modelos locales **qwen2.5:14b** y **llava:7b** para procesamiento visual de fotos que me subas.
+
+¿Qué arquitectura o agente local de código quieres que desarrollemos hoy?
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cuadro de Prompt e Entrada de Mensaje -->
+                        <div class="glass-panel rounded-2xl p-6 flex flex-col gap-5 border border-purple-500/10 shadow-lg">
+                            <!-- Actions Grid (Pills horizontales compactas) -->
+                            <div class="flex flex-wrap gap-2 items-center border-b border-white/5 pb-3">
+                                <span class="text-[10px] text-gray-500 font-mono font-bold uppercase">Prompts de Agente:</span>
+                                <button onclick="pasteAIPrompt('Busca proyectos ganadores de IA en la base de datos y detalla su stack tecnológico.')" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs border border-white/5 transition flex items-center gap-1 group">
+                                    <span>🔍 Proyectos Ganadores</span>
+                                </button>
+                                <button onclick="pasteAIPrompt('Diseña la arquitectura técnica de un nuevo proyecto, incluyendo esquemas de MongoDB, Dockerfile y modularidad.')" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs border border-white/5 transition flex items-center gap-1 group">
+                                    <span>🏗️ Diseñar Arquitectura</span>
+                                </button>
+                                <button onclick="pasteAIPrompt('Busca en GitHub y en la web ideas y repositorios de código abiertos sobre: ')" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs border border-white/5 transition flex items-center gap-1 group">
+                                    <span>🌐 Investigar en Línea</span>
+                                </button>
+                                <button onclick="pasteAIPrompt('¿Cuál es la mejor estrategia o arquitectura recomendada para competir en una hackatón de agentes locales?')" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-white rounded-lg text-xs border border-white/5 transition flex items-center gap-1 group">
+                                    <span>💡 Estrategia de IA</span>
+                                </button>
+                            </div>
+
+                            <!-- Previsualización de Imagen Cargada -->
+                            <div id="image-preview-container" class="hidden flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl p-3">
+                                <div class="relative w-16 h-16 rounded-lg overflow-hidden border border-white/20">
+                                    <img id="image-preview" class="w-full h-full object-cover" src="" alt="Vista previa">
+                                    <button onclick="removeUploadedImage()" class="absolute top-0.5 right-0.5 w-5 h-5 bg-red-600 hover:bg-red-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold shadow-md">✕</button>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs text-gray-300 font-medium">Imagen seleccionada</span>
+                                    <span class="text-[10px] text-gray-500">Se analizará localmente con llava:7b</span>
+                                </div>
+                            </div>
+
+                            <!-- Prompt Input -->
+                            <div class="flex flex-col gap-3">
+                                <div class="relative">
+                                    <textarea id="ai-prompt-input" rows="3" placeholder="Escribe aquí tu pregunta o requerimiento de código para Ralphi IA..." class="w-full bg-white/5 border border-white/10 rounded-xl pl-4 pr-12 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition duration-300 resize-none id-lang" data-key="ai-placeholder"></textarea>
+                                    
+                                    <!-- Audio Mic Button -->
+                                    <button id="btn-voice-input" onclick="toggleVoiceInput()" class="absolute right-3 bottom-3 w-8 h-8 rounded-full bg-white/5 hover:bg-purple-600/30 border border-white/10 flex items-center justify-center text-gray-400 hover:text-purple-300 transition duration-300 shadow-md" title="Grabar voz">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                <div class="flex justify-between items-center gap-3">
+                                    <div class="flex flex-col gap-1.5">
+                                        <div class="flex items-center gap-2">
+                                            <!-- Image Upload Input -->
+                                            <input type="file" id="image-upload-input" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                                            <button onclick="document.getElementById('image-upload-input').click()" class="px-3 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-semibold rounded-lg border border-white/10 transition duration-300 flex items-center gap-1.5 shadow-lg shadow-purple-900/10">
+                                                <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
+                                                <span class="id-lang" data-key="btn-upload-image">Subir Foto</span>
+                                            </button>
+                                            <span class="text-[11px] text-gray-500 font-mono hidden md:inline">Modelos locales: qwen2.5:14b & llava:7b</span>
+                                        </div>
+                                        <span class="text-[9px] text-gray-500 font-sans">
+                                            Nota: Si el micrófono no responde por HTTP, habilita <code>chrome://flags/#unsafely-treat-insecure-origin-as-secure</code> y añade esta IP.
+                                        </span>
+                                    </div>
+                                    <button id="btn-ask-ai" onclick="submitAIPrompt()" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-semibold rounded-lg shadow-lg transition duration-300 id-lang" data-key="btn-ask-ai">
+                                        Preguntar a Copiloto
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                    <!-- Agentes movidos a la barra lateral para optimizar espacio -->
+
+                    <!-- Próximas Hackatones (Active/Upcoming) -->
+                    <div id="hackathons-container" class="glass-panel rounded-2xl p-6 flex flex-col gap-4 border border-purple-500/10 shadow-lg">
+                        <div class="flex items-center justify-between border-b border-white/5 pb-3">
+                            <div>
+                                <h3 class="text-lg font-bold font-title text-purple-300 id-lang" data-key="hackathons-title">Hackatones Próximas y Activas</h3>
+                                <p class="text-sm text-gray-400 font-sans id-lang" data-key="hackathons-desc">Eventos de inteligencia artificial para competir y aplicar soluciones en desarrollo.</p>
+                            </div>
+                            <button onclick="syncHackathons()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-semibold rounded-lg transition duration-200 id-lang" data-key="btn-sync-hackathons">
+                                Sincronizar Hackatones
+                            </button>
+                        </div>
+                        
+                        <div id="hackathons-list" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Grid / Container -->
+                <div id="content-container" class="hidden grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- Cards will be injected here -->
+                </div>
+
+                <!-- Funds Panel (Hidden by default) -->
+                <div id="funds-container" class="hidden flex flex-col gap-6">
+                    <div class="glass-panel rounded-2xl p-6 flex flex-col gap-4">
+                        <div class="flex items-center justify-between border-b border-white/5 pb-3">
+                            <div>
+                                <h3 class="text-lg font-bold font-title text-purple-300">Radar de Créditos y Financiación</h3>
+                                <p class="text-sm text-gray-400 mt-1 font-sans">Convocatorias, subsidios de nube (AWS, Google Cloud, Azure) y capital de riesgo disponibles para startups con LLC en EE.UU. (Wyoming) y soluciones de IA (InerChispa).</p>
+                            </div>
+                            <button onclick="syncFunds()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-semibold rounded-lg transition duration-200">
+                                Escanear Oportunidades
+                            </button>
+                        </div>
+                        
+                        <div id="funds-list" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                            <!-- Injected dynamic funds -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notion Panel (Hidden by default) -->
+                <div id="notion-container" class="hidden flex flex-col gap-6">
+                    <div class="glass-panel rounded-2xl p-6 flex flex-col gap-5">
+                        <div class="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-white/5 pb-3 gap-4">
+                            <div>
+                                <h3 class="text-lg font-bold font-title text-purple-300">Conectores de Negocio (InnerOS Core)</h3>
+                                <p class="text-sm text-gray-400 mt-1 font-sans">Sincroniza bases de datos y páginas a MongoDB. El sistema estructurará la información en inventarios, facturas y reportes para habilitar consultas en lenguaje natural.</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <button onclick="resetBusinessData()" class="px-4 py-2.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 text-xs font-semibold rounded-lg border border-red-500/20 transition duration-200">
+                                    Limpiar Datos
+                                </button>
+                                <button onclick="syncContifico()" class="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-semibold rounded-lg transition duration-200">
+                                    Sincronizar Contifico
+                                </button>
+                                <button onclick="syncNotion()" class="px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-semibold rounded-lg transition duration-200 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.306 7M7 9h8V1"></path>
+                                    </svg>
+                                    <span>Sincronizar Notion</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Statistics Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-2">
+                            <div class="bg-white/5 rounded-xl p-4">
+                                <span class="text-xs text-purple-300 font-semibold block mb-1">Total Páginas/Registros</span>
+                                <span id="notion-stat-raw" class="text-xl font-bold text-white font-mono">0</span>
+                            </div>
+                            <div class="bg-white/5 rounded-xl p-4">
+                                <span class="text-xs text-emerald-300 font-semibold block mb-1">Facturas Consolidadas</span>
+                                <span id="notion-stat-invoices" class="text-xl font-bold text-white font-mono">0</span>
+                            </div>
+                            <div class="bg-white/5 rounded-xl p-4">
+                                <span class="text-xs text-indigo-300 font-semibold block mb-1">Equipos / Inventario</span>
+                                <span id="notion-stat-inventory" class="text-xl font-bold text-white font-mono">0</span>
+                            </div>
+                            <div class="bg-white/5 rounded-xl p-4">
+                                <span class="text-xs text-pink-300 font-semibold block mb-1">Reportes & Clientes</span>
+                                <span id="notion-stat-reports" class="text-xl font-bold text-white font-mono">0</span>
+                            </div>
+                        </div>
+
+                        <!-- Mental Map Tree representation -->
+                        <div class="flex flex-col gap-2 mt-4 border-b border-white/5 pb-5">
+                            <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">Estructura & Mapa Mental de Procesos (Notion)</span>
+                            <div id="notion-map-box" class="bg-black/45 rounded-xl p-5 border border-white/5 max-h-[50vh] overflow-y-auto font-mono text-sm leading-relaxed whitespace-pre-wrap text-gray-300">
+                                Sincroniza tu Notion Workspace para cargar la jerarquía y estructura del mapa mental aquí.
+                            </div>
+                        </div>
+
+                        <!-- Staging Connectors Roadmap -->
+                        <div class="flex flex-col gap-3 mt-2">
+                            <h4 class="text-sm font-bold text-gray-300 font-title">Otros Extractores & Fuentes de Datos (Hoja de Ruta)</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="bg-white/5 rounded-2xl p-5 border border-white/5 opacity-60 flex flex-col justify-between">
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[9px] uppercase font-bold tracking-wider bg-orange-950/60 text-orange-400 px-2 py-0.5 rounded border border-orange-500/20 font-mono">PST / OST</span>
+                                            <span class="text-[10px] text-gray-400 font-mono">En Staging</span>
+                                        </div>
+                                        <h4 class="text-sm font-bold text-white font-title mt-1">Extractor de Correos Outlook</h4>
+                                        <p class="text-[11px] text-gray-400 leading-relaxed font-sans mt-1">Sube archivos .pst/.ost para extraer de forma offline el historial de correos de clientes y presupuestos.</p>
+                                    </div>
+                                    <span class="text-[11px] text-gray-500 font-mono mt-3">Módulo: scope.os_central</span>
+                                </div>
+
+                                <div class="bg-white/5 rounded-2xl p-5 border border-white/5 opacity-60 flex flex-col justify-between">
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[9px] uppercase font-bold tracking-wider bg-blue-950/60 text-blue-400 px-2 py-0.5 rounded border border-blue-500/20 font-mono">GCS / Drive</span>
+                                            <span class="text-[10px] text-gray-400 font-mono">En Staging</span>
+                                        </div>
+                                        <h4 class="text-sm font-bold text-white font-title mt-1">Conector Google Cloud & Drive</h4>
+                                        <p class="text-[11px] text-gray-400 leading-relaxed font-sans mt-1">Sincroniza y extrae automáticamente texto de carpetas de PDF e imágenes usando OCR local.</p>
+                                    </div>
+                                    <span class="text-[11px] text-gray-500 font-mono mt-3">Módulo: scope.creator_os</span>
+                                </div>
+
+                                <div class="bg-white/5 rounded-2xl p-5 border border-white/5 opacity-60 flex flex-col justify-between">
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[9px] uppercase font-bold tracking-wider bg-indigo-950/60 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/20 font-mono">Dropbox</span>
+                                            <span class="text-[10px] text-gray-400 font-mono">En Staging</span>
+                                        </div>
+                                        <h4 class="text-sm font-bold text-white font-title mt-1">Conector de Carpetas Dropbox</h4>
+                                        <p class="text-[11px] text-gray-400 leading-relaxed font-sans mt-1">Ingesta directa de manuales de servicio y bitácoras operacionales compartidas en Dropbox.</p>
+                                    </div>
+                                    <span class="text-[11px] text-gray-500 font-mono mt-3">Módulo: scope.pc_doctor_ai_ops</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terminal Logs Panel (Hidden by default) -->
+                <div id="logs-container" class="hidden flex flex-col gap-6">
+                    <div class="glass-panel rounded-2xl p-6 flex flex-col gap-5 border border-purple-500/10 shadow-lg">
+                        <div class="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-white/5 pb-3 gap-4">
+                            <div>
+                                <h3 class="text-lg font-bold font-title text-purple-300">Terminal de Logs (Autopilot Systems)</h3>
+                                <p class="text-sm text-gray-400 mt-1 font-sans">Monitorea en tiempo real los logs y errores de los servicios en segundo plano.</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <div>
+                                    <label class="text-xs text-gray-400 mr-2 font-mono">Archivo:</label>
+                                    <select id="log-file-select" onchange="loadTerminalLogs()" class="bg-[#12131a] border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500">
+                                        <option value="server.log">FastAPI Server (server.log)</option>
+                                        <option value="scraper_run.log">Scraper Run (scraper_run.log)</option>
+                                        <option value="scheduler.log">Task Scheduler (scheduler.log)</option>
+                                        <option value="main_run.log">AI Agent Run (main_run.log)</option>
+                                        <option value="cache_run.log">Cache Builder (cache_run.log)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-xs text-gray-400 mr-2 font-mono">Líneas:</label>
+                                    <select id="log-lines-select" onchange="loadTerminalLogs()" class="bg-[#12131a] border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500">
+                                        <option value="50">50</option>
+                                        <option value="100" selected>100</option>
+                                        <option value="200">200</option>
+                                        <option value="500">500</option>
+                                    </select>
+                                </div>
+                                <button onclick="loadTerminalLogs()" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-semibold rounded-lg border border-white/10 transition">
+                                    Refrescar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Retro terminal viewport -->
+                        <div class="relative bg-[#0b0c10] border border-white/10 rounded-xl p-4 shadow-2xl">
+                            <div class="flex items-center justify-between border-b border-white/5 pb-2 mb-3">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+                                    <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                                    <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+                                    <span class="text-[11px] text-gray-500 font-mono ml-2">bash - autopilot@innerspark</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Auto-actualizando
+                                    </span>
+                                </div>
+                            </div>
+                            <pre id="terminal-log-content" class="text-xs font-mono text-amber-200/90 overflow-x-auto whitespace-pre-wrap max-h-[50vh] min-h-[350px] scrollbar-thin scrollbar-thumb-purple-950 scrollbar-track-transparent pr-2 leading-relaxed" style="scroll-behavior: smooth;"></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Search Panel (Hidden by default) -->
+                <div id="searchcode-container" class="hidden flex flex-col gap-6">
+                    <div class="glass-panel rounded-2xl p-6 flex flex-col gap-5 border border-purple-500/10 shadow-lg">
+                        <div>
+                            <h3 class="text-lg font-bold font-title text-purple-300">Buscador de Código Global (GitHub API)</h3>
+                            <p class="text-sm text-gray-400 mt-1 font-sans">Busca cualquier tipo de proyecto o tecnología de alta calidad en GitHub para importarlo e iniciar el análisis de la IA local instantáneamente.</p>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <input type="text" id="github-search-input" placeholder="Ej: medical AI agent, contabilidad fast-api, tailwind dashboard..." class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 transition duration-300">
+                            <button onclick="runGithubSearch()" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-xl transition duration-200">
+                                Buscar
+                            </button>
+                        </div>
+                        
+                        <div id="github-search-results" class="flex flex-col gap-4 mt-3 divide-y divide-white/5 max-h-[50vh] overflow-y-auto pr-2">
+                            <p class="text-xs text-gray-500 py-4 text-center">Introduce un tema de interés para buscar repositorios avanzados.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Modal (Pop-up alert modal) -->
+                <div id="notifications-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+                    <div class="glass-panel w-full max-w-lg rounded-2xl border border-white/10 p-6 flex flex-col gap-4 shadow-2xl relative">
+                        <button onclick="toggleNotificationsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                        <div class="flex items-center justify-between border-b border-white/5 pb-3">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                </svg>
+                                <h3 class="text-lg font-bold font-title text-white">Alertas de Convocatorias Aptas</h3>
+                            </div>
+                            <button onclick="markAllNotificationsAsRead()" class="text-xs text-purple-400 hover:text-purple-300 font-medium">
+                                Marcar todo como leído
+                            </button>
+                        </div>
+                        
+                        <div id="notifications-list" class="flex flex-col gap-3 max-h-80 overflow-y-auto pr-2 divide-y divide-white/5">
+                            <p class="text-xs text-gray-500 py-4 text-center">No hay notificaciones nuevas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategist Panel (Hidden by default) -->
+                <div id="strategist-container" class="hidden flex flex-col gap-6">
+                    <div class="glass-panel rounded-2xl p-6 flex flex-col gap-5">
+                        <div class="border-b border-white/5 pb-2">
+                            <h3 class="text-lg font-bold font-title text-purple-300">Copiloto Estratega de Hackatones</h3>
+                            <p class="text-sm text-gray-400 mt-1">Ingresa el hackatón, tus tecnologías y requerimientos. La IA local consultará MongoDB para diseñar una estrategia técnica ganadora.</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- URL/Slug -->
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-xs font-bold text-gray-300 uppercase tracking-wide">URL o Slug del Hackatón en Devpost</label>
+                                <input type="text" id="strategist-url" placeholder="Ej: brightdata-ai-agents-web-data-hackathon o unitedhacksv7" class="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition duration-300">
+                            </div>
+                            
+                            <!-- Required Technologies -->
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-xs font-bold text-gray-300 uppercase tracking-wide">Tecnologías Obligatorias / Patrocinadas</label>
+                                <input type="text" id="strategist-techs" placeholder="Ej: AIML, Bright Data, Band, Python (separadas por comas)" class="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition duration-300">
+                            </div>
+                        </div>
+
+                        <!-- Special Instructions / Personal Context / Date -->
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-bold text-gray-300 uppercase tracking-wide">Instrucciones Especiales, Fecha de Entrega o Ideas a Validar</label>
+                            <textarea id="strategist-prompt" rows="3" placeholder="Ej: Voy a competir el 25 de junio. Recomiéndame la mejor arquitectura de base de datos para una solución de agentes locales y cómo integrar la base de datos de ganadores para validar mi idea..." class="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition duration-300 resize-none"></textarea>
+                        </div>
+
+                        <div class="flex justify-end">
+                            <button id="btn-generate-strategy" onclick="runStrategist()" class="px-6 py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-sm font-semibold rounded-xl shadow-lg transition duration-300 flex items-center justify-center gap-2 w-full md:w-auto">
+                                <span id="btn-strategy-text">Generar Plan Estratégico Maestro</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Strategy Result View -->
+                    <div id="strategy-result-box" class="hidden bg-gradient-to-r from-purple-900/10 to-indigo-900/10 rounded-2xl p-6 border border-purple-500/15 flex flex-col gap-4">
+                        <div class="flex items-center justify-between border-b border-white/5 pb-3">
+                            <h4 class="text-base font-bold text-purple-300 font-title flex items-center gap-2" id="strategy-title">
+                                Estrategia de Proyecto
+                            </h4>
+                            <button onclick="downloadStrategyMD()" class="px-3.5 py-2 bg-white/5 hover:bg-white/10 text-xs font-semibold text-gray-300 rounded-lg border border-white/10 transition">
+                                Descargar Plan (.md)
+                            </button>
+                        </div>
+                        
+                        <!-- Similar Projects List -->
+                        <div class="flex flex-col gap-2">
+                            <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">Proyectos de Referencia Cruzados</span>
+                            <div id="strategy-similar-projects" class="flex flex-wrap gap-2"></div>
+                        </div>
+
+                        <!-- Markdown Content rendered as text -->
+                        <div id="strategy-markdown-content" class="text-sm text-gray-200 leading-relaxed font-sans bg-black/40 p-5 rounded-xl border border-white/5 whitespace-pre-wrap max-h-[60vh] overflow-y-auto"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Viewer Modal -->
+    <div id="viewer-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="glass-panel rounded-3xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-white/10">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 flex items-center justify-between border-b border-white/5 bg-black/40">
+                <div class="flex flex-col">
+                    <span id="modal-badge" class="self-start text-[10px] uppercase font-bold tracking-wider bg-purple-900/60 text-purple-300 px-2 py-0.5 rounded-md border border-purple-500/30 mb-1">CÓDIGO GANADOR</span>
+                    <h3 id="modal-title" class="text-xl font-bold font-title text-white">Detalle del Proyecto</h3>
+                </div>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white transition p-1 bg-white/5 hover:bg-white/10 rounded-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Modal Content (Scrollable) -->
+            <div class="p-6 overflow-y-auto flex flex-col gap-6">
+                <!-- Info Section -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white/5 rounded-xl p-4">
+                        <span class="text-xs text-purple-300 font-semibold block mb-1">Premio Obtenido</span>
+                        <span id="modal-prize" class="text-sm text-gray-200"></span>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-4">
+                        <span class="text-xs text-indigo-300 font-semibold block mb-1">Repositorio Original</span>
+                        <a id="modal-url" href="#" target="_blank" class="text-sm text-blue-400 hover:underline break-all"></a>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-4">
+                        <span class="text-xs text-pink-300 font-semibold block mb-1">Hackatón</span>
+                        <span id="modal-hackathon" class="text-sm text-gray-200"></span>
+                    </div>
+                </div>
+
+                <!-- Tree and Dependencies -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-black/40 rounded-2xl p-4 border border-white/5">
+                        <h4 class="text-sm font-bold text-gray-300 mb-2 font-title flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                            Estructura de Archivos (Raíz)
+                        </h4>
+                        <pre id="modal-files" class="text-xs text-gray-400 font-mono bg-black/30 p-3 rounded-lg overflow-x-auto max-h-40"></pre>
+                    </div>
+                    <div class="bg-black/40 rounded-2xl p-4 border border-white/5">
+                        <h4 class="text-sm font-bold text-gray-300 mb-2 font-title flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                            Dependencias Detectadas
+                        </h4>
+                        <pre id="modal-deps" class="text-xs text-gray-400 font-mono bg-black/30 p-3 rounded-lg overflow-x-auto max-h-40"></pre>
+                    </div>
+                </div>
+
+                <!-- Análisis Profundo con IA Local -->
+                <div class="bg-gradient-to-r from-purple-900/20 to-indigo-900/20 rounded-2xl p-6 border border-purple-500/20 flex flex-col gap-4">
+                    <div class="flex items-center justify-between border-b border-white/5 pb-3">
+                        <h4 class="text-base font-bold text-purple-300 font-title flex items-center gap-2">
+                            <svg class="w-5 h-5 text-purple-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            Análisis Profundo de Código (Ollama Local)
+                        </h4>
+                        <div class="flex items-center gap-2">
+                            <button id="btn-export" onclick="exportAnalysis()" class="px-3.5 py-2 bg-white/5 hover:bg-white/10 text-xs font-semibold text-gray-300 rounded-lg border border-white/10 transition flex items-center gap-1.5 hidden">
+                                <span>Descargar MD</span>
+                            </button>
+                            <button id="btn-analyze" onclick="requestAnalysis()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-xs font-semibold text-white rounded-lg shadow-lg shadow-purple-900/20 hover:shadow-purple-900/40 transition flex items-center gap-2">
+                                <span id="analyze-btn-text">Analizar Código con IA</span>
+                            </button>
+                        </div>
+
+                    </div>
+                    <div id="modal-analysis-content" class="text-sm text-gray-300 leading-relaxed max-h-96 overflow-y-auto whitespace-pre-wrap font-sans bg-black/40 p-4 rounded-xl border border-white/5">
+                        El análisis de código no se ha generado aún. Haz clic en el botón de arriba para iniciar la auditoría utilizando tus modelos locales.
+                    </div>
+                </div>
+
+                <!-- README Content -->
+                <div class="bg-black/20 rounded-2xl p-4 border border-white/5">
+                    <h4 class="text-sm font-bold text-gray-300 mb-2 font-title">README Completo o Extracto</h4>
+                    <div id="modal-readme" class="text-xs text-gray-300 font-mono bg-black/40 p-4 rounded-xl whitespace-pre-wrap overflow-x-auto leading-relaxed border border-white/5 max-h-80"></div>
+                </div>
+            </div>
+    <!-- Application Management Modal -->
+    <div id="app-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="glass-panel rounded-3xl w-full max-w-lg flex flex-col shadow-2xl overflow-hidden border border-white/10">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 flex items-center justify-between border-b border-white/5 bg-black/40">
+                <div>
+                    <h3 class="text-lg font-bold font-title text-white id-lang" data-key="modal-app-title">Gestionar Postulación</h3>
+                    <p id="app-modal-event-name" class="text-xs text-gray-400 mt-0.5 truncate max-w-sm"></p>
+                </div>
+                <button onclick="closeAppModal()" class="text-gray-400 hover:text-white transition p-1 bg-white/5 hover:bg-white/10 rounded-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+
+                "ai-title": "Asistente Copiloto de Proyectos y Hackatones",
+                "ai-desc": "Escribe cualquier consulta en lenguaje natural. La IA local te ayudará a diseñar arquitecturas, buscar código, proponer ideas de negocio y estructurar tu código.",
+                "action-ganadores": "🔍 Proyectos Ganadores",
+                "action-ganadores-desc": "Consultar código e ideas premiadas",
+                "action-finanzas": "🏗️ Diseñar Arquitectura",
+                "action-finanzas-desc": "Generar boilerplate, esquemas DB y Docker",
+                "action-inventario": "🌐 Investigar en Línea",
+                "action-inventario-desc": "Buscar código e ideas en la web",
+                "action-estrategia": "💡 Estrategia de IA",
+                "action-estrategia-desc": "Consultar propuesta y roadmaps",
+                "ai-placeholder": "Escribe aquí tu pregunta para InnerOS...",
+                "ai-model-info": "Modelo local: qwen2.5:14b-instruct",
+                "btn-ask-ai": "Preguntar a Copiloto",
+                "agents-title": "Central de Agentes IA (CrewAI)",
+                "agents-desc": "Registro y estado de los agentes locales especializados configurados en el sistema.",
+                "hackathons-title": "Hackatones Próximas y Activas",
+                "hackathons-desc": "Eventos de inteligencia artificial para competir y aplicar soluciones en desarrollo.",
+                "btn-sync-hackathons": "Sincronizar Hackatones",
+                "modal-app-title": "Gestionar Postulación",
+                "modal-app-status": "Estado de Postulación",
+                "modal-app-user": "Usuario / Email",
+                "modal-app-pass": "Contraseña",
+                "modal-app-notes": "Notas Tácticas y Requisitos",
+                "btn-cancel": "Cancelar",
+                "btn-save": "Guardar Cambios"
+            },
+            en: {
+                "app-title": "Hackathon Autopilot",
+                "app-subtitle": "LOCAL KNOWLEDGE CACHE",
+                "btn-scrape": "Update Mining",
+                "stats-title": "Data Summary",
+                "stats-codebases": "Codebases",
+                "stats-ih": "Indie Hackers",
+                "stats-hn": "Show HN Projects",
+                "stats-codebases-ref": "Codebases (Ref)",
+                "stats-active-contests": "Active Contests",
+                "stats-alerts-pwa": "Mobile Alerts / PWA",
+                "eco-title": "Most Used Ecosystem",
+                "tab-ai": "AI Copilot",
+                "tab-codebases": "Winning Repositories",
+                "tab-searchcode": "Search Code (GitHub)",
+                "tab-community": "Community (IH & HN)",
+                "tab-strategist": "Hackathon Strategist",
+                "tab-funds": "Funding Radar",
+                "tab-notion": "Extractors & Sources",
+                "tab-logs": "Terminal Logs",
+                "live-scraping-status": "Scraping live: Devpost, Lablab.ai, GitHub API, Taikai, HackerEarth, BeMyApp, Showcode",
+                "search-placeholder": "Search by technology, prize, or keyword...",
+                "loading-techs": "Loading technologies...",
+                "loading-agents": "Loading agents...",
+                "chat-history-title": "Conversation with Ralphi AI",
+                "btn-chats-history": "Chats (History)",
+                "btn-start-audio": "Start Audio",
+                "btn-stop-audio": "Stop Audio",
+                "btn-clear-chat": "Clear Chat",
+                "welcome-msg": "Hello! I am Ralphi AI, your development and local operations automation assistant for InnerOS.\n\nI have a direct connection to your hackathons, invoices, and inventory databases in MongoDB, and I can execute advanced real-time searches of code repositories on GitHub or tutorials on Lablab.ai. I also feature local **qwen2.5:14b** and **llava:7b** models for visual analysis of photos you upload.\n\nWhich architecture or local code agent would you like to develop today?",
+                "no-active-conv": "No active conversation. Click the '+' button in the sidebar to create one.",
+                "ai-title": "AI Project & Hackathon Copilot Assistant",
+                "ai-desc": "Write any query in natural language. Local AI will help you design architectures, search code, propose business ideas, and structure your codebase.",
+                "action-ganadores": "🔍 Winning Projects",
+                "action-ganadores-desc": "Consult prize-winning code & ideas",
+                "action-finanzas": "🏗️ Design Architecture",
+                "action-finanzas-desc": "Generate boilerplate, DB schemas, and Docker",
+                "action-inventario": "🌐 Search Online",
+                "action-inventario-desc": "Search code and ideas on the web",
+                "action-estrategia": "💡 AI Strategy",
+                "action-estrategia-desc": "Consult proposals & roadmaps",
+                "ai-placeholder": "Type your question for InnerOS here...",
+                "ai-model-info": "Local model: qwen2.5:14b-instruct",
+                "btn-ask-ai": "Ask Copilot",
+                "agents-title": "AI Agents Hub (CrewAI)",
+                "agents-desc": "Registry and status of the specialized local agents configured in the system.",
+                "hackathons-title": "Upcoming & Active Hackathons",
+                "hackathons-desc": "AI events to compete and apply developing solutions.",
+                "btn-sync-hackathons": "Sync Hackathons",
+                "modal-app-title": "Manage Application",
+                "modal-app-status": "Application Status",
+                "modal-app-user": "Username / Email",
+                "modal-app-pass": "Password",
+                "modal-app-notes": "Tactical Notes & Requirements",
+                "btn-cancel": "Cancel",
+                "btn-save": "Save Changes"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'es' ? 'en' : 'es';
+            localStorage.setItem('preferredLang', currentLang);
+            document.getElementById('lang-text').innerText = currentLang === 'es' ? 'EN' : 'ES';
+            updateUILanguage();
+        }
+
+        function updateUILanguage() {
+            document.querySelectorAll('.id-lang').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (key && translations[currentLang][key]) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.placeholder = translations[currentLang][key];
+                    } else {
+                        el.innerText = translations[currentLang][key];
+                    }
+                }
+            });
+            // Update prompt placeholder manually
+            const promptInput = document.getElementById('ai-prompt-input');
+            if (promptInput) {
+                promptInput.placeholder = translations[currentLang]['ai-placeholder'];
+            }
+        }
+
+        // Init
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('lang-text').innerText = currentLang === 'es' ? 'EN' : 'ES';
+            updateUILanguage();
+            fetchStats();
+            fetchProjects();
+            fetchCommunity();
+            fetchHackathons();
+            fetchAgents();
+            loadConversations();
+            switchTab('ai'); // Default active tab is now Copiloto IA
+            setInterval(fetchStats, 6000); // Auto-refresh scraper status & counts
+
+            // Register PWA Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('Service Worker registrado con éxito', reg))
+                    .catch(err => console.error('Error registrando Service Worker', err));
+            }
+        });
+
+        async function fetchHackathons() {
+            try {
+                const res = await fetch('/api/hackathons');
+                const data = await res.json();
+                if (Array.isArray(data)) {
+                    allHackathons = data;
+                } else {
+                    console.error("Hackathons API did not return an array:", data);
+                    allHackathons = [];
+                }
+                renderHackathons();
+            } catch (err) {
+                console.error("Error fetching hackathons:", err);
+                allHackathons = [];
+                renderHackathons();
+            }
+        }
+
+        async function renderHackathons() {
+            const list = document.getElementById('hackathons-list');
+            list.innerHTML = '';
+            
+            if (allHackathons.length === 0) {
+                list.innerHTML = `<p class="text-xs text-gray-500 col-span-2">No hay hackatones registradas. Haz clic en Sincronizar.</p>`;
+                return;
+            }
+            
+            const filtered = allHackathons;
+            
+            // Sort: active first, then upcoming, then expired/finished
+            filtered.sort((a, b) => {
+                const statusA = (a.status || '').toLowerCase();
+                const statusB = (b.status || '').toLowerCase();
+                if (statusA === 'active' && statusB !== 'active') return -1;
+                if (statusA !== 'active' && statusB === 'active') return 1;
+                if (statusA === 'upcoming' && statusB === 'expired') return -1;
+                if (statusA === 'expired' && statusB === 'upcoming') return 1;
+                return 0;
+            });
+
+            activeFilteredHackathons = filtered;
+
+            activeFilteredHackathons.forEach((h, idx) => {
+                let statusBadge = '';
+                
+                // We will fetch application info asynchronously to update the badge
+                fetch(`/api/hackathons/application?url=${encodeURIComponent(h.url)}`)
+                    .then(r => r.json())
+                    .then(appData => {
+                        if (appData && appData.status) {
+                            let badgeClass = "bg-purple-950/60 text-purple-300 border-purple-500/20";
+                            let statusText = "Interesado";
+                            if (appData.status === 'applied') {
+                                badgeClass = "bg-emerald-950/60 text-emerald-300 border-emerald-500/20";
+                                statusText = currentLang === 'es' ? "Postulado" : "Applied";
+                            } else if (appData.status === 'draft') {
+                                badgeClass = "bg-orange-950/60 text-orange-300 border-orange-500/20";
+                                statusText = currentLang === 'es' ? "Borrador" : "Draft";
+                            }
+                            const badgeSpan = document.getElementById(`badge-hackathon-${idx}`);
+                            if (badgeSpan) {
+                                badgeSpan.className = `text-[9px] uppercase font-bold tracking-wider ${badgeClass} px-2 py-0.5 rounded border`;
+                                badgeSpan.innerText = statusText;
+                            }
+                        }
+                    }).catch(e => {});
+
+                // Determine hackathon status badge (Active, Upcoming, Finished/Expired)
+                let statusBadgeColor = 'bg-gray-900/60 text-gray-400 border-gray-500/20';
+                let statusBadgeText = h.status || 'active';
+                if (statusBadgeText.toLowerCase() === 'active') {
+                    statusBadgeColor = 'bg-emerald-950/60 text-emerald-400 border-emerald-500/20';
+                    statusBadgeText = currentLang === 'es' ? 'Activo' : 'Active';
+                } else if (statusBadgeText.toLowerCase() === 'upcoming') {
+                    statusBadgeColor = 'bg-blue-950/60 text-blue-400 border-blue-500/20';
+                    statusBadgeText = currentLang === 'es' ? 'Próximo' : 'Upcoming';
+                } else if (statusBadgeText.toLowerCase() === 'expired' || statusBadgeText.toLowerCase() === 'finished') {
+                    statusBadgeColor = 'bg-red-950/60 text-red-400 border-red-500/20';
+                    statusBadgeText = currentLang === 'es' ? 'Finalizado' : 'Ended';
+                }
+
+                const card = document.createElement('div');
+                card.className = "bg-white/5 rounded-2xl p-5 border border-white/5 flex flex-col justify-between hover:border-purple-500/20 transition-all";
+                card.innerHTML = `
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[9px] uppercase font-bold tracking-wider bg-indigo-950/60 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/20 font-mono">
+                                ${h.source || 'Devpost'}
+                            </span>
+                            <div class="flex items-center gap-1.5 flex-wrap justify-end">
+                                <span class="text-[9px] uppercase font-bold tracking-wider ${statusBadgeColor} px-2 py-0.5 rounded border">
+                                    ${statusBadgeText}
+                                </span>
+                                <span id="badge-hackathon-${idx}"></span>
+                                <span class="text-xs text-purple-400 font-bold font-mono">🏆 Premios: ${h.prize_pool || 'Ver en sitio web'}</span>
+                            </div>
+                        </div>
+                        <h4 class="text-sm font-bold text-white font-title mt-1 leading-snug truncate">
+                            <a href="${h.url}" target="_blank" class="hover:text-purple-400 transition" title="Ver convocatoria en sitio web">${h.title}</a>
+                        </h4>
+                        <div class="text-[11px] text-purple-300 font-semibold font-sans mt-1 flex flex-col gap-0.5">
+                            <div>🗓️ Fecha: ${h.start_date || 'Ver en sitio web'}</div>
+                            <div>🏁 Deadline: ${h.deadline || 'Ver en sitio web'}</div>
+                        </div>
+                        <div class="text-[11px] text-indigo-300 font-mono mt-0.5 truncate" title="${h.url}">
+                            🔗 Link: <a href="${h.url}" target="_blank" class="hover:text-purple-400 transition underline">${h.url}</a>
+                        </div>
+                        <div class="text-[11px] text-gray-500 font-sans mt-1">
+                            ${h.technologies ? h.technologies.slice(0, 4).map(t => `<span class="bg-white/5 text-gray-300 px-1.5 py-0.5 rounded mr-1">${t}</span>`).join('') : ''}
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-white/5 pt-4 mt-4 text-xs gap-2">
+                        <button onclick="openAppModalByIndex(${idx})" class="px-2.5 py-1.5 bg-white/5 hover:bg-white/10 text-gray-300 rounded border border-white/10 transition">
+                            ${currentLang === 'es' ? 'Postulación' : 'Apply Tracking'}
+                        </button>
+                        <button onclick="launchStrategistPlanByIndex(${idx})" class="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded font-semibold transition">
+                            ${currentLang === 'es' ? 'Diseñar Plan IA' : 'Design AI Plan'}
+                        </button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        async function syncHackathons() {
+            try {
+                const res = await fetch('/api/hackathons/sync', { method: 'POST' });
+                const data = await res.json();
+                alert(data.message);
+                setTimeout(fetchHackathons, 3000);
+            } catch (err) {
+                alert("Error al sincronizar hackatones.");
+            }
+        }
+
+        async function fetchAgents() {
+            try {
+                const res = await fetch('/api/agents');
+                const data = await res.json();
+                if (Array.isArray(data)) {
+                    allAgents = data;
+                } else {
+                    console.error("Agents API did not return an array:", data);
+                    allAgents = [];
+                }
+                renderAgents();
+            } catch (err) {
+                console.error("Error fetching agents:", err);
+                allAgents = [];
+                renderAgents();
+            }
+        }
+
+        function renderAgents() {
+            const list = document.getElementById('agents-list');
+            list.innerHTML = '';
+            
+            if (allAgents.length === 0) {
+                list.innerHTML = `<p class="text-xs text-gray-500">No hay agentes registrados.</p>`;
+                return;
+            }
+            
+            list.className = "flex flex-col gap-3.5 w-full";
+            
+            allAgents.forEach(a => {
+                const slug = a.slug || '';
+                let svgIcon = '';
+                let glowColor = '';
+                let borderHover = '';
+                
+                if (slug.includes('scout')) {
+                    svgIcon = `
+                        <svg class="w-7 h-7 text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                        </svg>
+                    `;
+                    glowColor = 'from-purple-600/10 to-indigo-600/5';
+                    borderHover = 'hover:border-purple-500/40';
+                } else if (slug.includes('analyst')) {
+                    svgIcon = `
+                        <svg class="w-7 h-7 text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.6)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    `;
+                    glowColor = 'from-indigo-600/10 to-blue-600/5';
+                    borderHover = 'hover:border-indigo-500/40';
+                } else if (slug.includes('strategist')) {
+                    svgIcon = `
+                        <svg class="w-7 h-7 text-pink-400 drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                    `;
+                    glowColor = 'from-pink-600/10 to-rose-600/5';
+                    borderHover = 'hover:border-pink-500/40';
+                } else {
+                    svgIcon = `
+                        <svg class="w-7 h-7 text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.6)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                    `;
+                    glowColor = 'from-emerald-600/10 to-teal-600/5';
+                    borderHover = 'hover:border-emerald-500/40';
+                }
+                
+                const card = document.createElement('div');
+                card.className = `flex gap-3 bg-gradient-to-br ${glowColor} bg-white/2 rounded-xl p-3 border border-white/5 ${borderHover} transition-all duration-300 relative overflow-hidden group shadow-md w-full`;
+                card.innerHTML = `
+                    <div class="h-10 w-10 rounded-lg bg-black/40 border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-all">
+                        ${svgIcon}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-1.5">
+                            <h4 class="text-xs font-bold text-white truncate font-title">${a.name}</h4>
+                            <span class="w-1.5 h-1.5 rounded-full ${a.status === 'active' || a.status === 'idle' ? 'bg-emerald-500 animate-pulse' : 'bg-orange-500'} flex-shrink-0"></span>
+                        </div>
+                        <p class="text-[10px] text-purple-300 font-semibold truncate mt-0.5">${a.role}</p>
+                        <p class="text-[10px] text-gray-400 line-clamp-2 mt-1 leading-normal">${a.goal}</p>
+                        <div class="flex items-center justify-between text-[9px] text-gray-500 font-mono mt-2 border-t border-white/5 pt-1.5">
+                            <span>Modelo: ${a.llm_model}</span>
+                            <span class="text-indigo-400 capitalize">${a.status}</span>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        let submitPollInterval = null;
+
+        function openAppModalByIndex(idx) {
+            const h = activeFilteredHackathons[idx];
+            if (h) {
+                openAppModal(h.title, h.url);
+            }
+        }
+
+        function openAppModal(name, url) {
+            // Show modal immediately
+            document.getElementById('app-modal').classList.remove('hidden');
+            
+            document.getElementById('app-modal-event-name').innerText = name;
+            document.getElementById('app-modal-url').value = url;
+            
+            document.getElementById('app-modal-status').value = 'interested';
+            document.getElementById('app-modal-user').value = '';
+            document.getElementById('app-modal-pass').value = '';
+            document.getElementById('app-modal-notes').value = '';
+
+            const statusBox = document.getElementById('app-submit-status-box');
+            statusBox.classList.add('hidden');
+            statusBox.innerHTML = '';
+            if (submitPollInterval) {
+                clearInterval(submitPollInterval);
+                submitPollInterval = null;
+            }
+            const btn = document.getElementById('btn-auto-submit');
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            
+            fetch(`/api/hackathons/application?url=${encodeURIComponent(url)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data && data.status) {
+                        document.getElementById('app-modal-status').value = data.status;
+                        document.getElementById('app-modal-user').value = data.user || '';
+                        document.getElementById('app-modal-pass').value = data.password || '';
+                        document.getElementById('app-modal-notes').value = data.notes || '';
+                    }
+                })
+                .catch(err => {
+                    console.error("Error cargando postulación de hackatón:", err);
+                });
+        }
+
+        async function triggerAutoSubmit() {
+            const url = document.getElementById('app-modal-url').value;
+            const btn = document.getElementById('btn-auto-submit');
+            const statusBox = document.getElementById('app-submit-status-box');
+            
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            statusBox.classList.remove('hidden');
+            statusBox.innerHTML = `<span>Iniciando agente Playwright para el envío automatizado a la plataforma del evento...</span>`;
+            
+            try {
+                const res = await fetch('/api/hackathons/auto-submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: url })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    startSubmitPolling(url);
+                } else {
+                    statusBox.innerHTML = `<span class="text-red-400">Error: ${data.message}</span>`;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            } catch (err) {
+                statusBox.innerHTML = `<span class="text-red-400">Error de red al conectar con el servidor.</span>`;
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        function startSubmitPolling(url) {
+            if (submitPollInterval) clearInterval(submitPollInterval);
+            
+            const btn = document.getElementById('btn-auto-submit');
+            const statusBox = document.getElementById('app-submit-status-box');
+            
+            submitPollInterval = setInterval(async () => {
+                try {
+                    const res = await fetch(`/api/hackathons/auto-submit/status?url=${encodeURIComponent(url)}`);
+                    const data = await res.json();
+                    
+                    if (data.status === 'success') {
+                        clearInterval(submitPollInterval);
+                        submitPollInterval = null;
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        
+                        let screenshotEl = '';
+                        if (data.screenshot) {
+                            screenshotEl = `<a href="/${data.screenshot.replace('templates/', '')}" target="_blank" class="text-indigo-400 underline font-semibold mt-1">Ver Captura de Pantalla del Envío</a>`;
+                        }
+                        statusBox.innerHTML = `
+                            <span class="text-emerald-400 font-semibold">¡Envío completado con éxito!</span>
+                            <span>${data.message}</span>
+                            ${screenshotEl}
+                        `;
+                    } else if (data.status === 'error') {
+                        clearInterval(submitPollInterval);
+                        submitPollInterval = null;
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        statusBox.innerHTML = `
+                            <span class="text-red-400 font-semibold">Error al enviar:</span>
+                            <span>${data.message}</span>
+                            <a href="/screenshots/error_login.png" target="_blank" class="text-red-400 underline font-semibold mt-1">Ver Captura de Pantalla del Error</a>
+                        `;
+                    } else {
+                        statusBox.innerHTML = `<span>Estado: ${data.message || 'Procesando...'}</span>`;
+                    }
+                } catch (err) {
+                    console.error("Error polling submit status:", err);
+                }
+            }, 3000);
+        }
+
+        function closeAppModal() {
+            document.getElementById('app-modal').classList.add('hidden');
+        }
+
+        async function saveHackathonApplication() {
+            const url = document.getElementById('app-modal-url').value;
+            const status = document.getElementById('app-modal-status').value;
+            const user = document.getElementById('app-modal-user').value;
+            const password = document.getElementById('app-modal-pass').value;
+            const notes = document.getElementById('app-modal-notes').value;
+            
+            try {
+                const res = await fetch('/api/hackathons/application', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        url: url,
+                        status: status,
+                        user: user,
+                        password: password,
+                        notes: notes
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(currentLang === 'es' ? 'Postulación guardada correctamente.' : 'Application saved successfully.');
+                    closeAppModal();
+                    fetchHackathons();
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                alert("Error al guardar postulación.");
+            }
+        }
+
+        let activeCommunityType = 'all';
+        function toggleCommunityFilter(type) {
+            activeCommunityType = type;
+            if (activeTab === 'community') {
+                renderCommunity();
+            }
+        }
+
+        function launchStrategistPlanByIndex(idx) {
+            const h = activeFilteredHackathons[idx];
+            if (h) {
+                launchStrategistPlan(h.url, h.technologies || []);
+            }
+        }
+
+        function launchStrategistPlan(url, technologies = []) {
+            switchTab('strategist');
+            document.getElementById('strategist-url').value = url;
+            document.getElementById('strategist-techs').value = (technologies || []).join(', ');
+            document.getElementById('strategist-prompt').value = '';
+            runStrategist();
+        }
+
+        async function fetchStats() {
+            try {
+                const res = await fetch('/api/stats');
+                const data = await res.json();
+                document.getElementById('stat-repos').innerText = data.codebases_count;
+                document.getElementById('stat-ih').innerText = data.indiehackers_count;
+                document.getElementById('stat-hn').innerText = data.hackernews_count;
+                document.getElementById('stat-hackathons').innerText = data.hackathons_count || 0;
+                document.getElementById('stat-notifs').innerText = data.unread_notifications_count || 0;
+                
+                const badge = document.getElementById('notif-badge');
+                if (badge) {
+                    if (data.unread_notifications_count > 0) {
+                        badge.classList.remove('hidden');
+                    } else {
+                        badge.classList.add('hidden');
+                    }
+                }
+
+                // Render technologies progress bars
+                const techList = document.getElementById('tech-list');
+                techList.innerHTML = '';
+                const sortedTechs = Object.entries(data.technologies).sort((a,b) => b[1] - a[1]).slice(0, 8);
+                const maxCount = sortedTechs.length > 0 ? sortedTechs[0][1] : 1;
+                
+                sortedTechs.forEach(([tech, count]) => {
+                    const pct = Math.round((count / maxCount) * 100);
+                    const item = document.createElement('div');
+                    item.className = "flex flex-col gap-1";
+                    item.innerHTML = `
+                        <div class="flex items-center justify-between text-xs font-semibold">
+                            <span class="text-gray-300 capitalize cursor-pointer hover:text-purple-400 transition" onclick="switchTab('codebases'); toggleTechFilter('${tech}')">${tech}</span>
+                            <span class="text-purple-400 font-mono">${count}</span>
+                        </div>
+                        <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden border border-white/5">
+                            <div class="bg-gradient-to-r from-purple-500 to-indigo-500 h-full rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                        </div>
+                    `;
+                    techList.appendChild(item);
+                });
+
+
+                // Update scraper status button
+                const btn = document.getElementById('btn-scrape');
+                const text = document.getElementById('scrape-text');
+                const icon = document.getElementById('scrape-icon');
+                if (data.scrape_in_progress) {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    text.innerText = currentLang === 'es' ? "Raspando en segundo plano..." : "Scraping in background...";
+                    icon.classList.add('animate-spin');
+                } else {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    text.innerText = translations[currentLang]["btn-scrape"];
+                    icon.classList.remove('animate-spin');
+                }
+            } catch (err) {
+                console.error("Error fetching stats:", err);
+            }
+        }
+
+        async function fetchProjects() {
+            try {
+                const res = await fetch('/api/projects');
+                const data = await res.json();
+                if (Array.isArray(data)) {
+                    allProjects = data;
+                } else {
+                    console.error("Projects API did not return an array:", data);
+                    allProjects = [];
+                }
+                if (activeTab === 'codebases') {
+                    renderCodebases();
+                }
+            } catch (err) {
+                console.error("Error fetching projects:", err);
+                allProjects = [];
+            }
+        }
+
+        async function fetchCommunity() {
+            try {
+                const res = await fetch('/api/community');
+                const data = await res.json();
+                if (Array.isArray(data)) {
+                    allCommunity = data;
+                } else {
+                    console.error("Community API did not return an array:", data);
+                    allCommunity = [];
+                }
+                if (activeTab === 'community') {
+                    renderCommunity();
+                }
+            } catch (err) {
+                console.error("Error fetching community data:", err);
+                allCommunity = [];
+            }
+        }
+
+        let selectedTechFilter = '';
+
+        function toggleTechFilter(tech) {
+            selectedTechFilter = tech;
+            
+            // Update active pill styling
+            const pills = document.querySelectorAll('.tech-pill');
+            pills.forEach(pill => {
+                if ((tech === '' && pill.innerText.toLowerCase() === 'todos') || pill.innerText.toLowerCase() === tech) {
+                    pill.classList.remove('bg-white/5', 'text-gray-300', 'border-white/5', 'hover:bg-white/10');
+                    pill.classList.add('bg-purple-600', 'text-white', 'border-purple-500/20');
+                } else {
+                    pill.classList.remove('bg-purple-600', 'text-white', 'border-purple-500/20');
+                    pill.classList.add('bg-white/5', 'text-gray-300', 'border-white/5', 'hover:bg-white/10');
+                }
+            });
+            
+            if (activeTab === 'codebases') {
+                renderCodebases();
+            } else {
+                renderCommunity();
+            }
+        }
+
+        function toggleSourceFilter(source) {
+            const pills = document.querySelectorAll('.src-pill');
+            pills.forEach(pill => {
+                const id = pill.id;
+                if (id === 'src-filter-' + source) {
+                    pill.classList.remove('bg-white/5', 'text-gray-300', 'border-white/5', 'hover:bg-white/10');
+                    pill.classList.add('bg-purple-600', 'text-white', 'border-purple-500/20');
+                } else {
+                    pill.classList.remove('bg-purple-600', 'text-white', 'border-purple-500/20');
+                    pill.classList.add('bg-white/5', 'text-gray-300', 'border-white/5', 'hover:bg-white/10');
+                }
+            });
+            
+            if (source === 'github') {
+                switchTab('codebases');
+            } else if (source === 'ih') {
+                switchTab('community');
+                toggleCommunityFilter('ih');
+            } else if (source === 'hn') {
+                switchTab('community');
+                toggleCommunityFilter('hn');
+            } else if (source === 'all') {
+                if (activeTab === 'community') {
+                    toggleCommunityFilter('all');
+                } else {
+                    switchTab('codebases');
+                }
+            }
+        }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            stopLogsAutoRefresh();
+            const btnAI = document.getElementById('tab-ai');
+            const btnCodebases = document.getElementById('tab-codebases');
+            const btnSearchCode = document.getElementById('tab-searchcode');
+            const btnCommunity = document.getElementById('tab-community');
+            const btnStrategist = document.getElementById('tab-strategist');
+            const btnFunds = document.getElementById('tab-funds');
+            const btnNotion = document.getElementById('tab-notion');
+            const btnLogs = document.getElementById('tab-logs');
+            const btnSRE = document.getElementById('tab-sre');
+            const searchWrapper = document.getElementById('search-wrapper');
+            const techFiltersWrapper = document.getElementById('tech-filters-wrapper');
+            const sourceFiltersWrapper = document.getElementById('source-filters-wrapper');
+            const contentContainer = document.getElementById('content-container');
+            const strategistContainer = document.getElementById('strategist-container');
+            const fundsContainer = document.getElementById('funds-container');
+            const notionContainer = document.getElementById('notion-container');
+            const logsContainer = document.getElementById('logs-container');
+            const sreContainer = document.getElementById('sre-container');
+            const aiContainer = document.getElementById('ai-container');
+            const searchcodeContainer = document.getElementById('searchcode-container');
+            const hackathonsContainer = document.getElementById('hackathons-container');
+            
+            // Toggle hackathons container visibility based on tab
+            if (hackathonsContainer) {
+                if (tab === 'ai') {
+                    hackathonsContainer.classList.remove('hidden');
+                } else {
+                    hackathonsContainer.classList.add('hidden');
+                }
+            }
+            
+            // Clases de botón activo/inactivo
+            const inactiveClass = "flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-lg text-gray-400 hover:text-white transition duration-200 whitespace-nowrap id-lang";
+            const activeClass = "flex-1 md:flex-none px-4 py-2 text-sm font-semibold rounded-lg bg-purple-600 text-white transition duration-200 whitespace-nowrap id-lang";
+            
+            btnAI.className = inactiveClass;
+            btnCodebases.className = inactiveClass;
+            if (btnSearchCode) btnSearchCode.className = inactiveClass;
+            btnCommunity.className = inactiveClass;
+            btnStrategist.className = inactiveClass;
+            btnFunds.className = inactiveClass;
+            btnNotion.className = inactiveClass;
+            if (btnLogs) btnLogs.className = inactiveClass;
+            if (btnSRE) btnSRE.className = inactiveClass;
+            
+            if (tab === 'codebases' || tab === 'community') {
+                if (sourceFiltersWrapper) sourceFiltersWrapper.classList.remove('hidden');
+            } else {
+                if (sourceFiltersWrapper) sourceFiltersWrapper.classList.add('hidden');
+            }
+            
+            if (searchcodeContainer) searchcodeContainer.classList.add('hidden');
+            if (logsContainer) logsContainer.classList.add('hidden');
+            if (sreContainer) sreContainer.classList.add('hidden');
+            
+            if (tab === 'ai') {
+                btnAI.className = activeClass;
+                searchWrapper.classList.add('hidden');
+                techFiltersWrapper.classList.add('hidden');
+                contentContainer.classList.add('hidden');
+                contentContainer.classList.remove('grid');
+                strategistContainer.classList.add('hidden');
+                fundsContainer.classList.add('hidden');
+                notionContainer.classList.add('hidden');
+                aiContainer.classList.remove('hidden');
+            } else if (tab === 'codebases') {
+                btnCodebases.className = activeClass;
+                searchWrapper.classList.remove('hidden');
+                techFiltersWrapper.classList.remove('hidden');
+                contentContainer.classList.add('grid');
+                contentContainer.classList.remove('hidden');
+                strategistContainer.classList.add('hidden');
+                fundsContainer.classList.add('hidden');
+                notionContainer.classList.add('hidden');
+                aiContainer.classList.add('hidden');
+                renderCodebases();
+            } else if (tab === 'searchcode') {
+                if (btnSearchCode) btnSearchCode.className = activeClass;
+                searchWrapper.classList.add('hidden');
+                techFiltersWrapper.classList.add('hidden');
+                contentContainer.classList.add('hidden');
+                contentContainer.classList.remove('grid');
+                strategistContainer.classList.add('hidden');
+                fundsContainer.classList.add('hidden');
+                notionContainer.classList.add('hidden');
+                aiContainer.classList.add('hidden');
+                if (searchcodeContainer) searchcodeContainer.classList.remove('hidden');
+            } else if (tab === 'community') {
+                btnCommunity.className = activeClass;
+                searchWrapper.classList.remove('hidden');
+                techFiltersWrapper.classList.remove('hidden');
+                contentContainer.classList.add('grid');
+                contentContainer.classList.remove('hidden');
+                strategistContainer.classList.add('hidden');
+                fundsContainer.classList.add('hidden');
+                notionContainer.classList.add('hidden');
+                aiContainer.classList.add('hidden');
+                renderCommunity();
+            } else if (tab === 'strategist') {
+                btnStrategist.className = activeClass;
+                searchWrapper.classList.add('hidden');
+                techFiltersWrapper.classList.add('hidden');
+                contentContainer.classList.remove('grid');
+                contentContainer.classList.add('hidden');
+                strategistContainer.classList.remove('hidden');
+                fundsContainer.classList.add('hidden');
+                notionContainer.classList.add('hidden');
+                aiContainer.classList.add('hidden');
+            } else if (tab === 'funds') {
+                btnFunds.className = activeClass;
+                searchWrapper.classList.add('hidden');
+                techFiltersWrapper.classList.add('hidden');
+                contentContainer.classList.remove('grid');
+                contentContainer.classList.add('hidden');
+                strategistContainer.classList.add('hidden');
+                fundsContainer.classList.remove('hidden');
+                notionContainer.classList.add('hidden');
+                aiContainer.classList.add('hidden');
+                fetchFunds();
+            } else if (tab === 'notion') {
+                btnNotion.className = activeClass;
+                searchWrapper.classList.add('hidden');
+                techFiltersWrapper.classList.add('hidden');
+                contentContainer.classList.remove('grid');
+                contentContainer.classList.add('hidden');
+                strategistContainer.classList.add('hidden');
+                fundsContainer.classList.add('hidden');
+                notionContainer.classList.remove('hidden');
+                aiContainer.classList.add('hidden');
+                fetchNotionStatus();
+            } else if (tab === 'logs') {
+                if (btnLogs) btnLogs.className = activeClass;
+                searchWrapper.classList.add('hidden');
+                techFiltersWrapper.classList.add('hidden');
+                contentContainer.classList.remove('grid');
+                contentContainer.classList.add('hidden');
+                strategistContainer.classList.add('hidden');
+                fundsContainer.classList.add('hidden');
+                notionContainer.classList.add('hidden');
+                aiContainer.classList.add('hidden');
+                if (logsContainer) logsContainer.classList.remove('hidden');
+                startLogsAutoRefresh();
+            } else if (tab === 'sre') {
+                if (btnSRE) btnSRE.className = activeClass;
+                searchWrapper.classList.add('hidden');
+                techFiltersWrapper.classList.add('hidden');
+                contentContainer.classList.remove('grid');
+                contentContainer.classList.add('hidden');
+                strategistContainer.classList.add('hidden');
+                fundsContainer.classList.add('hidden');
+                notionContainer.classList.add('hidden');
+                aiContainer.classList.add('hidden');
+                if (sreContainer) sreContainer.classList.remove('hidden');
+            }
+        }
+
+        function pasteAIPrompt(text) {
+            const input = document.getElementById('ai-prompt-input');
+            if (input) {
+                input.value = text;
+                input.focus();
+                if (!text.endsWith(': ') && !text.endsWith('sobre: ')) {
+                    submitAIPrompt();
+                }
+            }
+        }
+
+        let uploadedImageBase64 = null;
+        let voiceRecognition = null;
+        let isListening = false;
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('conversations-sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('hidden');
+            }
+        }
+
+        function toggleVoiceInput() {
+            const input = document.getElementById('ai-prompt-input');
+            const micBtn = document.getElementById('btn-voice-input');
+            const headerMicBtn = document.getElementById('btn-voice-input-header');
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                alert("Tu navegador o sistema operativo no soporta el reconocimiento de voz nativo en este origen. Si estás usando Chrome sobre HTTP (no localhost/HTTPS), debes configurarlo primero.");
+                return;
+            }
+            
+            if (isListening) {
+                if (voiceRecognition) voiceRecognition.stop();
+                return;
+            }
+            
+            voiceRecognition = new SpeechRecognition();
+            voiceRecognition.lang = 'es-ES';
+            voiceRecognition.continuous = true;
+            voiceRecognition.interimResults = false;
+            
+            voiceRecognition.onstart = () => {
+                isListening = true;
+                [micBtn, headerMicBtn].forEach(btn => {
+                    if (btn) {
+                        btn.classList.remove('bg-white/5');
+                        btn.classList.add('bg-purple-600', 'text-white', 'animate-pulse');
+                        btn.title = "Detener micrófono";
+                    }
+                });
+            };
+            
+            voiceRecognition.onerror = (e) => {
+                console.error("Error en reconocimiento de voz:", e);
+                stopVoiceRecognition();
+                
+                if (e.error === 'not-allowed') {
+                    alert("Acceso al micrófono denegado.\n\n" +
+                          "Nota importante de seguridad: Los navegadores modernos bloquean el micrófono en conexiones HTTP no seguras.\n" +
+                          "Para solucionarlo en Chrome, visita:\n" +
+                          "  chrome://flags/#unsafely-treat-insecure-origin-as-secure\n\n" +
+                          "Habilita la opción e ingresa tu URL actual: http://" + window.location.host);
+                } else if (e.error === 'no-speech') {
+                    // Quiet failure, just stop
+                } else {
+                    alert("Error de micrófono (" + e.error + "). Asegúrate de tener un micrófono activo.");
+                }
+            };
+            
+            voiceRecognition.onend = () => {
+                stopVoiceRecognition();
+            };
+            
+            voiceRecognition.onresult = (event) => {
+                let finalTranscripts = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscripts += event.results[i][0].transcript + ' ';
+                    }
+                }
+                if (finalTranscripts.trim()) {
+                    input.value = (input.value ? input.value + " " : "") + finalTranscripts.trim();
+                    input.focus();
+                    scrollToBottom();
+                }
+            };
+            
+            try {
+                voiceRecognition.start();
+            } catch (err) {
+                console.error("No se pudo iniciar el servicio de voz:", err);
+                alert("Error de seguridad o de origen al iniciar el micrófono.");
+            }
+        }
+        
+        function stopVoiceRecognition() {
+            isListening = false;
+            const micBtn = document.getElementById('btn-voice-input');
+            const headerMicBtn = document.getElementById('btn-voice-input-header');
+            [micBtn, headerMicBtn].forEach(btn => {
+                if (btn) {
+                    btn.classList.remove('bg-purple-600', 'text-white', 'animate-pulse');
+                    btn.classList.add('bg-white/5');
+                    btn.title = btn.id === 'btn-voice-input' ? "Grabar voz" : "Iniciar micrófono para hablar";
+                }
+            });
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'es-ES';
+                
+                const voices = window.speechSynthesis.getVoices();
+                const esVoice = voices.find(v => v.lang.startsWith('es'));
+                if (esVoice) utterance.voice = esVoice;
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Tu navegador no soporta síntesis de voz.");
+            }
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedImageBase64 = e.target.result;
+                document.getElementById('image-preview').src = uploadedImageBase64;
+                document.getElementById('image-preview-container').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function removeUploadedImage() {
+            uploadedImageBase64 = null;
+            document.getElementById('image-upload-input').value = "";
+            document.getElementById('image-preview').src = "";
+            document.getElementById('image-preview-container').classList.add('hidden');
+        }
+
+        let activeConversationId = null;
+
+        const scrollToBottom = () => {
+            const history = document.getElementById('chat-history');
+            if (history) {
+                setTimeout(() => {
+                    history.scrollTop = history.scrollHeight;
+                }, 50);
+            }
+        };
+
+        // Bind Enter key on prompt input to submit, Shift+Enter for newline
+        window.addEventListener('DOMContentLoaded', () => {
+            const promptInput = document.getElementById('ai-prompt-input');
+            if (promptInput) {
+                promptInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        submitAIPrompt();
+                    }
+                });
+            }
+        });
+
+        async function loadConversations() {
+            try {
+                const res = await fetch('/api/ai/conversations');
+                const data = await res.json();
+                renderConversationsList(data.conversations);
+                
+                if (data.conversations && data.conversations.length > 0) {
+                    if (!activeConversationId) {
+                        activeConversationId = data.conversations[0].conversation_id;
+                    }
+                    await selectConversation(activeConversationId, false);
+                } else {
+                    clearActiveChatHistoryUI();
+                }
+            } catch (err) {
+                console.error("Error cargando conversaciones:", err);
+            }
+        }
+
+        function renderConversationsList(conversations) {
+            const list = document.getElementById('conversations-list');
+            if (!list) return;
+            list.innerHTML = '';
+            
+            conversations.forEach(c => {
+                const isActive = c.conversation_id === activeConversationId;
+                const div = document.createElement('div');
+                div.className = `group flex items-center justify-between p-2.5 rounded-xl text-xs transition duration-200 border cursor-pointer ${
+                    isActive 
+                        ? 'bg-purple-600/25 border-purple-500 text-white' 
+                        : 'bg-white/5 border-white/5 text-gray-300 hover:bg-white/10 hover:text-white'
+                }`;
+                
+                div.onclick = (e) => {
+                    if (e.target.closest('button')) return;
+                    selectConversation(c.conversation_id);
+                };
+
+                const titleSpan = document.createElement('span');
+                titleSpan.className = 'truncate font-medium flex-1 pr-2';
+                titleSpan.innerText = c.title || 'Conversación Nueva';
+                div.appendChild(titleSpan);
+
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity';
+                
+                const btnRename = document.createElement('button');
+                btnRename.className = 'p-1 hover:bg-purple-600/50 rounded text-purple-300 transition';
+                btnRename.title = 'Renombrar';
+                btnRename.innerHTML = `
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                    </svg>
+                `;
+                btnRename.onclick = (e) => {
+                    e.stopPropagation();
+                    renameConversationPrompt(c.conversation_id, c.title);
+                };
+                actionsDiv.appendChild(btnRename);
+
+                const btnDelete = document.createElement('button');
+                btnDelete.className = 'p-1 hover:bg-red-600/50 rounded text-red-300 transition';
+                btnDelete.title = 'Eliminar';
+                btnDelete.innerHTML = `
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                `;
+                btnDelete.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteConversationConfirm(c.conversation_id);
+                };
+                actionsDiv.appendChild(btnDelete);
+
+                div.appendChild(actionsDiv);
+                list.appendChild(div);
+            });
+        }
+
+        async function createNewConversation() {
+            try {
+                const res = await fetch('/api/ai/conversations', { method: 'POST' });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    activeConversationId = data.conversation.conversation_id;
+                    await loadConversations();
+                }
+            } catch (err) {
+                console.error("Error creando nueva conversación:", err);
+            }
+        }
+
+        async function selectConversation(convId, shouldFocus = true) {
+            activeConversationId = convId;
+            await loadConversationsWithoutSelecting();
+            await loadActiveChatHistory();
+            if (shouldFocus) {
+                const input = document.getElementById('ai-prompt-input');
+                if (input) input.focus();
+            }
+        }
+
+        async function loadConversationsWithoutSelecting() {
+            try {
+                const res = await fetch('/api/ai/conversations');
+                const data = await res.json();
+                renderConversationsList(data.conversations);
+            } catch (err) {
+                console.error("Error cargando conversaciones sin seleccionar:", err);
+            }
+        }
+
+        async function loadActiveChatHistory() {
+            if (!activeConversationId) {
+                clearActiveChatHistoryUI();
+                return;
+            }
+            try {
+                const res = await fetch(`/api/ai/conversations/${activeConversationId}/history`);
+                const data = await res.json();
+                const history = document.getElementById('chat-history');
+                if (!history) return;
+                
+                const welcomeHtml = `
+                    <div class="flex flex-col items-start gap-1.5 self-start max-w-[85%]">
+                        <span class="text-[10px] text-purple-400 font-semibold font-mono">RALPHI IA</span>
+                        <div id="welcome-message" class="bg-white/5 text-gray-200 rounded-2xl rounded-tl-none px-4 py-3 border border-white/5 text-sm leading-relaxed whitespace-pre-wrap id-lang" data-key="welcome-msg">${translations[currentLang]["welcome-msg"]}</div>
+                    </div>
+                `;
+                history.innerHTML = welcomeHtml;
+                
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach(msg => {
+                        const div = document.createElement('div');
+                        if (msg.role === 'user') {
+                            div.className = "flex flex-col items-end gap-1.5 self-end max-w-[85%]";
+                            let imgHtml = "";
+                            if (msg.image) {
+                                imgHtml = `<div class="mt-2"><img src="data:image/png;base64,${msg.image}" class="max-w-[200px] max-h-[150px] rounded-lg border border-white/10 object-cover"></div>`;
+                            }
+                            div.innerHTML = `
+                                <span class="text-[10px] text-gray-500 font-semibold font-mono">TÚ</span>
+                                <div class="bg-purple-600/30 text-white rounded-2xl rounded-tr-none px-4 py-3 border border-purple-500/20 text-sm leading-relaxed whitespace-pre-wrap">
+                                    ${msg.content}
+                                    ${imgHtml}
+                                </div>
+                            `;
+                        } else {
+                            const botMsgId = 'bot-msg-loaded-' + Math.random().toString(36).substr(2, 9);
+                            div.className = "flex flex-col items-start gap-1.5 self-start max-w-[85%]";
+                            div.innerHTML = `
+                                <span class="text-[10px] text-purple-400 font-semibold font-mono">RALPHI IA</span>
+                                <div class="bg-white/5 text-gray-200 rounded-2xl rounded-tl-none px-4 py-3 border border-white/5 text-sm leading-relaxed whitespace-pre-wrap">
+                                    <div id="${botMsgId}-text" class="markdown-body">${msg.content}</div>
+                                    <div class="mt-3 flex items-center gap-2 border-t border-white/5 pt-2">
+                                        <button onclick="speakText(document.getElementById('${botMsgId}-text').innerText)" class="px-2.5 py-1 bg-white/5 hover:bg-purple-600/30 text-[10px] font-semibold text-purple-300 rounded border border-white/10 transition flex items-center gap-1 shadow">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                                            </svg>
+                                            Escuchar
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        history.appendChild(div);
+                    });
+                    scrollToBottom();
+                }
+            } catch (err) {
+                console.error("Error cargando historial de chat:", err);
+            }
+        }
+
+        function clearActiveChatHistoryUI() {
+            const history = document.getElementById('chat-history');
+            if (history) {
+                history.innerHTML = `
+                    <div class="flex flex-col items-start gap-1.5 self-start max-w-[85%]">
+                        <span class="text-[10px] text-purple-400 font-semibold font-mono">RALPHI IA</span>
+                        <div class="bg-white/5 text-gray-200 rounded-2xl rounded-tl-none px-4 py-3 border border-white/5 text-sm leading-relaxed whitespace-pre-wrap id-lang" data-key="no-active-conv">${translations[currentLang]["no-active-conv"]}</div>
+                    </div>
+                `;
+            }
+        }
+
+        async function renameConversationPrompt(convId, currentTitle) {
+            const newTitle = prompt("Renombrar conversación:", currentTitle);
+            if (newTitle === null) return;
+            const trimmed = newTitle.trim();
+            if (!trimmed) return;
+            try {
+                const res = await fetch(`/api/ai/conversations/${convId}/rename`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: trimmed })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    await loadConversations();
+                }
+            } catch (err) {
+                console.error("Error renombrando conversación:", err);
+            }
+        }
+
+        async function deleteConversationConfirm(convId) {
+            if (!confirm("¿Estás seguro de que quieres eliminar esta conversación y todo su historial?")) return;
+            try {
+                const res = await fetch(`/api/ai/conversations/${convId}`, {
+                    method: 'DELETE'
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    if (activeConversationId === convId) {
+                        activeConversationId = null;
+                    }
+                    await loadConversations();
+                }
+            } catch (err) {
+                console.error("Error eliminando conversación:", err);
+            }
+        }
+
+        async function clearActiveChatHistory() {
+            if (!activeConversationId) return;
+            if (!confirm("¿Estás seguro de que quieres limpiar todo el historial de esta conversación?")) return;
+            try {
+                const res = await fetch(`/api/ai/conversations/${activeConversationId}/clear`, { method: 'POST' });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    await loadActiveChatHistory();
+                    window.speechSynthesis.cancel();
+                } else {
+                    alert("No se pudo limpiar el historial.");
+                }
+            } catch (err) {
+                console.error("Error limpiando historial de chat:", err);
+            }
+        }
+
+        async function submitCreateProject(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const logContainer = document.getElementById('project-creation-log');
+            logContainer.classList.remove('hidden');
+            logContainer.innerHTML = "Iniciando creación de proyecto e infraestructura en el servidor...\n";
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = "Creando...";
+            
+            try {
+                const res = await fetch('/api/projects/create', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok && data.status === "success") {
+                    logContainer.innerHTML += `\n\n✅ ¡Éxito!\n${data.message}\n\nDetalles del servidor:\n${data.log}`;
+                    form.reset();
+                } else {
+                    logContainer.innerHTML += `\n\n❌ Error:\n${data.message || 'Error desconocido'}`;
+                    if (data.log) {
+                        logContainer.innerHTML += `\n\nLogs:\n${data.log}`;
+                    }
+                }
+            } catch (err) {
+                logContainer.innerHTML += `\n\n❌ Error de red o del servidor: ${err}`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = "Inicializar Proyecto e Infraestructura";
+            }
+        }
+
+        async function submitAIPrompt() {
+            const input = document.getElementById('ai-prompt-input');
+            const promptVal = input.value.trim();
+            if (!promptVal && !uploadedImageBase64) return;
+            
+            const btn = document.getElementById('btn-ask-ai');
+            const historyContainer = document.getElementById('chat-history-container');
+            const history = document.getElementById('chat-history');
+            
+            input.value = "";
+            historyContainer.classList.remove('hidden');
+            
+            let imgHtml = "";
+            if (uploadedImageBase64) {
+                imgHtml = `<div class="mt-2"><img src="${uploadedImageBase64}" class="max-w-[200px] max-h-[150px] rounded-lg border border-white/10 object-cover"></div>`;
+            }
+            
+            const userDiv = document.createElement('div');
+            userDiv.className = "flex flex-col items-end gap-1.5 self-end max-w-[85%]";
+            userDiv.innerHTML = `
+                <span class="text-[10px] text-gray-500 font-semibold font-mono">TÚ</span>
+                <div class="bg-purple-600/30 text-white rounded-2xl rounded-tr-none px-4 py-3 border border-purple-500/20 text-sm leading-relaxed whitespace-pre-wrap">
+                    ${promptVal || "Imagen adjunta"}
+                    ${imgHtml}
+                </div>
+            `;
+            history.appendChild(userDiv);
+            scrollToBottom();
+            
+            const botMsgId = 'bot-msg-' + Date.now();
+            const botDiv = document.createElement('div');
+            botDiv.className = "flex flex-col items-start gap-1.5 self-start max-w-[85%]";
+            botDiv.innerHTML = `
+                <span class="text-[10px] text-purple-400 font-semibold font-mono">RALPHI IA</span>
+                <div id="${botMsgId}-bubble" class="bg-white/5 text-gray-200 rounded-2xl rounded-tl-none px-4 py-3 border border-white/5 text-sm leading-relaxed whitespace-pre-wrap animate-pulse">
+                    Procesando con Ollama local y base de datos...
+                </div>
+            `;
+            history.appendChild(botDiv);
+            scrollToBottom();
+            
+            const currentImgBase64 = uploadedImageBase64;
+            removeUploadedImage();
+            
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            
+            try {
+                const res = await fetch('/api/ai/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        prompt: promptVal,
+                        images: currentImgBase64 ? [currentImgBase64] : [],
+                        conversation_id: activeConversationId
+                    })
+                });
+                const data = await res.json();
+                
+                if (data.conversation_id && data.conversation_id !== activeConversationId) {
+                    activeConversationId = data.conversation_id;
+                    await loadConversationsWithoutSelecting();
+                }
+                
+                const bubble = document.getElementById(`${botMsgId}-bubble`);
+                bubble.classList.remove('animate-pulse');
+                bubble.innerHTML = `
+                    <div id="${botMsgId}-text" class="markdown-body">${data.response}</div>
+                    <div class="mt-3 flex items-center gap-2 border-t border-white/5 pt-2">
+                        <button onclick="speakText(document.getElementById('${botMsgId}-text').innerText)" class="px-2.5 py-1 bg-white/5 hover:bg-purple-600/30 text-[10px] font-semibold text-purple-300 rounded border border-white/10 transition flex items-center gap-1 shadow">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                            </svg>
+                            Escuchar
+                        </button>
+                    </div>
+                `;
+            } catch (err) {
+                const bubble = document.getElementById(`${botMsgId}-bubble`);
+                bubble.classList.remove('animate-pulse');
+                bubble.innerText = "Error de red o conexión al intentar consultar tu modelo local Ollama.";
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                scrollToBottom();
+            }
+        }
+
+
+        async function fetchNotionStatus() {
+            try {
+                const res = await fetch('/api/notion/status');
+                const data = await res.json();
+                document.getElementById('notion-stat-raw').innerText = data.raw_count;
+                document.getElementById('notion-stat-invoices').innerText = data.invoices_count;
+                document.getElementById('notion-stat-inventory').innerText = data.inventory_count;
+                document.getElementById('notion-stat-reports').innerText = data.reports_count;
+                
+                const mapBox = document.getElementById('notion-map-box');
+                if (data.has_map && data.map_content) {
+                    mapBox.innerText = data.map_content;
+                } else {
+                    mapBox.innerText = "No se ha generado el mapa mental aún. Sincroniza Notion para estructurar tus datos.";
+                }
+            } catch (err) {
+                console.error("Error fetching Notion status:", err);
+            }
+        }
+
+        async function syncNotion() {
+            try {
+                const res = await fetch('/api/notion/sync', { method: 'POST' });
+                const data = await res.json();
+                alert(data.message);
+                setTimeout(fetchNotionStatus, 2000);
+                setTimeout(fetchNotionStatus, 5000);
+            } catch (err) {
+                alert("Error al iniciar sincronización con Notion.");
+            }
+        }
+
+        async function syncContifico() {
+            try {
+                const res = await fetch('/api/contifico/sync', { method: 'POST' });
+                const data = await res.json();
+                alert(data.message);
+                setTimeout(fetchNotionStatus, 2000);
+                setTimeout(fetchNotionStatus, 5000);
+            } catch (err) {
+                alert("Error al iniciar sincronización con Contifico.");
+            }
+        }
+
+        async function resetBusinessData() {
+            if (!confirm("¿Estás seguro de que deseas limpiar todas las facturas, inventario, reportes e importaciones de Notion/Contifico? Esta acción vaciará las colecciones para iniciar desde cero.")) {
+                return;
+            }
+            try {
+                const res = await fetch('/api/db/reset', { method: 'POST' });
+                const data = await res.json();
+                alert(data.message);
+                fetchNotionStatus();
+            } catch (err) {
+                alert("Error al limpiar la base de datos.");
+            }
+        }
+
+        function renderCodebases() {
+            const container = document.getElementById('content-container');
+            container.innerHTML = '';
+            
+            const filtered = allProjects.filter(p => {
+                const searchStr = `${p.url} ${p.prize_won || ''} ${p.files || ''} ${p.dependencies || ''} ${p.readme || ''}`.toLowerCase();
+                const matchesSearch = searchStr.includes(searchQuery.toLowerCase());
+                const matchesTech = selectedTechFilter === '' || searchStr.includes(selectedTechFilter.toLowerCase());
+                return matchesSearch && matchesTech;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full py-12 text-center text-gray-400">No se encontraron proyectos ganadores.</div>`;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "glass-card rounded-2xl p-5 flex flex-col justify-between cursor-pointer";
+                card.onclick = () => openModal(p);
+                
+                // Extraer el nombre del repo
+                const parts = p.url.replace("https://github.com/", "").split("/");
+                const name = parts.length >= 2 ? `${parts[0]}/${parts[1]}` : p.url;
+                
+                card.innerHTML = `
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-start justify-between">
+                            <span class="text-[9px] uppercase font-bold tracking-wider bg-purple-900/60 text-purple-300 px-2 py-0.5 rounded border border-purple-500/20">
+                                ${p.source || 'Devpost Winners'}
+                            </span>
+                            <span class="text-xs text-gray-400 font-medium font-mono">${p.prize_won ? p.prize_won.split(" en ")[0] : "Ganador"}</span>
+                        </div>
+                        <h4 class="text-base font-bold text-white font-title line-clamp-1 mt-1">${name}</h4>
+                        <p class="text-xs text-gray-400 line-clamp-3 leading-relaxed mt-1">
+                            ${p.readme ? p.readme.substring(0, 180).replace(/[#`*]/g, "") + '...' : 'Sin descripción disponible.'}
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-white/5 pt-4 mt-4 text-[11px]">
+                        <span class="text-indigo-400 font-semibold truncate max-w-[150px]">${p.prize_won ? p.prize_won.split(" en '")[1]?.replace("'", "") || "" : ""}</span>
+                        <span class="text-gray-500 font-mono">Ver Código &rarr;</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderCommunity() {
+            const container = document.getElementById('content-container');
+            container.innerHTML = '';
+            
+            let ihList = allCommunity.indiehackers;
+            let hnList = allCommunity.hackernews;
+            
+            if (activeCommunityType === 'ih') {
+                hnList = [];
+            } else if (activeCommunityType === 'hn') {
+                ihList = [];
+            }
+            
+            const ihFiltered = ihList.filter(i => {
+                const matchesSearch = i.title.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesTech = selectedTechFilter === '' || i.title.toLowerCase().includes(selectedTechFilter.toLowerCase());
+                return matchesSearch && matchesTech;
+            });
+            const hnFiltered = hnList.filter(h => {
+                const matchesSearch = h.title.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesTech = selectedTechFilter === '' || h.title.toLowerCase().includes(selectedTechFilter.toLowerCase());
+                return matchesSearch && matchesTech;
+            });
+
+            if (ihFiltered.length === 0 && hnFiltered.length === 0) {
+                container.innerHTML = `<div class="col-span-full py-12 text-center text-gray-400">No se encontraron hilos ni proyectos de comunidad.</div>`;
+                return;
+            }
+
+            // Render Indie Hackers
+            ihFiltered.forEach(item => {
+                const card = document.createElement('a');
+                card.href = item.url;
+                card.target = "_blank";
+                card.className = "glass-card rounded-2xl p-5 flex flex-col justify-between";
+                card.innerHTML = `
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[9px] uppercase font-bold tracking-wider bg-orange-950/60 text-orange-400 px-2 py-0.5 rounded border border-orange-500/20">
+                                INDIE HACKERS
+                            </span>
+                        </div>
+                        <h4 class="text-sm font-semibold text-white font-title line-clamp-2 mt-1 leading-snug">${item.title}</h4>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-white/5 pt-4 mt-4 text-xs">
+                        <span class="text-gray-500 truncate break-all max-w-[200px] font-mono">${item.url.replace("https://www.", "")}</span>
+                        <span class="text-orange-400 font-medium">Leer Hilo &rarr;</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Render Hacker News Show HN
+            hnFiltered.forEach(item => {
+                const card = document.createElement('a');
+                card.href = item.url;
+                card.target = "_blank";
+                card.className = "glass-card rounded-2xl p-5 flex flex-col justify-between";
+                card.innerHTML = `
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[9px] uppercase font-bold tracking-wider bg-emerald-950/60 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">
+                                SHOW HN
+                            </span>
+                            <span class="text-xs text-gray-400 font-mono">${item.points} pts</span>
+                        </div>
+                        <h4 class="text-sm font-semibold text-white font-title line-clamp-2 mt-1 leading-snug">${item.title}</h4>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-white/5 pt-4 mt-4 text-xs">
+                        <span class="text-gray-500 font-mono">por ${item.author || "hn"}</span>
+                        <span class="text-emerald-400 font-medium">Ver Show HN &rarr;</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('search-input').value;
+            if (activeTab === 'codebases') {
+                renderCodebases();
+            } else {
+                renderCommunity();
+            }
+        }
+
+        async function runScraper() {
+            try {
+                const res = await fetch('/api/scrape/run', { method: 'POST' });
+                const data = await res.json();
+                alert(data.message);
+                fetchStats();
+            } catch (err) {
+                alert("Error al iniciar la minería.");
+            }
+        }
+
+        let activeProjectUrl = '';
+        let analysisPollInterval = null;
+
+        function openModal(project) {
+            activeProjectUrl = project.url;
+            document.getElementById('modal-title').innerText = project.url.replace("https://github.com/", "");
+            document.getElementById('modal-prize').innerText = project.prize_won || "Ganador (Categoría general)";
+            document.getElementById('modal-url').innerText = project.url;
+            document.getElementById('modal-url').href = project.url;
+            document.getElementById('modal-hackathon').innerText = project.prize_won?.split(" en la hackatón '")[1]?.replace("'", "") || "Devpost Event";
+            document.getElementById('modal-files').innerText = project.files || "Ninguno detectado en raíz";
+            document.getElementById('modal-deps').innerText = project.dependencies || "Sin dependencias de Node/Python detectadas";
+            document.getElementById('modal-readme').innerText = project.readme || "Sin README disponible.";
+            
+            // Cargar Análisis Profundo si existe
+            const analysisContent = document.getElementById('modal-analysis-content');
+            const btnText = document.getElementById('analyze-btn-text');
+            const btn = document.getElementById('btn-analyze');
+            
+            if (project.deep_analysis) {
+                analysisContent.innerText = project.deep_analysis;
+                btnText.innerText = "Reanalizar Código con IA";
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                document.getElementById('btn-export').classList.remove('hidden');
+            } else {
+                analysisContent.innerText = "El análisis de código no se ha generado aún. Haz clic en el botón de arriba para iniciar la auditoría utilizando tus modelos locales.";
+                btnText.innerText = "Analizar Código con IA";
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                document.getElementById('btn-export').classList.add('hidden');
+            }
+            
+            // Revisar si ya se está analizando en segundo plano
+            checkAnalysisStatus(project.url);
+            
+            document.getElementById('viewer-modal').classList.remove('hidden');
+        }
+
+        function exportAnalysis() {
+            if (!activeProjectUrl) return;
+            const project = allProjects.find(p => p.url === activeProjectUrl);
+            if (!project || !project.deep_analysis) return;
+            
+            const parts = project.url.replace("https://github.com/", "").split("/");
+            const name = parts.length >= 2 ? `${parts[0]}_${parts[1]}` : 'analisis';
+            
+            const blob = new Blob([project.deep_analysis], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `analisis_${name}.md`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+
+        async function checkAnalysisStatus(url) {
+            try {
+                const res = await fetch(`/api/projects/analyze/status?url=${encodeURIComponent(url)}`);
+                const data = await res.json();
+                const btn = document.getElementById('btn-analyze');
+                const btnText = document.getElementById('analyze-btn-text');
+                
+                if (data.is_analyzing) {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    btnText.innerText = "Analizando con Ollama...";
+                    startPolling(url);
+                }
+            } catch (err) {
+                console.error("Error checking analysis status:", err);
+            }
+        }
+
+        async function requestAnalysis() {
+            if (!activeProjectUrl) return;
+            
+            const btn = document.getElementById('btn-analyze');
+            const btnText = document.getElementById('analyze-btn-text');
+            const analysisContent = document.getElementById('modal-analysis-content');
+            
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btnText.innerText = "Iniciando análisis...";
+            analysisContent.innerText = "Descargando archivos fuente de GitHub y conectando con Ollama (qwen2.5-coder:7b) local en tu tarjeta gráfica...\n\nEsto puede tardar entre 30 y 60 segundos. Por favor espera.";
+            
+            try {
+                const res = await fetch('/api/projects/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: activeProjectUrl })
+                });
+                
+                const data = await res.json();
+                if (res.ok) {
+                    btnText.innerText = "Analizando con Ollama...";
+                    startPolling(activeProjectUrl);
+                } else {
+                    alert(data.message || "Error al iniciar análisis.");
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    btnText.innerText = "Analizar Código con IA";
+                }
+            } catch (err) {
+                alert("Error de conexión al solicitar análisis.");
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnText.innerText = "Analizar Código con IA";
+            }
+        }
+
+        function startPolling(url) {
+            if (analysisPollInterval) clearInterval(analysisPollInterval);
+            
+            analysisPollInterval = setInterval(async () => {
+                try {
+                    const res = await fetch(`/api/projects/analyze/status?url=${encodeURIComponent(url)}`);
+                    const data = await res.json();
+                    
+                    if (!data.is_analyzing) {
+                        clearInterval(analysisPollInterval);
+                        analysisPollInterval = null;
+                        
+                        // Refrescar proyectos para cargar la respuesta
+                        await fetchProjects();
+                        
+                        // Si el modal sigue abierto con el mismo proyecto, recargarlo
+                        if (activeProjectUrl === url) {
+                            const updatedProject = allProjects.find(p => p.url === url);
+                            if (updatedProject) {
+                                openModal(updatedProject);
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.error("Error polling analysis status:", err);
+                }
+            }, 3000);
+        }
+
+        let activeStrategyData = null;
+        let strategistPollInterval = null;
+
+        async function runStrategist() {
+            const urlInput = document.getElementById('strategist-url');
+            const url = urlInput.value.trim();
+            if (!url) {
+                alert("Por favor ingresa la URL o el subdominio del hackatón de Devpost.");
+                return;
+            }
+
+            const techsInput = document.getElementById('strategist-techs');
+            const requiredTechsArray = techsInput.value ? techsInput.value.split(',').map(t => t.trim()).filter(t => t) : [];
+            
+            const promptInput = document.getElementById('strategist-prompt');
+            const customPrompt = promptInput.value.trim();
+
+            const btn = document.getElementById('btn-generate-strategy');
+            const btnText = document.getElementById('btn-strategy-text');
+            const resultBox = document.getElementById('strategy-result-box');
+            const markdownContent = document.getElementById('strategy-markdown-content');
+
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btnText.innerText = "Raspando & Analizando con IA...";
+            resultBox.classList.remove('hidden');
+            markdownContent.innerText = "Iniciando raspado de la hackatón, buscando referencias de ganadores pasados en MongoDB y ejecutando qwen2.5-coder:7b para el diseño estratégico...\n\nEsto puede tardar entre 40 y 90 segundos. Por favor, no cierres esta pestaña.";
+
+            try {
+                const res = await fetch('/api/strategist/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        url: url,
+                        required_techs: requiredTechsArray,
+                        custom_prompt: customPrompt
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    startStrategistPolling(url);
+                } else {
+                    alert(data.message || "Error al iniciar el estratega.");
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    btnText.innerText = "Generar Plan Estratégico";
+                }
+            } catch (err) {
+                alert("Error de red al conectar con el servidor.");
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnText.innerText = "Generar Plan Estratégico";
+            }
+        }
+
+        function startStrategistPolling(url) {
+            if (strategistPollInterval) clearInterval(strategistPollInterval);
+            
+            const btn = document.getElementById('btn-generate-strategy');
+            const btnText = document.getElementById('btn-strategy-text');
+            const resultBox = document.getElementById('strategy-result-box');
+            const markdownContent = document.getElementById('strategy-markdown-content');
+            const titleEl = document.getElementById('strategy-title');
+            const similarEl = document.getElementById('strategy-similar-projects');
+
+            strategistPollInterval = setInterval(async () => {
+                try {
+                    const res = await fetch(`/api/strategist/status?url=${encodeURIComponent(url)}`);
+                    const data = await res.json();
+                    
+                    if (!data.is_analyzing) {
+                        clearInterval(strategistPollInterval);
+                        strategistPollInterval = null;
+                        
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        btnText.innerText = "Generar Plan Estratégico";
+
+                        if (data.result && data.result.status === 'success') {
+                            activeStrategyData = data.result;
+                            titleEl.innerText = `Estrategia de Proyecto para: ${data.result.title}`;
+                            markdownContent.innerText = data.result.strategy;
+                            
+                            // Render similar projects badges
+                            similarEl.innerHTML = '';
+                            if (data.result.similar_projects && data.result.similar_projects.length > 0) {
+                                data.result.similar_projects.forEach(p => {
+                                    const badge = document.createElement('a');
+                                    badge.href = p.url;
+                                    badge.target = "_blank";
+                                    badge.className = "text-xs bg-purple-950/60 text-purple-300 px-3 py-1.5 rounded-lg border border-purple-500/20 hover:bg-purple-900/60 transition";
+                                    badge.innerText = p.url.replace("https://github.com/", "") + " (" + p.prize.split(" en ")[0] + ")";
+                                    similarEl.appendChild(badge);
+                                });
+                            } else {
+                                similarEl.innerHTML = `<span class="text-xs text-gray-500">Sin ganadores previos relacionados en base de datos.</span>`;
+                            }
+                        } else {
+                            markdownContent.innerText = "Error: El análisis falló. Asegúrate de que la URL de Devpost es válida y de que Ollama está activo.";
+                        }
+                    }
+                } catch (err) {
+                    console.error("Error polling strategist status:", err);
+                }
+            }, 3000);
+        }
+
+        function downloadStrategyMD() {
+            if (!activeStrategyData || !activeStrategyData.strategy) return;
+            const blob = new Blob([activeStrategyData.strategy], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `estrategia_${activeStrategyData.title.toLowerCase().replace(/[^a-z0-9]+/g, "_")}.md`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        let allFunds = [];
+        
+        async function fetchFunds() {
+            try {
+                const res = await fetch('/api/funds');
+                const data = await res.json();
+                if (Array.isArray(data)) {
+                    allFunds = data;
+                } else {
+                    console.error("Funds API did not return an array:", data);
+                    allFunds = [];
+                }
+                renderFunds();
+            } catch (err) {
+                console.error("Error fetching funds:", err);
+                allFunds = [];
+                renderFunds();
+            }
+        }
+
+        function renderFunds() {
+            const container = document.getElementById('funds-list');
+            container.innerHTML = '';
+            
+            if (allFunds.length === 0) {
+                container.innerHTML = `<div class="col-span-full py-8 text-center text-gray-400">No se encontraron programas de financiamiento cargados.</div>`;
+                return;
+            }
+
+            allFunds.forEach(f => {
+                const card = document.createElement('div');
+                card.className = "bg-white/5 rounded-2xl p-5 border border-white/5 flex flex-col justify-between";
+                card.innerHTML = `
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[9px] uppercase font-bold tracking-wider bg-indigo-950/60 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/20 font-mono">
+                                ${f.type}
+                            </span>
+                            <span class="text-xs text-emerald-400 font-bold font-mono">${f.amount}</span>
+                        </div>
+                        <h4 class="text-base font-bold text-white font-title mt-1">${f.name}</h4>
+                        <span class="text-xs text-gray-500 font-mono">Proveedor: ${f.provider}</span>
+                        <p class="text-xs text-gray-400 leading-relaxed mt-2 font-sans">${f.description}</p>
+                        
+                        <div class="bg-black/35 rounded-xl p-3 border border-white/5 mt-3">
+                            <span class="text-[10px] text-purple-300 font-semibold block mb-1">Requisitos clave:</span>
+                            <span class="text-[11px] text-gray-300 leading-normal block font-sans">${f.requirements}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-white/5 pt-4 mt-4 text-xs">
+                        <span class="text-gray-500 font-mono">Estado: ${f.status}</span>
+                        <a href="${f.link}" target="_blank" class="text-purple-400 hover:text-purple-300 font-semibold flex items-center gap-1">
+                            <span>Aplicar</span> &rarr;
+                        </a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function syncFunds() {
+            try {
+                const res = await fetch('/api/funds/sync', { method: 'POST' });
+                const data = await res.json();
+                alert(data.message);
+                // Esperar un momento y recargar
+                setTimeout(fetchFunds, 2000);
+            } catch (err) {
+                alert("Error al iniciar el escaneo de fondos.");
+            }
+        }
+
+        function closeModal() {
+            if (analysisPollInterval) {
+                clearInterval(analysisPollInterval);
+                analysisPollInterval = null;
+            }
+            document.getElementById('viewer-modal').classList.add('hidden');
+        }
+
+        // Canvas Star & Circuit Background Animation (Futuristic Digital Mesh)
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const bgParticles = [];
+        const numBgParticles = 35; // Fewer particles for a cleaner, more elegant look
+
+        for (let i = 0; i < numBgParticles; i++) {
+            bgParticles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.25,
+                vy: (Math.random() - 0.5) * 0.25,
+                radius: Math.random() * 2 + 1,
+                pulseOffset: Math.random() * Math.PI * 2,
+                pulses: [] // Data pulses traveling along connections
+            });
+        }
+
+        function drawBackground() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw subtle matrix coordinate grid
+            ctx.strokeStyle = 'rgba(147, 51, 234, 0.02)';
+            ctx.lineWidth = 0.5;
+            const gridSize = 100;
+            for (let x = 0; x < width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            // Update particle positions
+            for (let i = 0; i < bgParticles.length; i++) {
+                const p1 = bgParticles[i];
+                p1.x += p1.vx;
+                p1.y += p1.vy;
+                
+                // Boundaries check
+                if (p1.x < 0 || p1.x > width) p1.vx *= -1;
+                if (p1.y < 0 || p1.y > height) p1.vy *= -1;
+                
+                // Draw glowing circuit nodes
+                p1.pulseOffset += 0.02;
+                const glow = Math.sin(p1.pulseOffset) * 0.4 + 0.6;
+                
+                ctx.fillStyle = `rgba(168, 85, 247, ${glow * 0.25})`;
+                ctx.shadowColor = '#a855f7';
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(p1.x, p1.y, p1.radius + 1, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillStyle = `rgba(255, 255, 255, ${glow * 0.7})`;
+                ctx.shadowBlur = 0; // Reset shadow for lines
+                ctx.beginPath();
+                ctx.arc(p1.x, p1.y, p1.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+        // Notifications state
+        let notificationsModalOpen = false;
+        
+        function toggleNotificationsModal() {
+            const modal = document.getElementById('notifications-modal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                fetchNotifications();
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+        
+        async function fetchNotifications() {
+            try {
+                const res = await fetch('/api/notifications');
+                let data = await res.json();
+                const list = document.getElementById('notifications-list');
+                list.innerHTML = '';
+                
+                if (!Array.isArray(data)) {
+                    console.error("Notifications API did not return an array:", data);
+                    data = [];
+                }
+                
+                if (data.length === 0) {
+                    list.innerHTML = `<p class="text-xs text-gray-500 py-4 text-center font-sans">No hay notificaciones nuevas.</p>`;
+                    return;
+                }
+                
+                data.forEach(n => {
+                    const item = document.createElement('div');
+                    item.className = "py-3 flex flex-col gap-1 first:pt-0";
+                    item.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold ${n.read ? 'text-gray-400' : 'text-amber-400'}">${n.title}</span>
+                            <span class="text-[9px] text-gray-500 font-mono">${n.date}</span>
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed font-sans">${n.message}</p>
+                        ${n.url ? `<a href="${n.url}" target="_blank" class="text-[10px] text-purple-400 hover:underline mt-1 w-fit">Ver Convocatoria →</a>` : ''}
+                    `;
+                    list.appendChild(item);
+                });
+            } catch(e) {
+                console.error("Error fetching notifications:", e);
+            }
+        }
+        
+        async function markAllNotificationsAsRead() {
+            try {
+                await fetch('/api/notifications/read', { method: 'POST' });
+                fetchStats();
+                fetchNotifications();
+            } catch(e) {
+                console.error(e);
+            }
+        }
+        
+        // GitHub & Multi-source Search
+        async function runGithubSearch() {
+            const input = document.getElementById('github-search-input');
+            const query = input.value.trim();
+            if (!query) return;
+            
+            const resultsBox = document.getElementById('github-search-results');
+            resultsBox.innerHTML = `
+                <div class="flex items-center justify-center py-8">
+                    <svg class="animate-spin h-6 w-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+            `;
+            
+            try {
+                const res = await fetch(`/api/repos/search?q=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                resultsBox.innerHTML = '';
+                
+                // Render GitHub repos
+                if (data.github && data.github.length > 0) {
+                    const header = document.createElement('h4');
+                    header.className = "text-xs font-bold text-purple-400 mt-2 mb-1 border-b border-white/5 pb-1 font-title";
+                    header.innerText = `Código & Repositorios de GitHub (${data.github.length})`;
+                    resultsBox.appendChild(header);
+                    
+                    data.github.forEach(repo => {
+                        const item = document.createElement('div');
+                        item.className = "py-3 flex items-start justify-between gap-4 border-b border-white/5 last:border-0";
+                        item.innerHTML = `
+                            <div class="flex flex-col gap-1">
+                                <span class="text-sm font-bold text-white font-title">${repo.title}</span>
+                                <p class="text-xs text-gray-400 leading-normal font-sans">${repo.description}</p>
+                                <div class="flex items-center gap-3 text-[10px] text-gray-500 font-mono mt-1">
+                                    <span class="text-amber-400 font-bold">★ ${repo.stars}</span>
+                                    <span>Lenguaje: ${repo.language}</span>
+                                </div>
+                            </div>
+                            <button onclick="importRepo('${repo.url}')" class="px-3 py-1.5 bg-purple-900/40 hover:bg-purple-800/60 text-purple-300 text-xs font-semibold rounded-lg border border-purple-500/20 transition duration-150 whitespace-nowrap">
+                                Importar
+                            </button>
+                        `;
+                        resultsBox.appendChild(item);
+                    });
+                }
+                
+                // Render Lablab articles / tutorials
+                if (data.lablab && data.lablab.length > 0) {
+                    const header = document.createElement('h4');
+                    header.className = "text-xs font-bold text-indigo-400 mt-4 mb-1 border-b border-white/5 pb-1 font-title";
+                    header.innerText = `Tutoriales & Artículos Lablab.ai (${data.lablab.length})`;
+                    resultsBox.appendChild(header);
+                    
+                    data.lablab.forEach(doc => {
+                        const item = document.createElement('div');
+                        item.className = "py-3 flex items-center justify-between gap-4 border-b border-white/5 last:border-0";
+                        item.innerHTML = `
+                            <div class="flex flex-col gap-1">
+                                <span class="text-sm font-bold text-white font-title">${doc.title}</span>
+                                <span class="text-[9px] uppercase font-bold tracking-wider bg-indigo-950/60 text-indigo-400 px-1.5 py-0.5 rounded w-fit border border-indigo-500/20 font-mono mt-0.5">${doc.type}</span>
+                            </div>
+                            <a href="${doc.url}" target="_blank" class="px-3 py-1.5 bg-indigo-900/40 hover:bg-indigo-800/60 text-indigo-300 text-xs font-semibold rounded-lg border border-indigo-500/20 transition duration-150 whitespace-nowrap">
+                                Abrir
+                            </a>
+                        `;
+                        resultsBox.appendChild(item);
+                    });
+                }
+                
+                // Render local community results (IH & HN)
+                if (data.community && data.community.length > 0) {
+                    const header = document.createElement('h4');
+                    header.className = "text-xs font-bold text-orange-400 mt-4 mb-1 border-b border-white/5 pb-1 font-title";
+                    header.innerText = `Debates & Startup Ideas (IH / HN) (${data.community.length})`;
+                    resultsBox.appendChild(header);
+                    
+                    data.community.forEach(t => {
+                        const item = document.createElement('div');
+                        item.className = "py-3 flex items-start justify-between gap-4 border-b border-white/5 last:border-0";
+                        item.innerHTML = `
+                            <div class="flex flex-col gap-1">
+                                <span class="text-sm font-bold text-white font-title">${t.title}</span>
+                                <p class="text-xs text-gray-400 leading-normal font-sans">${t.description}</p>
+                                <span class="text-[9px] uppercase font-bold bg-orange-950/60 text-orange-400 px-1.5 py-0.5 rounded w-fit border border-orange-500/20 font-mono mt-0.5">${t.source}</span>
+                            </div>
+                            <a href="${t.url}" target="_blank" class="px-3 py-1.5 bg-orange-900/40 hover:bg-orange-800/60 text-orange-300 text-xs font-semibold rounded-lg border border-orange-500/20 transition duration-150 whitespace-nowrap">
+                                Leer Hilo
+                            </a>
+                        `;
+                        resultsBox.appendChild(item);
+                    });
+                }
+                
+                if (data.total === 0) {
+                    resultsBox.innerHTML = `<p class="text-xs text-gray-500 py-6 text-center font-sans">No se encontraron resultados para esta búsqueda.</p>`;
+                }
+            } catch(e) {
+                console.error("Error searching:", e);
+                resultsBox.innerHTML = `<p class="text-xs text-red-400 py-6 text-center font-sans">Error al realizar la búsqueda.</p>`;
+            }
+        }
+        
+        async function importRepo(url) {
+            try {
+                alert("Iniciando importación y clonación en segundo plano. Esto puede demorar unos segundos...");
+                const res = await fetch('/api/repos/import', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({url: url})
+                });
+                const data = await res.json();
+                alert(data.message);
+                fetchStats();
+                fetchProjects();
+            } catch(e) {
+                alert("Error al importar repositorio.");
+            }
+        }
+
+        let logsIntervalId = null;
+
+        async function loadTerminalLogs() {
+            const fileSelect = document.getElementById('log-file-select');
+            const linesSelect = document.getElementById('log-lines-select');
+            if (!fileSelect || !linesSelect) return;
+            
+            const file = fileSelect.value;
+            const lines = linesSelect.value;
+            
+            try {
+                const res = await fetch(`/api/logs?file=${encodeURIComponent(file)}&lines=${lines}`);
+                const data = await res.json();
+                
+                const terminal = document.getElementById('terminal-log-content');
+                if (terminal) {
+                    if (data.status === 'success') {
+                        terminal.innerText = data.logs || 'El archivo está vacío.';
+                        // Auto scroll to bottom
+                        terminal.scrollTop = terminal.scrollHeight;
+                    } else {
+                        terminal.innerText = 'Error al cargar logs: ' + data.message;
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading logs:", err);
+            }
+        }
+
+        function startLogsAutoRefresh() {
+            stopLogsAutoRefresh();
+            loadTerminalLogs();
+            logsIntervalId = setInterval(loadTerminalLogs, 3000);
+        }
+
+        function stopLogsAutoRefresh() {
+            if (logsIntervalId) {
+                clearInterval(logsIntervalId);
+                logsIntervalId = null;
+            }
+        }
+
+        // Connect nodes & draw data pulses
+        for (let j = i + 1; j < bgParticles.length; j++) {
+            const p2 = bgParticles[j];
+            const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+            if (dist < 200) {
+                // Draw line
+                ctx.strokeStyle = `rgba(139, 92, 246, ${(1 - dist/200) * 0.08})`;
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+                
+                // Draw data pulse traveling along the circuit line
+                const pulseTime = (Date.now() / 1500 + i * 0.5) % 1;
+                const pulseX = p1.x + (p2.x - p1.x) * pulseTime;
+                const pulseY = p1.y + (p2.y - p1.y) * pulseTime;
+                
+                ctx.fillStyle = `rgba(255, 255, 255, ${(1 - dist/200) * 0.45})`;
+                ctx.shadowColor = '#a855f7';
+                ctx.shadowBlur = 5;
+                ctx.beginPath();
+                ctx.arc(pulseX, pulseY, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0; // Reset
+            }
+        }
+    }
+    requestAnimationFrame(drawBackground);
+}
+drawBackground();
+</script>
+</body>
+</html>

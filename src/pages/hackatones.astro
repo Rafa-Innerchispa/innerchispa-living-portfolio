@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+---
+<Base title="Hackatones" description="Lista curada de convocatorias y pistas activas.">
+  <section class="hero">
+    <span class="eyebrow" data-es="Hackatones" data-en="Hackathons" data-de="Hackathons" data-fr="Hackathons">Hackatones</span>
+    <h1 data-es="Convocatorias activas, elegibilidad y estrategia." data-en="Active calls, eligibility, and strategy." data-de="Aktive Ausschreibungen, Eignung und Strategie." data-fr="Appels actifs, éligibilité et stratégie.">Convocatorias activas, elegibilidad y estrategia.</h1>
+    <p data-es="Ruta de trabajo para minar oportunidades, decidir entidad y producir entregables reutilizables." data-en="Work path to mine opportunities, decide entity, and produce reusable deliverables." data-de="Arbeitsweg zur Erschließung von Chancen, zur Entscheidung über die Entität und zur Erstellung wiederverwendbarer Ergebnisse." data-fr="Chemin de travail pour miner les opportunités, décider de l'entité et produire des livrables réutilisables.">Ruta de trabajo para minar oportunidades, decidir entidad y producir entregables reutilizables.</p>
+  </section>
+  <div class="grid cols-2">
+    {site.hackathons.map((item) => {
+      const cover = item.images && item.images.length > 0 ? item.images[0].url : null;
+      const coverUrl = cover ? (cover.startsWith('/') ? baseUrl + cover.slice(1) : cover) : null;
+      return (
+        <article class="card stack" style="overflow: hidden; padding: 0; background: var(--panel);">
+          {coverUrl && (
+            <div style="aspect-ratio: 3/2; overflow: hidden; border-bottom: 1px solid var(--line);">
+              <img src={coverUrl} alt={item.title} style="width:100%; height:100%; object-fit:cover;" />
+            </div>
+          )}
+          <div class="stack" style="padding: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="badge" style="margin:0;">{item.status}</span>
+            </div>
+            <h2 style="font-size: 1.4rem; color: #fff; margin-top: 8px;">{item.title}</h2>
+            <p style="font-size: 0.92rem; line-height: 1.5; color: var(--muted);">{item.summary}</p>
+            
+            {item.technologies && item.technologies.length > 0 && (
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
+                {item.technologies.map((tech: string) => (
+                  <span class="pill" style="font-size: 0.75rem; padding: 3px 8px;">{tech}</span>
+                ))}
+              </div>
+            )}
+
+            {item.milestones && item.milestones.length > 0 && (
+              <div style="margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px;">
+                <strong style="font-size: 0.82rem; color: #a5b4fc; text-transform: uppercase;">Hitos del Proyecto:</strong>
+                <ul style="margin: 6px 0 0 0; padding-left: 18px; font-size: 0.85rem; color: var(--muted); display: grid; gap: 4px;">
+                  {item.milestones.map((m: any) => (
+                    <li>
+                      <span style={m.status === 'completed' ? "text-decoration: line-through; color: var(--accent-2);" : ""}>
+                        {m.title} ({m.date})
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div style="margin-top: auto; padding-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;">
+              {item.github_url && (
+                <a href={item.github_url} target="_blank" rel="noopener noreferrer" class="pill" style="font-size:0.78rem; text-decoration:none; background:rgba(255,255,255,0.02); display: inline-flex; align-items: center; gap: 4px;">
+                  💻 Repositorio
+                </a>
+              )}
+              {item.demo_url && (
+                <a href={item.demo_url} target="_blank" rel="noopener noreferrer" class="pill" style="font-size:0.78rem; text-decoration:none; background:rgba(103, 232, 249, 0.05); border-color: var(--accent); color: var(--accent); display: inline-flex; align-items: center; gap: 4px;">
+                  ⚡ Demo Live
+                </a>
+              )}
+              {item.submission_url && (
+                <a href={item.submission_url} target="_blank" rel="noopener noreferrer" class="pill" style="font-size:0.78rem; text-decoration:none; background:rgba(52, 211, 153, 0.05); border-color: var(--accent-2); color: var(--accent-2); display: inline-flex; align-items: center; gap: 4px;">
+                  🏆 Submission
+                </a>
+              )}
+            </div>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+</Base>

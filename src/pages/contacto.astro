@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+<Base title="Contacto" description="Canales de contacto oficiales y oficinas.">
+  <section class="hero">
+    <span class="eyebrow">Contacto</span>
+    <h1>Hablemos.</h1>
+    <p>Ponte en contacto con nuestro equipo para soporte técnico corporativo, integraciones de IA o consultas de negocio.</p>
+  </section>
+
+  <div class="grid cols-2">
+    <section class="section stack">
+      <h2>Canal Centralizado</h2>
+      <p>
+        Para consultas sobre automatizaciones con IA (Ralphi IA / Ralph AI), soporte modular o proyectos activos:
+      </p>
+      <div class="card" style="border-color: var(--accent); background: rgba(103, 232, 249, 0.02);">
+        <strong>Correo Principal:</strong>
+        <p style="margin-top: 8px;">
+          <a href={`mailto:${site.contact}`} style="color: var(--accent); font-size: 1.1rem; text-decoration: underline; font-weight: bold;">{site.contact}</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="section stack">
+      <h2>Presencia y Operaciones</h2>
+      <div class="card">
+        <strong>Estados Unidos (InnerChispa LLC):</strong>
+        <p>Estrategia, arquitectura modular de IA y soluciones en la nube.</p>
+      </div>
+      <div class="card">
+        <strong>Ecuador (PC Doctor S.A.):</strong>
+        <p>Operaciones técnicas de campo, CCTV, soporte empresarial y redes.</p>
+      </div>
+    </section>
+  </div>
+</Base>

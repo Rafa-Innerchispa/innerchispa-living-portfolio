@@ -1,0 +1,106 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+---
+<Base title="Home" description={site.tagline}>
+  <section class="hero">
+    <span class="eyebrow">{site.intro.eyebrow}</span>
+    <div class="grid cols-2" style="align-items:start;">
+      <div class="stack">
+        <h1>{site.intro.headline}</h1>
+        <p>{site.intro.summary}</p>
+        <div class="stack" style="gap: 10px;">
+          <div class="pill">PC Doctor S.A. · Ecuador</div>
+          <div class="pill">InnerChispa LLC · InnerSpark · RalfIA</div>
+        </div>
+      </div>
+      <figure class="hero-visual card">
+        <img src={`${baseUrl}hero-innerchispa.png`} alt="Panel operativo de InnerChispa, PC Doctor y RalfIA" />
+      </figure>
+    </div>
+    <div class="card stack">
+      <span class="badge">Proof of life</span>
+      <h3>PC Doctor opera como caso vivo del sistema</h3>
+      <p>
+        Clientes, visitas, cotizaciones, equipos, reportes, WhatsApp y contabilidad se convierten en
+        memoria reusable para el resto del ecosistema.
+      </p>
+      <div class="grid cols-2">
+        {site.proof.map((item) => (
+          <article class="card stack" style="background: rgba(255,255,255,0.02);">
+            <strong>{item.title}</strong>
+            <p>{item.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <div class="grid cols-2">
+    <section class="section stack">
+      <h2>Historia viva</h2>
+      {site.timeline.map((item) => (
+        <article class="card stack">
+          <div class="meta">{item.date}</div>
+          <strong>{item.title}</strong>
+          <p>{item.body}</p>
+        </article>
+      ))}
+    </section>
+
+    <section class="section stack">
+      <h2>Entidades y mision</h2>
+      {site.entities.map((entity) => (
+        <article class="card stack">
+          <strong>{entity.name}</strong>
+          <span class="meta">{entity.region}</span>
+          <p>{entity.role}</p>
+        </article>
+      ))}
+      <div class="card stack">
+        <h3>Lo que queremos construir</h3>
+        {site.mission.map((m) => (
+          <div class="pill">{m}</div>
+        ))}
+      </div>
+    </section>
+  </div>
+
+  <section class="section stack">
+    <h2>Capacidades</h2>
+    <div class="grid cols-3">
+      {site.capabilities.map((capability) => (
+        <div class="card">{capability}</div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section stack">
+    <h2>Proyectos destacados</h2>
+    <div class="grid cols-2">
+      {site.projects.map((project) => (
+        <article class="card stack">
+          <span class="badge">{project.status}</span>
+          <h3>{project.name}</h3>
+          <p>{project.summary}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section stack">
+    <h2>Galeria viva</h2>
+    <div class="grid cols-2 media-grid">
+      {site.visuals.map((visual) => (
+        <figure class="card stack visual-card">
+          <img src={visual.src.startsWith('/') ? baseUrl + visual.src.slice(1) : visual.src} alt={visual.alt} loading="lazy" />
+          <figcaption>
+            <strong>{visual.title}</strong>
+            <p>{visual.caption}</p>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+</Base>

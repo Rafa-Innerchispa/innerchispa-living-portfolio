@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+<Base title="Tecnología" description="Capacidades técnicas y conectores reutilizables.">
+  <section class="hero">
+    <span class="eyebrow">Tecnología</span>
+    <h1>Capas reutilizables, no scripts sueltos.</h1>
+    <p>El objetivo es que cada conector, agente o herramienta se publique una sola vez y se recupere después por MCP, web y paneles internos.</p>
+  </section>
+  <div class="grid cols-3">
+    {site.capabilities.map((capability) => (
+      <article class="card stack">
+        <h2>{capability}</h2>
+        <p>Listo para reutilizar en paneles, coordinación y automatización.</p>
+      </article>
+    ))}
+  </div>
+</Base>

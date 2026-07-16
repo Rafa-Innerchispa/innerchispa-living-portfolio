@@ -1,0 +1,68 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Política de Privacidad" description="Política de privacidad corporativa y términos de uso responsable de datos.">
+  <section class="hero">
+    <span class="eyebrow">Legal y Transparencia</span>
+    <h1>Política de Privacidad</h1>
+    <p>Términos de uso responsable y protección de datos para los sistemas de InnerChispa LLC y PC Doctor S.A.</p>
+  </section>
+
+  <div class="grid cols-2">
+    <section class="section stack">
+      <h2>1. Compromiso de Confidencialidad</h2>
+      <p>
+        En el ecosistema modular de InnerChispa y PC Doctor, la seguridad de la información es un pilar fundamental. Esta política rige cómo recolectamos, procesamos y salvaguardamos los datos transaccionales, credenciales de API, registros de WhatsApp y flujos de automatización.
+      </p>
+      <div class="card">
+        <strong>Principios Fundamentales:</strong>
+        <ul>
+          <li><strong>Minimización:</strong> Solo almacenamos los tokens y metadatos estrictamente necesarios para la ejecución técnica.</li>
+          <li><strong>Soberanía Local:</strong> Priorizamos modelos de lenguaje locales (Ollama/Qwen) sobre APIs externas para evitar la fuga de datos confidenciales de negocio.</li>
+          <li><strong>Human-in-the-Loop:</strong> Ningún entregable generado por IA (cartas, cotizaciones, correos) se envía o publica sin la aprobación expresa del administrador humano.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section stack">
+      <h2>2. Datos y Credenciales de Plataformas</h2>
+      <p>
+        Nuestros conectores y herramientas MCP integran credenciales temporales de plataformas externas (tales como LinkedIn, Google Workspace, y MongoDB).
+      </p>
+      <div class="card">
+        <strong>Seguridad y Cifrado:</strong>
+        <p>
+          Los tokens de acceso y llaves secretas se cifran en reposo y se transmiten utilizando túneles seguros y protocolos OAuth 2.0. Las conexiones a las bases de datos de PC Doctor se realizan mediante canales internos seguros de red.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <div class="grid cols-2" style="margin-top: 20px;">
+    <section class="section stack">
+      <h2>3. Integraciones de Mensajería y Correo</h2>
+      <p>
+        El procesamiento de hilos de correos y la Evolution API de WhatsApp se limitan a la extracción de requerimientos operativos, alertas de asignación de créditos y flujos de soporte técnico empresarial.
+      </p>
+      <div class="card">
+        <strong>Retención y Eliminación:</strong>
+        <p>
+          No mantenemos copias innecesarias de conversaciones personales. Toda la información extraída se asocia estrictamente a registros de soporte empresarial o a expedientes de fondos de startups.
+        </p>
+      </div>
+    </section>
+
+    <section class="section stack">
+      <h2>4. Contacto y Derechos de Datos</h2>
+      <p>
+        Como titular de los datos, tiene derecho a solicitar la visualización, modificación o eliminación inmediata de cualquier token, email registrado o credencial en nuestro clúster de servidores (Intel y AMD standby).
+      </p>
+      <div class="card" style="background: rgba(103, 232, 249, 0.05); border-color: var(--accent);">
+        <strong>Canal Oficial de Privacidad:</strong>
+        <p>
+          Para ejercer sus derechos o resolver dudas sobre la gestión de automatizaciones, puede contactar al correo de administración centralizada: <a href="mailto:rlopez@innerchispa.us" style="color: var(--accent); text-decoration: underline;">rlopez@innerchispa.us</a>.
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>
