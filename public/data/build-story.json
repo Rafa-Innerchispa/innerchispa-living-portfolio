@@ -1,0 +1,370 @@
+{
+  "activityEvents": [
+    {
+      "agentIds": [
+        "codex",
+        "chatgpt"
+      ],
+      "evidenceIds": [
+        "evidence-schema"
+      ],
+      "hackathonId": "openai-build-week-2026",
+      "id": "event-feed-contract",
+      "occurredAt": "2026-07-16T12:00:00Z",
+      "projectId": "ralphiia-quoteops",
+      "summary": {
+        "en": "Projects, events, agents, evidence and non-billing rewards now share one reusable sanitized shape.",
+        "es": "Proyectos, eventos, agentes, evidencia y recompensas no asociadas a facturación comparten una forma sanitizada reutilizable."
+      },
+      "title": {
+        "en": "Public story contract defined",
+        "es": "Contrato público de historia definido"
+      },
+      "type": "milestone",
+      "verified": true
+    },
+    {
+      "agentIds": [
+        "codex"
+      ],
+      "evidenceIds": [
+        "evidence-baseline"
+      ],
+      "hackathonId": "openai-build-week-2026",
+      "id": "event-baseline-commit",
+      "occurredAt": "2026-07-16T11:30:00Z",
+      "projectId": "ralphiia-quoteops",
+      "summary": {
+        "en": "Baseline commit 2fd9eb5 copied the current staging source into an independent worktree.",
+        "es": "El commit base 2fd9eb5 copió el staging actual a un worktree independiente."
+      },
+      "title": {
+        "en": "Astro staging isolated",
+        "es": "Staging Astro aislado"
+      },
+      "type": "commit",
+      "verified": true
+    },
+    {
+      "agentIds": [
+        "antigravity"
+      ],
+      "evidenceIds": [],
+      "hackathonId": "openai-build-week-2026",
+      "id": "event-next-integration",
+      "occurredAt": "2026-07-16T11:00:00Z",
+      "projectId": "ralphiia-quoteops",
+      "summary": {
+        "en": "Antigravity can later connect an approved public feed URL and carry the reviewed build into staging.",
+        "es": "Antigravity podrá conectar una URL pública aprobada y llevar la compilación revisada a staging."
+      },
+      "title": {
+        "en": "Review integration boundary",
+        "es": "Revisar límite de integración"
+      },
+      "type": "next_action",
+      "verified": true
+    }
+  ],
+  "agents": [
+    {
+      "contribution": {
+        "en": "Owns the existing Astro backfill and the future reviewed deployment handoff.",
+        "es": "Gestiona el backfill Astro existente y la futura entrega revisada para despliegue."
+      },
+      "id": "antigravity",
+      "lastObservedAt": "2026-07-16T11:40:00Z",
+      "name": "Antigravity",
+      "provider": "Google",
+      "role": {
+        "en": "Staging integration owner",
+        "es": "Responsable de integración a staging"
+      },
+      "status": "waiting"
+    },
+    {
+      "contribution": {
+        "en": "Translates owner goals into bounded work and verifies handoffs without publishing private conversations.",
+        "es": "Traduce metas del propietario en trabajo acotado y verifica entregas sin publicar conversaciones privadas."
+      },
+      "id": "chatgpt",
+      "lastObservedAt": "2026-07-16T11:55:00Z",
+      "name": "ChatGPT",
+      "provider": "OpenAI",
+      "role": {
+        "en": "Coordination and product synthesis",
+        "es": "Coordinación y síntesis de producto"
+      },
+      "status": "active"
+    },
+    {
+      "contribution": {
+        "en": "Builds bounded code slices, tests contracts and records commit evidence.",
+        "es": "Construye partes acotadas, prueba contratos y registra evidencia de commits."
+      },
+      "id": "codex",
+      "lastObservedAt": "2026-07-16T11:58:00Z",
+      "name": "Codex",
+      "provider": "OpenAI",
+      "role": {
+        "en": "Independent implementation worker",
+        "es": "Agente de implementación independiente"
+      },
+      "status": "active"
+    },
+    {
+      "contribution": {
+        "en": "Contributes reviewable findings and cross-checks; only resulting artifacts are published.",
+        "es": "Aporta hallazgos revisables y validaciones; solo se publican los artefactos resultantes."
+      },
+      "id": "gemini",
+      "lastObservedAt": "2026-07-16T10:30:00Z",
+      "name": "Gemini",
+      "provider": "Google",
+      "role": {
+        "en": "Research and review collaborator",
+        "es": "Colaborador de investigación y revisión"
+      },
+      "status": "waiting"
+    }
+  ],
+  "current": {
+    "hackathonId": "openai-build-week-2026",
+    "headline": {
+      "en": "Turning a request into a quote you can trust.",
+      "es": "Convertir una solicitud en una cotización confiable."
+    },
+    "nextAction": {
+      "en": "Connect a verified public feed after owner review, then replace this demonstration snapshot without changing the page structure.",
+      "es": "Conectar un feed público verificado tras revisión del propietario y reemplazar esta demostración sin cambiar la estructura de la página."
+    },
+    "projectId": "ralphiia-quoteops",
+    "summary": {
+      "en": "RalphiIA QuoteOps is connecting intake, tool planning, human approval and reconciliation into one observable operational path.",
+      "es": "RalphiIA QuoteOps conecta ingreso, planificación de herramientas, aprobación humana y conciliación en una ruta operativa observable."
+    },
+    "whyItMatters": {
+      "en": "Small teams lose time when customer intent, tax identity, pricing and approval live in separate systems. The build makes that handoff legible and repeatable.",
+      "es": "Los equipos pequeños pierden tiempo cuando la intención del cliente, identidad tributaria, precios y aprobación viven en sistemas separados. Este proyecto vuelve ese traspaso legible y repetible."
+    }
+  },
+  "evidence": [
+    {
+      "id": "evidence-schema",
+      "label": {
+        "en": "Feed schema module",
+        "es": "Módulo de esquema del feed"
+      },
+      "observedAt": "2026-07-16T12:00:00Z",
+      "summary": {
+        "en": "Checked-in validator, sanitizer, deterministic generator and tests.",
+        "es": "Validador, sanitizador, generador determinista y pruebas incluidos en Git."
+      },
+      "type": "artifact"
+    },
+    {
+      "id": "evidence-baseline",
+      "label": {
+        "en": "Baseline 2fd9eb5",
+        "es": "Línea base 2fd9eb5"
+      },
+      "observedAt": "2026-07-16T11:30:00Z",
+      "summary": {
+        "en": "An isolated copy of the Astro staging source; no production system was changed.",
+        "es": "Copia aislada del staging Astro; no se modificó ningún sistema de producción."
+      },
+      "type": "commit"
+    }
+  ],
+  "freshness": {
+    "refreshEverySeconds": 15,
+    "staleAfterSeconds": 300
+  },
+  "generatedAt": "2026-07-16T12:00:00Z",
+  "hackathons": [
+    {
+      "endsAt": "2026-08-31T23:59:59Z",
+      "id": "gitlab-transcend-2026",
+      "name": {
+        "en": "GitLab Transcend Hackathon",
+        "es": "Hackatón GitLab Transcend"
+      },
+      "projectIds": [
+        "innerspark-smart-quoter"
+      ],
+      "slug": "gitlab-transcend-2026",
+      "startsAt": "2026-08-01T00:00:00Z",
+      "status": "upcoming",
+      "summary": {
+        "en": "A later event flowing through the same contract, ready to inherit proven components and evidence patterns.",
+        "es": "Un evento posterior que usa el mismo contrato, listo para heredar componentes y patrones de evidencia probados."
+      }
+    },
+    {
+      "endsAt": "2026-07-19T23:59:59Z",
+      "id": "openai-build-week-2026",
+      "name": {
+        "en": "OpenAI Build Week 2026",
+        "es": "OpenAI Build Week 2026"
+      },
+      "projectIds": [
+        "ralphiia-quoteops"
+      ],
+      "slug": "openai-build-week-2026",
+      "startsAt": "2026-07-13T00:00:00Z",
+      "status": "active",
+      "summary": {
+        "en": "The leading build story: a focused week for turning multi-agent automation into an auditable product path.",
+        "es": "La historia principal: una semana enfocada en convertir automatización multiagente en una ruta de producto auditable."
+      }
+    }
+  ],
+  "lastVerifiedAt": "2026-07-16T12:00:00Z",
+  "milestones": [
+    {
+      "hackathonId": "openai-build-week-2026",
+      "id": "milestone-contract",
+      "projectId": "ralphiia-quoteops",
+      "status": "complete",
+      "title": {
+        "en": "Sanitized story contract",
+        "es": "Contrato de historia sanitizada"
+      },
+      "updatedAt": "2026-07-16T12:00:00Z",
+      "verification": {
+        "en": "Schema and hostile-input tests are part of the website repository.",
+        "es": "Las pruebas de esquema y entradas hostiles forman parte del repositorio web."
+      }
+    },
+    {
+      "hackathonId": "openai-build-week-2026",
+      "id": "milestone-live-source",
+      "projectId": "ralphiia-quoteops",
+      "status": "planned",
+      "title": {
+        "en": "Approved live source",
+        "es": "Fuente live aprobada"
+      },
+      "updatedAt": "2026-07-16T11:45:00Z",
+      "verification": {
+        "en": "Requires owner-reviewed public endpoint and sanitized publisher integration.",
+        "es": "Requiere endpoint público revisado por el propietario e integración del publicador sanitizado."
+      }
+    },
+    {
+      "hackathonId": "openai-build-week-2026",
+      "id": "milestone-quote-path",
+      "projectId": "ralphiia-quoteops",
+      "status": "in_progress",
+      "title": {
+        "en": "Quote workflow evidence",
+        "es": "Evidencia del flujo de cotización"
+      },
+      "updatedAt": "2026-07-16T11:20:00Z",
+      "verification": {
+        "en": "Observable tests and artifacts only; customer records remain private.",
+        "es": "Solo pruebas y artefactos observables; los registros de clientes permanecen privados."
+      }
+    }
+  ],
+  "projects": [
+    {
+      "hackathonIds": [
+        "gitlab-transcend-2026"
+      ],
+      "id": "innerspark-smart-quoter",
+      "name": {
+        "en": "InnerSpark Smart Quoter",
+        "es": "InnerSpark Smart Quoter"
+      },
+      "slug": "innerspark-smart-quoter",
+      "status": "testing",
+      "summary": {
+        "en": "A reusable local-first intake and classification foundation for future hackathons.",
+        "es": "Una base reutilizable y local-first de ingreso y clasificación para futuros hackatones."
+      },
+      "tags": [
+        "Ollama",
+        "Whisper",
+        "GitLab"
+      ]
+    },
+    {
+      "hackathonIds": [
+        "openai-build-week-2026"
+      ],
+      "id": "ralphiia-quoteops",
+      "name": {
+        "en": "RalphiIA QuoteOps",
+        "es": "RalphiIA QuoteOps"
+      },
+      "slug": "ralphiia-quoteops",
+      "status": "building",
+      "summary": {
+        "en": "A human-approved quote workflow with observable intake, planning and reconciliation evidence.",
+        "es": "Un flujo de cotización con aprobación humana y evidencia observable de ingreso, planificación y conciliación."
+      },
+      "tags": [
+        "FastAPI",
+        "OpenAI",
+        "MCP",
+        "human approval"
+      ]
+    }
+  ],
+  "rewardAccounts": [
+    {
+      "category": "prize",
+      "displayValue": {
+        "en": "Eligibility under review",
+        "es": "Elegibilidad en revisión"
+      },
+      "id": "reward-gitlab-transcend",
+      "notBilling": true,
+      "note": {
+        "en": "A potential event reward, never an API balance or billing statement.",
+        "es": "Una posible recompensa del evento, nunca un saldo de API ni estado de facturación."
+      },
+      "program": {
+        "en": "Transcend prize eligibility",
+        "es": "Elegibilidad de premio Transcend"
+      },
+      "provider": "GitLab",
+      "status": "pending",
+      "updatedAt": "2026-07-16T09:30:00Z"
+    },
+    {
+      "category": "hackathon_credit",
+      "displayValue": {
+        "en": "Amount intentionally not published",
+        "es": "Monto no publicado intencionalmente"
+      },
+      "id": "reward-openai-build-week",
+      "notBilling": true,
+      "note": {
+        "en": "Program support is tracked separately from API invoices and consumption.",
+        "es": "El apoyo del programa se registra separado de facturas y consumo de API."
+      },
+      "program": {
+        "en": "Build Week program credits",
+        "es": "Créditos del programa Build Week"
+      },
+      "provider": "OpenAI",
+      "status": "available",
+      "updatedAt": "2026-07-16T10:00:00Z"
+    }
+  ],
+  "schemaVersion": "1.0.0",
+  "snapshotId": "build-week-sanitized-20260716",
+  "source": {
+    "kind": "fallback",
+    "label": {
+      "en": "Checked-in sanitized demonstration",
+      "es": "Demostración sanitizada incluida"
+    }
+  },
+  "system": {
+    "latestEventId": "event-feed-contract",
+    "publicFeedName": "innerchispa-live-build-story"
+  }
+}

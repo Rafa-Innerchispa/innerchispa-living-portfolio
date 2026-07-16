@@ -1,0 +1,107 @@
+---
+import Base from '../layouts/Base.astro';
+import fallback from '../data/build-story-fallback.json';
+
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const configured = (import.meta.env.PUBLIC_BUILD_STORY_FEED_URLS || '')
+  .split(',')
+  .map((url) => url.trim())
+  .filter(Boolean);
+const feedUrls = [...configured, `${base}data/build-story.json`];
+const english = (value) => value.en;
+const project = fallback.projects.find((item) => item.id === fallback.current.projectId);
+const hackathon = fallback.hackathons.find((item) => item.id === fallback.current.hackathonId);
+---
+<Base title="Live Build Story" description="Observable progress from InnerChispa's current hackathon build: agents, commits, tests, evidence and next actions." pageClass="live-story-page">
+  <div id="live-story-root" data-feed-urls={JSON.stringify(feedUrls)}>
+    <header class="story-page-head">
+      <div>
+        <span class="kicker" data-en="Observable work · refreshed every 15 seconds" data-es="Trabajo observable · actualizado cada 15 segundos">Observable work · refreshed every 15 seconds</span>
+        <h1><span data-en="Live" data-es="Historia">Live</span><br /><span data-en="Build Story" data-es="en Vivo">Build Story</span></h1>
+      </div>
+      <div class="connection-wrap">
+        <div id="story-connection" class="connection-indicator" data-state="fallback"><span data-connection-label>Fallback · sanitized demonstration</span></div>
+        <small id="story-source">{english(fallback.source.label)}</small>
+        <small id="story-verified">Verified Jul 16, 2026, 12:00 PM UTC</small>
+      </div>
+    </header>
+
+    <section class="current-story" aria-labelledby="story-headline">
+      <aside class="story-context">
+        <div>
+          <div class="context-pair"><small data-en="Current hackathon" data-es="Hackatón actual">Current hackathon</small><strong id="story-hackathon">{english(hackathon.name)}</strong></div>
+          <div class="context-pair"><small data-en="Current project" data-es="Proyecto actual">Current project</small><strong id="story-project">{english(project.name)}</strong></div>
+        </div>
+        <div class="story-context-note"><p data-en="This view contains public artifacts and sanitized summaries only. It never publishes private reasoning or internal messages." data-es="Esta vista contiene solo artefactos públicos y resúmenes sanitizados. Nunca publica razonamiento privado ni mensajes internos.">This view contains public artifacts and sanitized summaries only. It never publishes private reasoning or internal messages.</p></div>
+      </aside>
+      <div class="story-lead">
+        <span class="kicker" data-en="What we are building now" data-es="Lo que construimos ahora">What we are building now</span>
+        <h2 id="story-headline">{english(fallback.current.headline)}</h2>
+        <p id="story-summary">{english(fallback.current.summary)}</p>
+        <div class="story-reason">
+          <div><small id="story-why-label">Why this matters</small><p id="story-why">{english(fallback.current.whyItMatters)}</p></div>
+          <div><small id="story-next-label">Next action</small><p id="story-next">{english(fallback.current.nextAction)}</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-section" aria-labelledby="agents-title">
+      <div class="story-section-head">
+        <h2 id="agents-title" data-en="Many agents. One observable trail." data-es="Muchos agentes. Un rastro observable.">Many agents. One observable trail.</h2>
+        <p data-en="The feed records what each collaborator contributed at the artifact level. It deliberately excludes prompts, hidden reasoning, raw conversations and private coordination." data-es="El feed registra lo que cada colaborador aportó a nivel de artefacto. Excluye deliberadamente prompts, razonamiento oculto, conversaciones crudas y coordinación privada.">The feed records what each collaborator contributed at the artifact level. It deliberately excludes prompts, hidden reasoning, raw conversations and private coordination.</p>
+      </div>
+      <div id="story-agents" class="agent-list" aria-live="polite"></div>
+    </section>
+
+    <section class="story-section activity-layout" aria-label="Activity and milestones">
+      <div>
+        <div class="story-section-head" style="grid-template-columns: 1fr; gap: 18px;">
+          <h2 data-en="Verified activity" data-es="Actividad verificada">Verified activity</h2>
+          <p data-en="Newest first. Every event is validated, attributed and connected to evidence where public evidence exists." data-es="Más reciente primero. Cada evento se valida, atribuye y conecta con evidencia cuando existe evidencia pública.">Newest first. Every event is validated, attributed and connected to evidence where public evidence exists.</p>
+        </div>
+        <div id="story-activity" class="activity-stream" aria-live="polite"></div>
+      </div>
+      <aside class="milestone-panel">
+        <span class="kicker" data-en="Build path" data-es="Ruta del build">Build path</span>
+        <h3 data-en="Milestones" data-es="Hitos">Milestones</h3>
+        <ol id="story-milestones" class="milestone-list"></ol>
+      </aside>
+    </section>
+
+    <section class="story-section">
+      <div class="story-section-head">
+        <h2 data-en="Evidence, not a performance." data-es="Evidencia, no una actuación.">Evidence, not a performance.</h2>
+        <p data-en="Commits, tests, artifacts and reviews are the only acceptable proof. Links must be public HTTPS URLs without credentials or private network details." data-es="Commits, pruebas, artefactos y revisiones son la única evidencia aceptable. Los enlaces deben ser HTTPS públicos, sin credenciales ni detalles de red privada.">Commits, tests, artifacts and reviews are the only acceptable proof. Links must be public HTTPS URLs without credentials or private network details.</p>
+      </div>
+      <div id="story-evidence" class="evidence-grid"></div>
+    </section>
+
+    <section class="story-section">
+      <div class="story-section-head">
+        <h2 data-en="Program support, clearly separated." data-es="Apoyo de programas, claramente separado.">Program support, clearly separated.</h2>
+        <p data-en="Hackathon credits, prizes and grants appear here as program rewards. They are never API usage, invoices or billing balances, and sensitive amounts may remain undisclosed." data-es="Créditos de hackatón, premios y subvenciones aparecen aquí como recompensas de programa. Nunca son uso de API, facturas ni saldos de facturación, y los montos sensibles pueden permanecer ocultos.">Hackathon credits, prizes and grants appear here as program rewards. They are never API usage, invoices or billing balances, and sensitive amounts may remain undisclosed.</p>
+      </div>
+      <div id="story-rewards" class="reward-grid"></div>
+    </section>
+
+    <section class="story-section">
+      <div class="privacy-boundary">
+        <div><span class="kicker" data-en="The publication boundary" data-es="El límite de publicación">The publication boundary</span><h2 data-en="Show the work. Protect the people." data-es="Mostrar el trabajo. Proteger a las personas.">Show the work. Protect the people.</h2></div>
+        <div>
+          <p data-en="A publisher may report an observable outcome—“12 tests passed”—but never the private conversation or reasoning that produced it." data-es="Un publicador puede reportar un resultado observable—“12 pruebas aprobadas”—pero nunca la conversación o razonamiento privado que lo produjo.">A publisher may report an observable outcome—“12 tests passed”—but never the private conversation or reasoning that produced it.</p>
+          <ul>
+            <li data-en="No chain-of-thought, prompts or raw agent messages" data-es="Sin cadena de pensamiento, prompts ni mensajes crudos de agentes">No chain-of-thought, prompts or raw agent messages</li>
+            <li data-en="No credentials, tokens, private URLs or infrastructure addresses" data-es="Sin credenciales, tokens, URLs privadas ni direcciones de infraestructura">No credentials, tokens, private URLs or infrastructure addresses</li>
+            <li data-en="No customer PII, business records or staff-payment data" data-es="Sin PII de clientes, registros comerciales ni datos de pagos al personal">No customer PII, business records or staff-payment data</li>
+            <li data-en="Incoming data is rejected before it can replace the last valid snapshot" data-es="Los datos entrantes se rechazan antes de reemplazar el último snapshot válido">Incoming data is rejected before it can replace the last valid snapshot</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    import fallbackSnapshot from '../data/build-story-fallback.json';
+    import { startLiveStory } from '../scripts/live-story-client.js';
+    startLiveStory(document.getElementById('live-story-root'), fallbackSnapshot);
+  </script>
+</Base>

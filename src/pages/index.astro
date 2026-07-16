@@ -1,105 +1,88 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
-const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const quoteOps = site.projects.find((project) => project.name.includes('QuoteOps')) || site.projects[0];
 ---
-<Base title="Home" description={site.tagline}>
-  <section class="hero">
-    <span class="eyebrow">{site.intro.eyebrow}</span>
-    <div class="grid cols-2" style="align-items:start;">
-      <div class="stack">
-        <h1>{site.intro.headline}</h1>
-        <p>{site.intro.summary}</p>
-        <div class="stack" style="gap: 10px;">
-          <div class="pill">PC Doctor S.A. · Ecuador</div>
-          <div class="pill">InnerChispa LLC · InnerSpark · RalfIA</div>
-        </div>
+<Base title="Home" description="InnerChispa turns human intent and observable agent work into useful, reusable systems." pageClass="home-page">
+  <section class="home-hero">
+    <div class="home-hero-copy">
+      <span class="kicker" data-en="A living technology studio" data-es="Un estudio tecnológico vivo">A living technology studio</span>
+      <h1>
+        <span data-en="Human intent." data-es="Intención humana.">Human intent.</span><br />
+        <em data-en="Agent craft." data-es="Oficio de agentes.">Agent craft.</em><br />
+        <span data-en="Real proof." data-es="Evidencia real.">Real proof.</span>
+      </h1>
+      <p
+        data-en="InnerChispa builds practical AI systems in the open: what changed, who contributed, what passed, and what comes next—without exposing the private work beneath it."
+        data-es="InnerChispa construye sistemas prácticos de IA en público: qué cambió, quién contribuyó, qué pasó pruebas y qué sigue—sin exponer el trabajo privado que hay debajo."
+      >InnerChispa builds practical AI systems in the open: what changed, who contributed, what passed, and what comes next—without exposing the private work beneath it.</p>
+      <div class="hero-actions">
+        <a class="story-link" href={`${base}historia-en-vivo`}><span aria-hidden="true">●</span><span data-en="Enter the Live Build Story" data-es="Entrar a la Historia en Vivo">Enter the Live Build Story</span></a>
+        <a class="text-link" href={`${base}proyectos`} data-en="Explore the work" data-es="Explorar el trabajo">Explore the work</a>
       </div>
-      <figure class="hero-visual card">
-        <img src={`${baseUrl}hero-innerchispa.png`} alt="Panel operativo de InnerChispa, PC Doctor y RalfIA" />
+    </div>
+    <div class="collaboration-orbit" aria-label="Observable multi-agent collaboration">
+      <div class="orbit-ring"></div>
+      <div class="orbit-center">RalphiIA<br />build</div>
+      <span class="orbit-agent a1">Codex</span>
+      <span class="orbit-agent a2">ChatGPT</span>
+      <span class="orbit-agent a3">Antigravity</span>
+      <span class="orbit-agent a4">Gemini</span>
+      <span class="orbit-agent a5">Human</span>
+    </div>
+  </section>
+
+  <a class="live-ribbon" href={`${base}historia-en-vivo`}>
+    <span class="pulse-dot" aria-hidden="true"></span>
+    <strong data-en="Now building · RalphiIA QuoteOps for OpenAI Build Week" data-es="En construcción · RalphiIA QuoteOps para OpenAI Build Week">Now building · RalphiIA QuoteOps for OpenAI Build Week</strong>
+    <small data-en="Sanitized fallback · refreshes every 15s" data-es="Fallback sanitizado · actualiza cada 15s">Sanitized fallback · refreshes every 15s</small>
+  </a>
+
+  <section class="section editorial-split">
+    <aside class="editorial-aside">
+      <span class="kicker" data-en="The leading story" data-es="La historia principal">The leading story</span>
+      <h2 data-en="One week. One clear operational path." data-es="Una semana. Una ruta operativa clara.">One week. One clear operational path.</h2>
+    </aside>
+    <article class="build-feature">
+      <figure>
+        <img src={`${base}visuals/quoteops_cover.png`} alt="RalphiIA QuoteOps cockpit" />
       </figure>
-    </div>
-    <div class="card stack">
-      <span class="badge">Proof of life</span>
-      <h3>PC Doctor opera como caso vivo del sistema</h3>
-      <p>
-        Clientes, visitas, cotizaciones, equipos, reportes, WhatsApp y contabilidad se convierten en
-        memoria reusable para el resto del ecosistema.
-      </p>
-      <div class="grid cols-2">
-        {site.proof.map((item) => (
-          <article class="card stack" style="background: rgba(255,255,255,0.02);">
-            <strong>{item.title}</strong>
-            <p>{item.body}</p>
-          </article>
-        ))}
+      <div class="feature-meta"><span>OpenAI Build Week · 2026</span><span data-en="Building" data-es="Construyendo">Building</span></div>
+      <div class="feature-copy">
+        <h3>{quoteOps?.name || 'RalphiIA QuoteOps'}</h3>
+        <p
+          data-en="A quote begins as messy human intent. QuoteOps turns that intent into an auditable sequence: intake, tool plan, human approval, trusted identity and reconciliation."
+          data-es="Una cotización comienza como intención humana desordenada. QuoteOps la convierte en una secuencia auditable: ingreso, plan de herramientas, aprobación humana, identidad confiable y conciliación."
+        >A quote begins as messy human intent. QuoteOps turns that intent into an auditable sequence: intake, tool plan, human approval, trusted identity and reconciliation.</p>
       </div>
+      <a class="text-link" href={`${base}historia-en-vivo`} data-en="See commits, tests and evidence" data-es="Ver commits, pruebas y evidencia">See commits, tests and evidence</a>
+    </article>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <h2 data-en="Public progress, private boundaries." data-es="Progreso público, límites privados.">Public progress, private boundaries.</h2>
+      <p
+        data-en="The story is assembled from observable artifacts—not hidden reasoning, raw agent messages, credentials, customer data or internal infrastructure."
+        data-es="La historia se arma con artefactos observables—no con razonamiento oculto, mensajes crudos de agentes, credenciales, datos de clientes o infraestructura interna."
+      >The story is assembled from observable artifacts—not hidden reasoning, raw agent messages, credentials, customer data or internal infrastructure.</p>
+    </div>
+    <div class="principle-list">
+      <article class="principle"><b>01</b><h3 data-en="Evidence over theater" data-es="Evidencia sobre espectáculo">Evidence over theater</h3><p data-en="Commits, passing tests, reviews and milestones tell the story." data-es="Commits, pruebas aprobadas, revisiones e hitos cuentan la historia.">Commits, passing tests, reviews and milestones tell the story.</p></article>
+      <article class="principle"><b>02</b><h3 data-en="Agents with boundaries" data-es="Agentes con límites">Agents with boundaries</h3><p data-en="Each contribution is scoped, observable and attributable." data-es="Cada contribución es acotada, observable y atribuible.">Each contribution is scoped, observable and attributable.</p></article>
+      <article class="principle"><b>03</b><h3 data-en="Reusable by design" data-es="Reutilizable por diseño">Reusable by design</h3><p data-en="Future hackathons arrive as data, not another bespoke page." data-es="Los futuros hackatones llegan como datos, no como otra página a medida.">Future hackathons arrive as data, not another bespoke page.</p></article>
     </div>
   </section>
 
-  <div class="grid cols-2">
-    <section class="section stack">
-      <h2>Historia viva</h2>
-      {site.timeline.map((item) => (
-        <article class="card stack">
-          <div class="meta">{item.date}</div>
-          <strong>{item.title}</strong>
-          <p>{item.body}</p>
-        </article>
-      ))}
-    </section>
-
-    <section class="section stack">
-      <h2>Entidades y mision</h2>
-      {site.entities.map((entity) => (
-        <article class="card stack">
-          <strong>{entity.name}</strong>
-          <span class="meta">{entity.region}</span>
-          <p>{entity.role}</p>
-        </article>
-      ))}
-      <div class="card stack">
-        <h3>Lo que queremos construir</h3>
-        {site.mission.map((m) => (
-          <div class="pill">{m}</div>
-        ))}
-      </div>
-    </section>
-  </div>
-
-  <section class="section stack">
-    <h2>Capacidades</h2>
+  <section class="section">
+    <div class="section-heading">
+      <h2 data-en="Built from a real operating ecosystem." data-es="Construido desde un ecosistema operativo real.">Built from a real operating ecosystem.</h2>
+      <p data-en="PC Doctor supplies the operational reality; InnerChispa and InnerSpark turn lessons into modular products, public experiments and accessible technology." data-es="PC Doctor aporta la realidad operativa; InnerChispa e InnerSpark convierten aprendizajes en productos modulares, experimentos públicos y tecnología accesible.">PC Doctor supplies the operational reality; InnerChispa and InnerSpark turn lessons into modular products, public experiments and accessible technology.</p>
+    </div>
     <div class="grid cols-3">
-      {site.capabilities.map((capability) => (
-        <div class="card">{capability}</div>
-      ))}
-    </div>
-  </section>
-
-  <section class="section stack">
-    <h2>Proyectos destacados</h2>
-    <div class="grid cols-2">
-      {site.projects.map((project) => (
-        <article class="card stack">
-          <span class="badge">{project.status}</span>
-          <h3>{project.name}</h3>
-          <p>{project.summary}</p>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <section class="section stack">
-    <h2>Galeria viva</h2>
-    <div class="grid cols-2 media-grid">
-      {site.visuals.map((visual) => (
-        <figure class="card stack visual-card">
-          <img src={visual.src.startsWith('/') ? baseUrl + visual.src.slice(1) : visual.src} alt={visual.alt} loading="lazy" />
-          <figcaption>
-            <strong>{visual.title}</strong>
-            <p>{visual.caption}</p>
-          </figcaption>
-        </figure>
+      {site.proof.map((item, index) => (
+        <article class="card stack"><span class="kicker">0{index + 1}</span><h3>{item.title}</h3><p>{item.body}</p></article>
       ))}
     </div>
   </section>

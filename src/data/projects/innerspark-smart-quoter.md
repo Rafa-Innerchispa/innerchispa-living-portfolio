@@ -1,6 +1,6 @@
 ---
 approved_by: rlopez
-demo_url: http://192.168.1.4:2026
+demo_url: ''
 github_url: https://github.com/Rafa-Innerchispa/innerspark-smart-quoter
 images:
 - caption: Dashboard principal del Smart Quoter

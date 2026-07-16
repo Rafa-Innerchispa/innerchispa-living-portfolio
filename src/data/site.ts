@@ -1,4 +1,7 @@
 import publishedContent from './published_content.json';
+import { isSafePublicUrl } from '../lib/build-story-contract.js';
+
+const publicUrl = (value: unknown) => typeof value === 'string' && isSafePublicUrl(value) ? value : '';
 
 export const site = {
   brand: 'InnerChispa',
@@ -50,8 +53,8 @@ export const site = {
       summary: x.description,
       technologies: x.technologies || [],
       images: x.images || [],
-      github_url: x.github_url || '',
-      demo_url: x.demo_url || '',
+      github_url: publicUrl(x.github_url),
+      demo_url: publicUrl(x.demo_url),
     })),
   visuals: [
     {
@@ -75,9 +78,9 @@ export const site = {
       summary: x.description,
       technologies: x.technologies || [],
       images: x.images || [],
-      github_url: x.github_url || '',
-      demo_url: x.demo_url || '',
-      submission_url: x.submission_url || '',
+      github_url: publicUrl(x.github_url),
+      demo_url: publicUrl(x.demo_url),
+      submission_url: publicUrl(x.submission_url),
       milestones: x.milestones || []
     })),
   timeline: [
