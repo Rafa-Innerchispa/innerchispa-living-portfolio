@@ -1,18 +1,26 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site } from '../data/site';
+
+const capabilities = [
+  ['Memoria privada de IA', 'Private AI memory'],
+  ['Agentes supervisados', 'Supervised agents'],
+  ['Operaciones por WhatsApp', 'WhatsApp operations'],
+  ['Enrutamiento a modelos locales', 'Local model routing'],
+  ['Infraestructura de campo', 'Field infrastructure'],
+  ['Evidencia y trazabilidad', 'Evidence and audit trails'],
+];
 ---
-<Base title="Tecnología" description="Capacidades técnicas y conectores reutilizables.">
+<Base title="Technology / Tecnología" description="Reusable technical capabilities and operational connectors.">
   <section class="hero">
-    <span class="eyebrow">Tecnología</span>
-    <h1>Capas reutilizables, no scripts sueltos.</h1>
-    <p>El objetivo es que cada conector, agente o herramienta se publique una sola vez y se recupere después por MCP, web y paneles internos.</p>
+    <span class="eyebrow" data-es="Tecnología" data-en="Technology">Technology</span>
+    <h1 data-es="Capas reutilizables, no scripts sueltos." data-en="Reusable layers, not isolated scripts.">Reusable layers, not isolated scripts.</h1>
+    <p data-es="Cada conector, agente o herramienta se publica una vez y después se recupera mediante MCP, la web y los paneles internos." data-en="Each connector, agent, or tool is published once and then retrieved through MCP, the website, and internal dashboards.">Each connector, agent, or tool is published once and then retrieved through MCP, the website, and internal dashboards.</p>
   </section>
   <div class="grid cols-3">
-    {site.capabilities.map((capability) => (
+    {capabilities.map(([es, en]) => (
       <article class="card stack">
-        <h2>{capability}</h2>
-        <p>Listo para reutilizar en paneles, coordinación y automatización.</p>
+        <h2 data-es={es} data-en={en}>{en}</h2>
+        <p data-es="Lista para reutilizar en paneles, coordinación y automatización." data-en="Ready to reuse across dashboards, coordination, and automation.">Ready to reuse across dashboards, coordination, and automation.</p>
       </article>
     ))}
   </div>

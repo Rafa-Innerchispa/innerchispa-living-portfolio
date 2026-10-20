@@ -1,21 +1,25 @@
 ---
-approved_by: rlopez
+approved_by: canonical_sync
 demo_url: ''
+event_url: https://rapid-agent.devpost.com/
 github_url: https://github.com/Rafa-Innerchispa/innerspark-swarm-os-cursor-local
-images:
-- caption: InnerOS IT Field Operations
-  is_cover: true
-  url: /visuals/gemma2_cover.png
-published_at: '2026-06-15T12:00:00Z'
+images: []
+published_at: '2026-08-04T14:28:20.169307+00:00'
 slug: google-cloud-rapid-agent-hackathon
+submission_url: https://devpost.com/software/inneros-sovereign-multi-agent-enterprise-orchestrator
 technologies:
-- Google Cloud
-- CrewAI
+- Google AI Studio
 - Gemini
-- MongoDB MCP
-theme: default
-title: Google Cloud Rapid Agent Hackathon
+- CrewAI
+- FastAPI
+- MongoDB
+- MCP
+- Ollama
+- WhatsApp
+theme: living-lab
+title: InnerOS — Sovereign Multi-Agent Swarm for IT Field Operations
+video_url: https://youtu.be/XaKLKX3imzU
 visibility: public
 ---
 
-Desarrollo de InnerOS-Sovereign, un flujo IT operativo con enrutamiento inteligente, cotizaciones automáticas Notion/MongoDB y alertas enriquecidas por WhatsApp.
+An eight-agent sovereign operations swarm turns field input into structured reports, quotes and notifications with local execution.

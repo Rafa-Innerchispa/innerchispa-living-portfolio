@@ -1,21 +1,24 @@
 ---
-approved_by: rlopez
+approved_by: canonical_sync
 demo_url: ''
-github_url: https://github.com/Rafa-Innerchispa/raphiia-openai
-images:
-- caption: RalphiIA QuoteOps
-  is_cover: true
-  url: /visuals/quoteops_cover.png
-published_at: '2026-07-13T12:00:00Z'
+event_url: https://openai.devpost.com/
+github_url: https://github.com/Rafa-Innerchispa/ralphiia-founderos-openai
+images: []
+published_at: '2026-08-04T14:28:20.180460+00:00'
 slug: openai-build-week
+submission_url: https://devpost.com/software/ralphiia-quoteops
 technologies:
-- OpenAI API
-- FastAPI
+- OpenAI Codex
+- ChatGPT
+- MCP
+- Python
 - MongoDB
-- Astro
-theme: default
-title: OpenAI Build Week
+- WhatsApp
+- Ollama
+theme: living-lab
+title: RalphiIA FounderOS — Build and Operate Anywhere
+video_url: https://youtu.be/extvA4vVS4Y
 visibility: public
 ---
 
-Desarrollo de la suite RalphiIA QuoteOps utilizando modelos avanzados para clasificar y generar cotizaciones y presupuestos B2B de forma dinámica sin contenido hardcodeado.
+FounderOS connects ChatGPT, Codex, MCP, WhatsApp, memory and governed tools into a traceable operating loop.

@@ -1,6 +1,7 @@
 ---
 approved_by: rlopez
-demo_url: ''
+demo_url: http://192.168.1.4:2026
+event_url: ''
 github_url: https://github.com/Rafa-Innerchispa/innerspark-smart-quoter
 images:
 - caption: Dashboard principal del Smart Quoter
@@ -8,15 +9,18 @@ images:
   url: /visuals/quoter_cover.png
 published_at: '2026-07-15T03:00:00Z'
 slug: innerspark-smart-quoter
+submission_url: ''
 technologies:
-- Python
+- Whisper
+- Ollama
 - FastAPI
 - MongoDB
-- Ollama
-- Whisper
+- Audio2Quote
+- HTML5
 theme: purple-neon
-title: InnerSpark Smart Quoter
+title: InnerSpark Smart Quoter — Cotización Instantánea Offline
+video_url: ''
 visibility: public
 ---
 
-Plataforma de cotización inteligente local asistida por IA. Transcribe audios a través de Whisper, extrae requerimientos y clasifica elementos de cotización utilizando modelos locales offline (Ollama) y enrutadores híbridos.
+Sistema inteligente de cotización a partir de notas de voz. Transcripción acústica local con Whisper, extracción estructurada de productos con Ollama y presupuestos oficiales en segundos.

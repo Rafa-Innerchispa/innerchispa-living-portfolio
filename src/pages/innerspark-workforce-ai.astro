@@ -1,0 +1,173 @@
+---
+import Base from '../layouts/Base.astro';
+
+const repoUrl = 'https://github.com/Rafa-Innerchispa/innerspark-workforce-ai';
+
+const modules = [
+  ['Biometric and mobile attendance', 'Asistencia biométrica y móvil'],
+  ['GPS/geofencing and private photo evidence', 'GPS/geocerca y evidencia fotográfica privada'],
+  ['Schedules, rotations and distributed teams', 'Horarios, rotaciones y equipos distribuidos'],
+  ['Leave, vacations, justifications and exceptions', 'Permisos, vacaciones, justificaciones e incidencias'],
+  ['Operational reports and pre-payroll preparation', 'Reportes operativos y preparación de prenómina'],
+  ['Human review before sensitive decisions', 'Revisión humana antes de decisiones sensibles'],
+];
+
+const boundaries = [
+  ['Not a contracted production deployment', 'No es un despliegue productivo contratado'],
+  ['No public employee data, photos or biometric templates', 'No se publican empleados, fotos ni plantillas biométricas'],
+  ['No internal URLs, serial numbers, GCP IDs, costs or credentials', 'No se publican URLs internas, seriales, IDs de GCP, costos ni credenciales'],
+  ['No cloud facial-recognition claim; the terminal validates locally', 'No se afirma reconocimiento facial automático en la nube; el terminal valida localmente'],
+];
+---
+
+<Base title="InnerSpark Workforce AI" description="Staging MVP for workforce operations: attendance, schedules, exceptions and pre-payroll preparation for distributed teams.">
+  <section class="hero workforce-hero" aria-labelledby="workforce-title">
+    <div class="hero-copy">
+      <span class="eyebrow" data-es="MVP en staging · posible piloto FEMAR" data-en="Staging MVP · possible FEMAR pilot">Staging MVP · possible FEMAR pilot</span>
+      <h1 id="workforce-title" data-es="Del caos de asistencia a operaciones laborales auditables." data-en="From attendance chaos to auditable workforce operations.">From attendance chaos to auditable workforce operations.</h1>
+      <p data-es="InnerSpark Workforce AI unifica asistencia biométrica y móvil, horarios, incidencias y preparación de prenómina para empresas con personal distribuido. Se presenta como un MVP en desarrollo preparado para un posible piloto empresarial con FEMAR, no como contrato cerrado ni producción." data-en="InnerSpark Workforce AI combines biometric and mobile attendance, schedules, exceptions, and pre-payroll preparation for distributed teams. It is presented as a staging MVP prepared for a possible FEMAR enterprise pilot, not as a closed contract or production deployment.">InnerSpark Workforce AI combines biometric and mobile attendance, schedules, exceptions, and pre-payroll preparation for distributed teams. It is presented as a staging MVP prepared for a possible FEMAR enterprise pilot, not as a closed contract or production deployment.</p>
+      <div class="hero-actions">
+        <a class="pill strong" href="#what-it-does" data-es="Ver qué hace" data-en="See what it does">See what it does</a>
+        <a class="pill" href={repoUrl} target="_blank" rel="noopener noreferrer" data-es="Repositorio público ↗" data-en="Public repository ↗">Public repository ↗</a>
+      </div>
+    </div>
+    <div class="workforce-map" aria-label="Workforce workflow map">
+      <div class="flow-card intake"><strong>ADMS</strong><small>SenseFace 2A</small></div>
+      <div class="flow-card mobile"><strong>Mobile</strong><small>GPS + photo</small></div>
+      <div class="flow-card core"><strong>Workforce AI</strong><small>reviewed operations</small></div>
+      <div class="flow-card reports"><strong>Reports</strong><small>exceptions</small></div>
+      <div class="flow-card payroll"><strong>Pre-payroll</strong><small>prepared, not final</small></div>
+    </div>
+  </section>
+
+  <section class="card stack status-panel" aria-labelledby="status-title">
+    <span class="eyebrow" data-es="Estado público seguro" data-en="Safe public status">Safe public status</span>
+    <h2 id="status-title" data-es="Lo mostramos como construcción verificable, no como promesa inflada." data-en="Shown as verifiable construction, not an inflated promise.">Shown as verifiable construction, not an inflated promise.</h2>
+    <div class="status-grid">
+      <article>
+        <strong data-es="Verificado hoy" data-en="Verified today">Verified today</strong>
+        <p data-es="El repositorio público y la base Cloud Run/ADMS existen como evidencia canónica. PR #1 contiene guardrails de costo." data-en="The public repository and Cloud Run/ADMS foundation exist as canonical evidence. PR #1 contains cost guardrails.">The public repository and Cloud Run/ADMS foundation exist as canonical evidence. PR #1 contains cost guardrails.</p>
+      </article>
+      <article>
+        <strong data-es="En progreso" data-en="In progress">In progress</strong>
+        <p data-es="Firestore, Cloud Storage, pantalla móvil, geocerca/foto y kill-switch 90% quedan como WIP hasta que aparezcan en PR/rama verificable." data-en="Firestore, Cloud Storage, mobile screen, geofence/photo, and 90% kill-switch remain WIP until visible in a verifiable PR/branch.">Firestore, Cloud Storage, mobile screen, geofence/photo, and 90% kill-switch remain WIP until visible in a verifiable PR/branch.</p>
+      </article>
+      <article>
+        <strong data-es="Límite comercial" data-en="Commercial boundary">Commercial boundary</strong>
+        <p data-es="FEMAR se menciona sólo como posible piloto empresarial. No se afirma contrato, producción ni cliente cerrado." data-en="FEMAR is referenced only as a possible enterprise pilot. No contract, production deployment, or closed customer is claimed.">FEMAR is referenced only as a possible enterprise pilot. No contract, production deployment, or closed customer is claimed.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="what-it-does" class="section stack workforce-section" aria-labelledby="does-title">
+    <span class="eyebrow" data-es="Qué hace" data-en="What it does">What it does</span>
+    <h2 id="does-title" data-es="Una capa operativa entre el reloj, el móvil y la prenómina." data-en="An operating layer between the clock, the phone, and pre-payroll.">An operating layer between the clock, the phone, and pre-payroll.</h2>
+    <div class="grid cols-3">
+      {modules.map(([en, es], index) => (
+        <article class="card module-card">
+          <span>{String(index + 1).padStart(2, '0')}</span>
+          <h3 data-es={es} data-en={en}>{en}</h3>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="card stack privacy-panel" aria-labelledby="privacy-title">
+    <span class="eyebrow" data-es="Privacidad y control" data-en="Privacy and control">Privacy and control</span>
+    <h2 id="privacy-title" data-es="Diseñado para evidencia privada, consentimiento y revisión humana." data-en="Designed for private evidence, consent, and human review.">Designed for private evidence, consent, and human review.</h2>
+    <div class="grid cols-2">
+      {boundaries.map(([en, es]) => (
+        <article class="boundary-item">
+          <strong data-es="Límite público" data-en="Public boundary">Public boundary</strong>
+          <p data-es={es} data-en={en}>{en}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section stack tech-section" aria-labelledby="tech-title">
+    <span class="eyebrow" data-es="Stack publicable" data-en="Publishable stack">Publishable stack</span>
+    <h2 id="tech-title" data-es="Tecnología suficiente para explicar, sin exponer la operación." data-en="Enough technology to explain it, without exposing operations.">Enough technology to explain it, without exposing operations.</h2>
+    <div class="tech-list">
+      {['React/Vite', 'FastAPI', 'Google Cloud Run', 'Firestore', 'Cloud Storage', 'ZKTeco ADMS', 'GPS/geofencing'].map((tech) => <span class="pill mini">{tech}</span>)}
+    </div>
+    <p class="disclaimer" data-es="Esta página evita datos reales de empleados, fotos, plantillas biométricas, seriales, URLs internas, IDs de GCP, costos y credenciales." data-en="This page avoids real employee data, photos, biometric templates, serial numbers, internal URLs, GCP IDs, costs, and credentials.">This page avoids real employee data, photos, biometric templates, serial numbers, internal URLs, GCP IDs, costs, and credentials.</p>
+  </section>
+
+  <style>
+    .workforce-hero {
+      grid-template-columns: minmax(0, 1fr) minmax(320px, .85fr);
+      align-items: center;
+      padding: clamp(30px, 5vw, 58px);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(168,228,223,.62), transparent 34%),
+        radial-gradient(circle at 84% 16%, rgba(222,214,255,.72), transparent 30%),
+        linear-gradient(135deg, rgba(255,254,248,.94), rgba(242,239,229,.88));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .workforce-hero h1 { max-width: 13ch; }
+    .hero-actions, .tech-list { display:flex; flex-wrap:wrap; gap:8px; }
+    .pill.strong { border-color: var(--violet); color: var(--violet); background: rgba(222,214,255,.48); }
+    .workforce-map {
+      min-height: 390px;
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(111,90,203,.13), transparent 35%),
+        linear-gradient(90deg, rgba(111,90,203,.08) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(23,33,31,.045) 1px, transparent 1px),
+        rgba(255,255,252,.66);
+      background-size: 100% 100%, 46px 46px, 46px 46px, auto;
+    }
+    .flow-card {
+      position:absolute;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      gap:4px;
+      width:132px;
+      min-height:86px;
+      padding:12px;
+      border:1px solid rgba(111,90,203,.18);
+      border-radius:20px;
+      background:rgba(255,255,252,.86);
+      box-shadow:0 18px 42px rgba(54,48,36,.08);
+    }
+    .flow-card small { color: var(--muted); }
+    .flow-card.core {
+      left:50%; top:50%; transform:translate(-50%,-50%);
+      width:172px; min-height:116px;
+      color:var(--violet);
+      background:linear-gradient(145deg, rgba(235,249,242,.96), rgba(222,214,255,.8));
+    }
+    .flow-card.intake { left:8%; top:14%; }
+    .flow-card.mobile { left:8%; bottom:14%; }
+    .flow-card.reports { right:8%; top:14%; }
+    .flow-card.payroll { right:8%; bottom:14%; }
+    .status-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .status-grid article, .boundary-item {
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      background:rgba(255,255,255,.42);
+    }
+    .module-card { min-height:150px; justify-content:space-between; }
+    .module-card span { color:var(--violet); font: 10px/1 'DM Mono', monospace; }
+    .privacy-panel { background: rgba(255,254,248,.68); }
+    .disclaimer { max-width: 760px; }
+    @media (max-width: 860px) {
+      .workforce-hero, .status-grid { grid-template-columns: 1fr; }
+      .workforce-map { min-height: 520px; }
+      .flow-card.intake, .flow-card.mobile { left:50%; transform:translateX(-50%); }
+      .flow-card.reports, .flow-card.payroll { right:auto; left:50%; transform:translateX(-50%); }
+      .flow-card.intake { top:6%; }
+      .flow-card.mobile { top:25%; bottom:auto; }
+      .flow-card.core { top:50%; }
+      .flow-card.reports { top:66%; }
+      .flow-card.payroll { top:84%; bottom:auto; }
+    }
+  </style>
+</Base>

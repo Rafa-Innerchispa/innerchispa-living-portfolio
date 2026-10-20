@@ -1,55 +1,53 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site } from '../data/site';
+import { site, formatSyncDate } from '../data/site';
 const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const syncEn = formatSyncDate(site.source.latestUpdate, 'en-US');
+const syncEs = formatSyncDate(site.source.latestUpdate, 'es-EC');
 ---
-<Base title="Proyectos" description="Inventario vivo de proyectos y frentes activos.">
-  <section class="hero">
-    <span class="eyebrow" data-es="Proyectos" data-en="Projects" data-de="Projekte" data-fr="Projets">Proyectos</span>
-    <h1 data-es="Inventario vivo del ecosistema." data-en="Live ecosystem inventory." data-de="Lebendes Ecosystem-Inventar." data-fr="Inventaire vivant de l'écosystème.">Inventario vivo del ecosistema.</h1>
-    <p data-es="Base para navegar proyectos activos, paneles, hackatones y servicios compartidos sin duplicar trabajo." data-en="Base to navigate active projects, panels, hackathons, and shared services without duplicating work." data-de="Basis zur Navigation von aktiven Projekten, Panels, Hackathons und geteilten Services ohne Arbeitsduplizierung." data-fr="Base pour naviguer dans les projets actifs, les panels, les hackathons et les services partagés sans dupliquer le travail.">Base para navegar proyectos activos, paneles, hackatones y servicios compartidos sin duplicar trabajo.</p>
+<Base title="Projects" description="The live inventory of approved InnerChispa systems, sourced from MCP and MongoDB.">
+  <section class="hero surface page-heading">
+    <div class="eyebrow live-indicator" data-es="Inventario conectado al MCP" data-en="MCP-connected inventory">MCP-connected inventory</div>
+    <h1><span data-es="Sistemas que" data-en="Systems that">Systems that</span><br /><span class="serif" data-es="ya están vivos." data-en="are already alive.">are already alive.</span></h1>
+    <p data-es="Cada tarjeta proviene del registro canónico de InnerChispa. Cuando se aprueba un proyecto nuevo, el MCP exporta el contenido y Astro actualiza esta página." data-en="Every card comes from InnerChispa’s canonical registry. When a new project is approved, MCP exports the content and Astro updates this page.">Every card comes from InnerChispa’s canonical registry. When a new project is approved, MCP exports the content and Astro updates this page.</p>
+    <span class="sync-badge"><i></i><span data-es={`Fuente actualizada: ${syncEs}`} data-en={`Source updated: ${syncEn}`}>Source updated: {syncEn}</span></span>
   </section>
-  <div class="grid cols-2">
-    {site.projects.map((project) => {
-      const cover = project.images && project.images.length > 0 ? project.images[0].url : null;
-      const coverUrl = cover ? (cover.startsWith('/') ? baseUrl + cover.slice(1) : cover) : null;
-      return (
-        <article class="card stack" style="overflow: hidden; padding: 0; background: var(--panel);">
-          {coverUrl && (
-            <div style="aspect-ratio: 3/2; overflow: hidden; border-bottom: 1px solid var(--line);">
-              <img src={coverUrl} alt={project.name} style="width:100%; height:100%; object-fit:cover;" />
-            </div>
-          )}
-          <div class="stack" style="padding: 20px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span class="badge" style="margin:0;">{project.status}</span>
-            </div>
-            <h2 style="font-size: 1.4rem; color: #fff; margin-top: 8px;">{project.name}</h2>
-            <p style="font-size: 0.92rem; line-height: 1.5; color: var(--muted);">{project.summary}</p>
-            
-            {project.technologies && project.technologies.length > 0 && (
-              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
-                {project.technologies.map((tech: string) => (
-                  <span class="pill" style="font-size: 0.75rem; padding: 3px 8px;">{tech}</span>
-                ))}
-              </div>
-            )}
 
-            <div style="margin-top: auto; padding-top: 12px; display: flex; gap: 10px;">
-              {project.github_url && (
-                <a href={project.github_url} target="_blank" rel="noopener noreferrer" class="pill" style="font-size:0.78rem; text-decoration:none; background:rgba(255,255,255,0.02); display: inline-flex; align-items: center; gap: 4px;">
-                  💻 Código
-                </a>
-              )}
-              {project.demo_url && (
-                <a href={project.demo_url} target="_blank" rel="noopener noreferrer" class="pill" style="font-size:0.78rem; text-decoration:none; background:rgba(103, 232, 249, 0.05); border-color: var(--accent); color: var(--accent); display: inline-flex; align-items: center; gap: 4px;">
-                  ⚡ Demo Live
-                </a>
-              )}
-            </div>
+  <div class="filter-row">
+    <div><strong>{site.projects.length}</strong> <span data-es="proyectos públicos" data-en="public projects">public projects</span></div>
+    <input class="search" id="project-search" type="search" data-placeholder-es="Buscar proyecto o tecnología" data-placeholder-en="Search project or technology" placeholder="Search project or technology" aria-label="Search projects" />
+  </div>
+
+  <div class="grid cols-3" id="project-grid">
+    {site.projects.map((project) => {
+      const cover = project.images?.[0]?.url;
+      const coverUrl = cover ? (cover.startsWith('/') ? baseUrl + cover.slice(1) : cover) : null;
+      const search = `${project.title_es} ${project.title_en} ${project.summary_es} ${project.summary_en} ${project.technologies.join(' ')}`.toLowerCase();
+      return <article class="card content-card" data-search={search}>
+        <div class="content-card-media">{coverUrl ? <img src={coverUrl} alt={project.title_en} loading="lazy" /> : <div class="abstract-cover"><i></i><b>IC</b></div>}<span class="badge floating">{project.status}</span></div>
+        <div class="content-card-body">
+          <div class="meta">{project.updated_at ? new Date(project.updated_at).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'2-digit'}) : 'InnerChispa'}</div>
+          <h3 data-es={project.title_es} data-en={project.title_en}>{project.title_en}</h3>
+          <p data-es={project.summary_es} data-en={project.summary_en}>{project.summary_en}</p>
+          <div class="tag-row">{project.technologies.slice(0,5).map((tech) => <span>{tech}</span>)}</div>
+          <div class="card-links">
+            {project.slug === 'innerspark-workforce-ai' && <a href={`${baseUrl}innerspark-workforce-ai`} data-es="Ver historia ↗" data-en="Read story ↗">Read story ↗</a>}
+            {project.github_url && <a href={project.github_url} target="_blank" rel="noopener noreferrer" data-es="Código ↗" data-en="Code ↗">Code ↗</a>}
+            {project.demo_url && !project.demo_url.includes('192.168.') && <a href={project.demo_url} target="_blank" rel="noopener noreferrer" data-es="Abrir demo ↗" data-en="Open demo ↗">Open demo ↗</a>}
           </div>
-        </article>
-      );
+        </div>
+      </article>;
     })}
   </div>
+  <div id="empty-projects" class="section empty" hidden data-es="No encontramos un proyecto con ese criterio." data-en="No project matches that search.">No project matches that search.</div>
+  <script is:inline>
+    const projectSearch = document.getElementById('project-search');
+    const projectCards = [...document.querySelectorAll('#project-grid [data-search]')];
+    const emptyProjects = document.getElementById('empty-projects');
+    function filterProjects() { const query = projectSearch.value.trim().toLowerCase(); let visible = 0; projectCards.forEach((card) => { const match = !query || card.dataset.search.includes(query); card.hidden = !match; if (match) visible += 1; }); emptyProjects.hidden = visible > 0; }
+    projectSearch.addEventListener('input', filterProjects);
+    const updateProjectPlaceholder = () => { const lang = document.documentElement.lang === 'es' ? 'es' : 'en'; projectSearch.placeholder = projectSearch.getAttribute(`data-placeholder-${lang}`); };
+    updateProjectPlaceholder(); document.getElementById('lang-select')?.addEventListener('change', () => setTimeout(updateProjectPlaceholder, 0));
+  </script>
+  <style>.floating{position:absolute;top:14px;right:14px;background:rgba(255,254,248,.86);backdrop-filter:blur(10px)}.abstract-cover{height:100%;display:grid;place-items:center;position:relative}.abstract-cover i{position:absolute;width:120px;height:120px;border:1px solid var(--violet);border-radius:50%}.abstract-cover b{font:18px/1 'DM Mono',monospace}.empty{text-align:center;color:var(--muted)}</style>
 </Base>

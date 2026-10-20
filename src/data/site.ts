@@ -1,108 +1,114 @@
 import publishedContent from './published_content.json';
-import { isSafePublicUrl } from '../lib/build-story-contract.js';
 
-const publicUrl = (value: unknown) => typeof value === 'string' && isSafePublicUrl(value) ? value : '';
+const englishDescriptions: Record<string, string> = {
+  proj_qwen_society: 'A high-performance agent-to-agent mesh for distributed DevOps and SRE investigation, connected to the operational memory of the InnerChispa ecosystem.',
+  hack_gitlab_upcoming: 'A focused contribution sprint for creating verifiable merge requests, strengthening CI/CD workflows, and building reusable DevSecOps capabilities.',
+  proj_funding_registry: 'A live operations portal for tracking technology credits, funding applications, resource consumption, approvals, and supporting evidence.',
+  proj_quoteops: 'An operational AI workflow that turns unstructured requests into reviewed B2B quotes, with identity checks, human approval, documents, and delivery tracking.',
+  proj_smart_quoter: 'A privacy-first, local AI quoting platform that transcribes voice, extracts requirements, validates Ecuadorian identity data, and prepares structured opportunities.',
+  proj_ralphiia_mcp: 'The canonical Model Context Protocol bridge connecting business memory, CRM, accounting, WhatsApp, and supervised agents through typed capabilities.',
+  hack_openai_build_week: 'Development of the RalphiIA QuoteOps suite for classifying requests and creating dynamic B2B quotes without hard-coded business content.',
+  hack_band_of_agents: 'A sovereign local multi-agent swarm for diagnosing networks, CCTV, and enterprise field-support cases with persistent organizational memory.',
+  hack_amd_act_ii: 'A sovereign edge-to-cloud multi-agent ecosystem that routes real operational work between local AMD hardware and accelerated cloud inference.',
+  hack_gitlab_transcend: 'InnerSpark DevSecOps Swarm intercepts GitLab events and coordinates local agents to inspect vulnerabilities and return auditable evidence.',
+  hack_brightdata_agents: 'VigilOS is an autonomous edge-security system that protects public-data ingestion and explains perimeter anomalies in real time.',
+  hack_ollama_offline: 'Offline-first classification and intake tools for operational control and intelligent quoting, powered by local Ollama and Whisper services.',
+  hack_chutes_malaysia: 'InnerOS Cloud Copilot reviews server events, identifies container anomalies, and dispatches evidence-rich notifications through WhatsApp.',
+  hack_uipath_agenthack: 'PC Doctor Maestro Copilot coordinates real MSP field exceptions using local models, structured memory, and human-in-the-loop control.',
+  hack_rapid_agent: 'A multi-agent field-operations flow combining smart routing, MongoDB memory, automated quotes, and contextual WhatsApp notifications.',
+  hack_gemini_xprize: 'Research and development of multi-agent systems and cognitive integrations using Gemini and distributed, locally persisted data meshes.',
+};
+
+const items = [...(publishedContent as any[])].sort((a, b) => String(b.updated_at || b.published_at || '').localeCompare(String(a.updated_at || a.published_at || '')));
+const latestUpdate = items.reduce((latest, item) => String(item.updated_at || item.published_at || '') > latest ? String(item.updated_at || item.published_at || '') : latest, '');
+
+const localize = (item: any) => ({
+  id: item.content_id,
+  slug: item.slug,
+  title: item.title,
+  title_es: item.translations?.es?.title || item.title_es || item.title,
+  title_en: item.translations?.en?.title || item.title_en || item.title,
+  status: item.status,
+  summary_es: item.translations?.es?.description || item.description_es || item.description,
+  summary_en: item.translations?.en?.description || item.description_en || englishDescriptions[item.content_id] || item.description,
+  technologies: item.technologies || [],
+  images: item.images || [],
+  github_url: item.github_url || '',
+  demo_url: item.demo_url || '',
+  submission_url: item.submission_url || '',
+  milestones: item.milestones || [],
+  updated_at: item.updated_at || item.published_at || '',
+});
 
 export const site = {
   brand: 'InnerChispa',
-  product: 'Ralphi IA / Ralph AI Ecosystem',
-  tagline: 'Automatización, coordinación y entregables operativos desde un solo centro',
+  product: 'Live Systems Lab',
+  tagline: 'Private intelligence, supervised agents, and real-world systems.',
   contact: 'rlopez@innerchispa.us',
-  intro: {
-    eyebrow: 'Plataforma viva',
-    headline: 'InnerChispa, PC Doctor, InnerSpark y Ralphi IA (LatAm) / Ralph AI (USA) en una sola historia técnica.',
-    summary:
-      'Un ecosistema modular para operar soporte técnico real, coordinar agentes de IA, documentar operaciones y convertir el trabajo de campo en conocimiento reusable.',
+  publicUrl: 'https://lab.innerchispa.us',
+  heroImage: '/hero-innerchispa.png',
+  business: {
+    name: 'PC Doctor S.A. · InnerChispa Live Systems Lab',
+    shortName: 'PC Doctor S.A.',
+    telephone: '+593999059000',
+    whatsapp: 'https://wa.me/593999059000',
+    email: 'rlopez@innerchispa.us',
+    url: 'https://www.innerchispa.us',
+    labUrl: 'https://lab.innerchispa.us',
+    priceRange: '$$',
+    areaServed: ['Guayaquil, Ecuador', 'Ecuador', 'Remote support'],
+    address: {
+      streetAddress: 'Guayaquil service area',
+      addressLocality: 'Guayaquil',
+      addressRegion: 'Guayas',
+      postalCode: '090150',
+      addressCountry: 'EC',
+    },
+    geo: {
+      latitude: -2.1894,
+      longitude: -79.8891,
+    },
+    sameAs: [
+      'https://www.innerchispa.us',
+      'https://github.com/Rafa-Innerchispa',
+      'https://www.linkedin.com/company/innerchispa',
+    ],
+    openingHours: [
+      { dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '18:00' },
+      { dayOfWeek: ['Saturday'], opens: '10:00', closes: '14:00' },
+    ],
+    services: [
+      { name: 'Computer and laptop diagnostics', description: 'Technical diagnosis for laptops, desktop PCs, operating systems, peripherals, and business workstations.' },
+      { name: 'Preventive maintenance and hardware repair', description: 'Cleaning, optimization, replacement guidance, storage, memory, thermal and performance maintenance.' },
+      { name: 'Remote and on-site IT support', description: 'Supervised remote assistance and coordinated on-site support for homes, founders, and small businesses.' },
+      { name: 'Networking, security and automation support', description: 'Support for networks, cameras, operational systems, WhatsApp workflows, private AI agents, and auditable automation.' },
+    ],
+    faqs: [
+      {
+        question: 'What does PC Doctor and InnerChispa do?',
+        answer: 'PC Doctor provides computer diagnostics, repair, maintenance, networking and IT support in Ecuador, while InnerChispa builds supervised AI systems, automation and private operational memory for real business workflows.',
+      },
+      {
+        question: 'Can support be remote or on-site?',
+        answer: 'Yes. The team can coordinate remote support when the issue can be diagnosed safely online, and on-site support when hardware, networks, cameras or physical infrastructure require field work.',
+      },
+      {
+        question: 'How can a customer request service quickly?',
+        answer: 'The fastest path is WhatsApp at +593999059000 or email at rlopez@innerchispa.us, with a short description of the device, issue, location and urgency.',
+      },
+      {
+        question: 'How are AI and automation used?',
+        answer: 'AI agents are used as supervised tools for intake, evidence organization, pattern detection, quoting assistance and operational follow-up; sensitive actions remain human-reviewed.',
+      },
+    ],
   },
-  proof: [
-    {
-      title: 'PC Doctor en producción real',
-      body: 'Operaciones en Ecuador, clientes, visitas, cotizaciones, facturación y evidencia viva que alimentan la memoria del sistema.',
-    },
-    {
-      title: 'Ralphi IA / Ralph AI como cerebro operativo',
-      body: 'MCP, coordinación multiagente, WhatsApp, paneles y memoria persistente para ChatGPT, Cursor, Codex, Antigravity y Gemini.',
-    },
-    {
-      title: 'InnerSpark como misión ampliada',
-      body: 'Apoyo a fundadores, ONGs y fundaciones; acceso a tecnología y automatización para quien necesite una ruta de entrada.',
-    },
-  ],
-  entities: [
-    {
-      name: 'PC Doctor S.A.',
-      region: 'Ecuador',
-      role: 'Operación técnica, soporte de campo, seguridad electrónica y soporte empresarial.',
-    },
-    {
-      name: 'InnerChispa LLC',
-      region: 'Estados Unidos',
-      role: 'Estrategia, automatización, productos web y colaboración con hackatones.',
-    },
-    {
-      name: 'InnerSpark',
-      region: 'Capa de misión',
-      role: 'Espiritualidad, conciencia, IA y soporte para proyectos con impacto.',
-    },
-  ],
-  projects: publishedContent
-    .filter((x: any) => x.type === 'project')
-    .map((x: any) => ({
-      name: x.title,
-      status: x.status === 'published' ? 'Activo' : x.status,
-      summary: x.description,
-      technologies: x.technologies || [],
-      images: x.images || [],
-      github_url: publicUrl(x.github_url),
-      demo_url: publicUrl(x.demo_url),
-    })),
-  visuals: [
-    {
-      title: 'Hero operational panel',
-      src: '/hero-innerchispa.png',
-      alt: 'Panel operativo de InnerChispa, PC Doctor y Ralphi IA',
-      caption: 'Hero principal de la portada actual.',
-    },
-    {
-      title: 'Next case study slot',
-      src: '/visuals/placeholder-case-study.png',
-      alt: 'Espacio reservado para una nueva imagen de caso de estudio',
-      caption: 'Copia aquí el siguiente PNG/JPG y actualiza la ruta.',
-    },
-  ],
-  hackathons: publishedContent
-    .filter((x: any) => x.type === 'hackathon')
-    .map((x: any) => ({
-      title: x.title,
-      status: x.status === 'published' ? 'Active' : x.status,
-      summary: x.description,
-      technologies: x.technologies || [],
-      images: x.images || [],
-      github_url: publicUrl(x.github_url),
-      demo_url: publicUrl(x.demo_url),
-      submission_url: publicUrl(x.submission_url),
-      milestones: x.milestones || []
-    })),
-  timeline: [
-    { date: '2026-07-01', title: 'Coordinación v2', body: 'Se establecen inboxes compartidos, journals y la memoria operativa central.' },
-    { date: '2026-07-07', title: 'Dual-node WhatsApp', body: 'Se documenta la estrategia de respaldo y bootstrap para el nodo AMD.' },
-    { date: '2026-07-10', title: 'Auditoría de datos', body: 'Se detecta la separación entre legacy y operaciones de PC Doctor.' },
-    { date: '2026-07-11', title: 'Arquitectura modular', body: 'Se formaliza el kernel + módulos vendibles y la historia viva del ecosistema.' },
-    { date: '2026-07-14', title: 'Staging web y narrativa', body: 'Se define la narrativa de marca y se prepara la web corporativa modular.' },
-  ],
-  capabilities: [
-    'MCP y coordinación multiagente',
-    'WhatsApp y mensajes operativos',
-    'Registro de fondos y créditos',
-    'Paneles web internos',
-    'Modelos locales y ruteo de IA',
-    'Documentación sincronizada',
-  ],
-  mission: [
-    'Automatizar trabajo real sin perder control humano.',
-    'Convertir operaciones en sistemas reutilizables.',
-    'Abrir tecnología a proyectos con impacto y a quien no puede pagar.',
-  ],
+  source: {
+    label: 'MCP · MongoDB · Astro',
+    itemCount: items.length,
+    latestUpdate,
+  },
+  projects: items.filter((item) => item.type === 'project').map(localize),
+  hackathons: items.filter((item) => item.type === 'hackathon').map(localize),
   navigation: [
     ['Home', '/'],
     ['Ralphi IA / Ralph AI', '/ralphi-ia'],
@@ -112,4 +118,26 @@ export const site = {
     ['Contacto', '/contacto'],
     ['Privacy', '/privacy'],
   ],
+  proof: [
+    { title: 'PC Doctor in real operations', body: 'Twenty-five years of field infrastructure, clients, service visits, physical systems, and operational evidence.' },
+    { title: 'RalphiIA as an operating layer', body: 'MCP, multi-agent coordination, WhatsApp, private memory, and human-supervised capabilities.' },
+    { title: 'Every project becomes a building block', body: 'What is learned in one mission is documented and made reusable across the ecosystem.' },
+  ],
+  entities: [
+    { name: 'PC Doctor S.A.', region: 'Ecuador', role: 'Physical infrastructure, field services, networking, security, and business operations.' },
+    { name: 'InnerChispa LLC', region: 'United States', role: 'AI systems strategy, reusable technology, products, and global collaboration.' },
+    { name: 'InnerSpark', region: 'Mission layer', role: 'Human-centered systems for founders, creators, organizations, and meaningful work.' },
+  ],
+  timeline: [
+    { date: '2000', title: 'Physical operations', body: 'PC Doctor begins building and maintaining real technology environments.' },
+    { date: '2026-07', title: 'Shared operational memory', body: 'Agents, tools, projects, and evidence converge through RalphiIA MCP.' },
+    { date: 'Now', title: 'Live systems laboratory', body: 'Each new approved project becomes a visible, reusable part of the InnerChispa ecosystem.' },
+  ],
+  capabilities: ['Private AI memory', 'Supervised agents', 'WhatsApp operations', 'Local model routing', 'Field infrastructure', 'Evidence and audit trails'],
+  mission: ['Automate real work without losing human control.', 'Turn operations into reusable systems.', 'Make practical intelligence available to projects with purpose.'],
+};
+
+export const formatSyncDate = (value: string, locale = 'en-US') => {
+  if (!value) return 'Awaiting first sync';
+  return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'America/Guayaquil' }).format(new Date(value));
 };

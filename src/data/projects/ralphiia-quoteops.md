@@ -1,6 +1,7 @@
 ---
 approved_by: rlopez
 demo_url: https://sworn-profusely-alongside.ngrok-free.dev/funding/ui
+event_url: ''
 github_url: https://github.com/Rafa-Innerchispa/ralphiia-quoteops
 images:
 - caption: Cockpit principal de QuoteOps
@@ -8,6 +9,7 @@ images:
   url: /visuals/quoteops_cover.png
 published_at: '2026-07-15T05:00:00Z'
 slug: ralphiia-quoteops
+submission_url: ''
 technologies:
 - Python
 - FastAPI
@@ -16,6 +18,7 @@ technologies:
 - Intuito API
 theme: purple-neon
 title: RalphiIA QuoteOps
+video_url: ''
 visibility: public
 ---
 

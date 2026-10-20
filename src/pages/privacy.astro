@@ -1,68 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
 ---
-<Base title="Política de Privacidad" description="Política de privacidad corporativa y términos de uso responsable de datos.">
+<Base title="Privacy / Privacidad" description="Responsible data-use and privacy principles for InnerChispa systems.">
   <section class="hero">
-    <span class="eyebrow">Legal y Transparencia</span>
-    <h1>Política de Privacidad</h1>
-    <p>Términos de uso responsable y protección de datos para los sistemas de InnerChispa LLC y PC Doctor S.A.</p>
+    <span class="eyebrow" data-es="Legal y transparencia" data-en="Legal and transparency">Legal and transparency</span>
+    <h1 data-es="Privacidad por diseño." data-en="Privacy by design.">Privacy by design.</h1>
+    <p data-es="Principios de uso responsable y protección de datos para los sistemas de InnerChispa LLC y PC Doctor S.A." data-en="Responsible-use and data-protection principles for InnerChispa LLC and PC Doctor S.A. systems.">Responsible-use and data-protection principles for InnerChispa LLC and PC Doctor S.A. systems.</p>
   </section>
-
   <div class="grid cols-2">
     <section class="section stack">
-      <h2>1. Compromiso de Confidencialidad</h2>
-      <p>
-        En el ecosistema modular de InnerChispa y PC Doctor, la seguridad de la información es un pilar fundamental. Esta política rige cómo recolectamos, procesamos y salvaguardamos los datos transaccionales, credenciales de API, registros de WhatsApp y flujos de automatización.
-      </p>
-      <div class="card">
-        <strong>Principios Fundamentales:</strong>
-        <ul>
-          <li><strong>Minimización:</strong> Solo almacenamos los tokens y metadatos estrictamente necesarios para la ejecución técnica.</li>
-          <li><strong>Soberanía Local:</strong> Priorizamos modelos de lenguaje locales (Ollama/Qwen) sobre APIs externas para evitar la fuga de datos confidenciales de negocio.</li>
-          <li><strong>Human-in-the-Loop:</strong> Ningún entregable generado por IA (cartas, cotizaciones, correos) se envía o publica sin la aprobación expresa del administrador humano.</li>
-        </ul>
-      </div>
+      <h2 data-es="1. Confidencialidad" data-en="1. Confidentiality">1. Confidentiality</h2>
+      <p data-es="La seguridad de la información guía cómo recolectamos, procesamos y protegemos datos operativos, credenciales y flujos de automatización." data-en="Information security guides how we collect, process, and protect operational data, credentials, and automation flows.">Information security guides how we collect, process, and protect operational data, credentials, and automation flows.</p>
+      <div class="card"><strong data-es="Principios fundamentales" data-en="Core principles">Core principles</strong><ul><li data-es="Minimización: conservamos solo lo necesario para ejecutar el servicio." data-en="Minimization: we retain only what is necessary to deliver the service.">Minimization: we retain only what is necessary to deliver the service.</li><li data-es="Procesamiento local: priorizamos infraestructura privada cuando es apropiado." data-en="Local processing: we prioritize private infrastructure when appropriate.">Local processing: we prioritize private infrastructure when appropriate.</li><li data-es="Control humano: ningún entregable sensible se envía sin aprobación." data-en="Human control: no sensitive deliverable is sent without approval.">Human control: no sensitive deliverable is sent without approval.</li></ul></div>
     </section>
-
     <section class="section stack">
-      <h2>2. Datos y Credenciales de Plataformas</h2>
-      <p>
-        Nuestros conectores y herramientas MCP integran credenciales temporales de plataformas externas (tales como LinkedIn, Google Workspace, y MongoDB).
-      </p>
-      <div class="card">
-        <strong>Seguridad y Cifrado:</strong>
-        <p>
-          Los tokens de acceso y llaves secretas se cifran en reposo y se transmiten utilizando túneles seguros y protocolos OAuth 2.0. Las conexiones a las bases de datos de PC Doctor se realizan mediante canales internos seguros de red.
-        </p>
-      </div>
+      <h2 data-es="2. Datos y credenciales" data-en="2. Data and credentials">2. Data and credentials</h2>
+      <p data-es="Nuestros conectores pueden usar credenciales temporales de plataformas externas para ejecutar funciones autorizadas." data-en="Our connectors may use temporary credentials from external platforms to perform authorized functions.">Our connectors may use temporary credentials from external platforms to perform authorized functions.</p>
+      <div class="card"><strong data-es="Seguridad" data-en="Security">Security</strong><p data-es="Los secretos se protegen en reposo y se transmiten mediante canales seguros y protocolos de autorización estándar." data-en="Secrets are protected at rest and transmitted through secure channels and standard authorization protocols.">Secrets are protected at rest and transmitted through secure channels and standard authorization protocols.</p></div>
     </section>
-  </div>
-
-  <div class="grid cols-2" style="margin-top: 20px;">
     <section class="section stack">
-      <h2>3. Integraciones de Mensajería y Correo</h2>
-      <p>
-        El procesamiento de hilos de correos y la Evolution API de WhatsApp se limitan a la extracción de requerimientos operativos, alertas de asignación de créditos y flujos de soporte técnico empresarial.
-      </p>
-      <div class="card">
-        <strong>Retención y Eliminación:</strong>
-        <p>
-          No mantenemos copias innecesarias de conversaciones personales. Toda la información extraída se asocia estrictamente a registros de soporte empresarial o a expedientes de fondos de startups.
-        </p>
-      </div>
+      <h2 data-es="3. Mensajería y correo" data-en="3. Messaging and email">3. Messaging and email</h2>
+      <p data-es="El procesamiento se limita a requerimientos operativos, alertas, asignaciones y flujos de soporte autorizados." data-en="Processing is limited to authorized operational requests, alerts, assignments, and support workflows.">Processing is limited to authorized operational requests, alerts, assignments, and support workflows.</p>
     </section>
-
     <section class="section stack">
-      <h2>4. Contacto y Derechos de Datos</h2>
-      <p>
-        Como titular de los datos, tiene derecho a solicitar la visualización, modificación o eliminación inmediata de cualquier token, email registrado o credencial en nuestro clúster de servidores (Intel y AMD standby).
-      </p>
-      <div class="card" style="background: rgba(103, 232, 249, 0.05); border-color: var(--accent);">
-        <strong>Canal Oficial de Privacidad:</strong>
-        <p>
-          Para ejercer sus derechos o resolver dudas sobre la gestión de automatizaciones, puede contactar al correo de administración centralizada: <a href="mailto:rlopez@innerchispa.us" style="color: var(--accent); text-decoration: underline;">rlopez@innerchispa.us</a>.
-        </p>
-      </div>
+      <h2 data-es="4. Tus derechos" data-en="4. Your rights">4. Your rights</h2>
+      <p data-es="Puedes solicitar acceso, corrección o eliminación de tus datos cuando corresponda. Escríbenos a" data-en="You may request access, correction, or deletion of your data where applicable. Contact us at">You may request access, correction, or deletion of your data where applicable. Contact us at</p>
+      <div class="card"><a href="mailto:rlopez@innerchispa.us">rlopez@innerchispa.us</a></div>
     </section>
   </div>
 </Base>

@@ -1,75 +1,325 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site } from '../data/site';
-const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+import portfolio from '../data/hackathons_portfolio.json';
+
+type Project = {
+  id: string;
+  canonical_project_name: string;
+  event_name: string | null;
+  platform: string;
+  event_date: string;
+  location: string;
+  project_status: string;
+  repository_url: string | null;
+  submission_url: string | null;
+  event_url: string | null;
+  live_demo_url: string | null;
+  video_url: string | null;
+  problem_statement: string;
+  solution_statement: string;
+  technologies: string[];
+  evidence_source: string[];
+  safe_to_display_publicly: boolean;
+  public_disclaimer: string;
+  section: string;
+  display_priority: number;
+};
+
+const allProjects = (portfolio.projects as Project[]).sort((a, b) => a.display_priority - b.display_priority);
+const publicProjects = allProjects.filter((project) => project.safe_to_display_publicly);
+const heldBack = allProjects.filter((project) => !project.safe_to_display_publicly);
+const sections = [
+  'Built live in San Francisco',
+  'Devpost submissions',
+  'LabLab build series',
+  'Currently building',
+  'Prototype archive',
+];
+const platforms = ['All', ...Array.from(new Set(publicProjects.map((project) => project.platform))).sort()];
+const statuses = ['All', ...Array.from(new Set(publicProjects.map((project) => project.project_status))).sort()];
+const years = ['All', ...Array.from(new Set(publicProjects.map((project) => project.event_date.slice(0, 4)))).sort()];
+
+const link = (href: string | null, label: string) => href ? { href, label } : null;
 ---
-<Base title="Hackatones" description="Lista curada de convocatorias y pistas activas.">
-  <section class="hero">
-    <span class="eyebrow" data-es="Hackatones" data-en="Hackathons" data-de="Hackathons" data-fr="Hackathons">Hackatones</span>
-    <h1 data-es="Convocatorias activas, elegibilidad y estrategia." data-en="Active calls, eligibility, and strategy." data-de="Aktive Ausschreibungen, Eignung und Strategie." data-fr="Appels actifs, éligibilité et stratégie.">Convocatorias activas, elegibilidad y estrategia.</h1>
-    <p data-es="Ruta de trabajo para minar oportunidades, decidir entidad y producir entregables reutilizables." data-en="Work path to mine opportunities, decide entity, and produce reusable deliverables." data-de="Arbeitsweg zur Erschließung von Chancen, zur Entscheidung über die Entität und zur Erstellung wiederverwendbarer Ergebnisse." data-fr="Chemin de travail pour miner les opportunités, décider de l'entité et produire des livrables réutilisables.">Ruta de trabajo para minar oportunidades, decidir entidad y producir entregables reutilizables.</p>
+
+<Base title="Hackathons" description="Canonical InnerChispa Living Lab portfolio synchronized from Devpost, LabLab and GitHub evidence.">
+  <section class="hero portfolio-hero">
+    <div class="hero-copy">
+      <span class="eyebrow" data-es="Portafolio vivo" data-en="Living portfolio" data-de="Live-Portfolio" data-fr="Portfolio vivant">Living portfolio</span>
+      <h1 data-es="Hackatones reales, evidencia real, sin inflar resultados." data-en="Real hackathons, real evidence, no inflated claims." data-de="Echte Hackathons, echte Nachweise, keine übertriebenen Behauptungen." data-fr="De vrais hackathons, de vraies preuves, sans résultats exagérés.">Real hackathons, real evidence, no inflated claims.</h1>
+      <p data-es="Esta página usa el inventario canónico del Living Lab para reconciliar Devpost, LabLab y GitHub. Las tarjetas muestran sólo proyectos seguros para publicar y mantienen pendientes las entradas sin evidencia completa." data-en="This page uses the Living Lab canonical inventory to reconcile Devpost, LabLab and GitHub. Cards show only public-safe projects and hold entries that still need evidence." data-de="Diese Seite nutzt das kanonische Living-Lab-Inventar, um Devpost, LabLab und GitHub abzugleichen." data-fr="Cette page utilise l’inventaire canonique du Living Lab pour réconcilier Devpost, LabLab et GitHub.">This page uses the Living Lab canonical inventory to reconcile Devpost, LabLab and GitHub. Cards show only public-safe projects and hold entries that still need evidence.</p>
+      <div class="hero-actions">
+        <a class="pill strong" href="#portfolio-grid">Explorar portafolio</a>
+        <a class="pill" href="https://www.innerchispa.us" target="_blank" rel="noopener noreferrer">Sitio oficial</a>
+      </div>
+    </div>
+    <div class="signal-map" aria-label="Mapa de sincronización">
+      <div class="signal-node source">Devpost<br /><small>Submissions</small></div>
+      <div class="signal-node source">LabLab<br /><small>Build series</small></div>
+      <div class="signal-node source">GitHub<br /><small>Repos</small></div>
+      <div class="signal-node core">hackathons.json<br /><small>Fuente canónica</small></div>
+      <div class="signal-node target">Astro<br /><small>Staging</small></div>
+      <div class="signal-node target">Living Lab<br /><small>Preview</small></div>
+    </div>
   </section>
-  <div class="grid cols-2">
-    {site.hackathons.map((item) => {
-      const cover = item.images && item.images.length > 0 ? item.images[0].url : null;
-      const coverUrl = cover ? (cover.startsWith('/') ? baseUrl + cover.slice(1) : cover) : null;
+
+  <section class="card stack sync-panel" aria-labelledby="sync-title">
+    <div class="sync-grid">
+      <div>
+        <span class="eyebrow" data-es="Sincronización" data-en="Synchronization" data-de="Synchronisierung" data-fr="Synchronisation">Synchronization</span>
+        <h2 id="sync-title">Fuente de verdad compartida</h2>
+        <p>Astro lee una copia del inventario canónico del Living Lab. El siguiente paso es automatizar la actualización desde Devpost, LabLab, GitHub y el panel de aprobación del puerto 2002.</p>
+      </div>
+      <div class="metric-row">
+        <div class="metric"><strong>{publicProjects.length}</strong><span>publicables</span></div>
+        <div class="metric"><strong>{heldBack.length}</strong><span>pendientes</span></div>
+        <div class="metric"><strong>{portfolio.schema_version}</strong><span>schema</span></div>
+      </div>
+    </div>
+    <div class="notice">
+      <strong>Control de claims:</strong> no se publican premios, resultados, clientes, revenue ni producción sin evidencia oficial. Los links temporales o internos no aparecen como demos públicos.
+    </div>
+  </section>
+
+  <section class="card stack filters" aria-label="Filtros del portafolio">
+    <div class="filter-group">
+      <label>
+        Plataforma
+        <select data-filter="platform">
+          {platforms.map((item) => <option value={item}>{item}</option>)}
+        </select>
+      </label>
+      <label>
+        Estado
+        <select data-filter="status">
+          {statuses.map((item) => <option value={item}>{item}</option>)}
+        </select>
+      </label>
+      <label>
+        Año
+        <select data-filter="year">
+          {years.map((item) => <option value={item}>{item}</option>)}
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <div id="portfolio-grid" class="stack portfolio-sections">
+    {sections.map((section) => {
+      const items = publicProjects.filter((project) => project.section === section);
+      if (!items.length) return null;
       return (
-        <article class="card stack" style="overflow: hidden; padding: 0; background: var(--panel);">
-          {coverUrl && (
-            <div style="aspect-ratio: 3/2; overflow: hidden; border-bottom: 1px solid var(--line);">
-              <img src={coverUrl} alt={item.title} style="width:100%; height:100%; object-fit:cover;" />
-            </div>
-          )}
-          <div class="stack" style="padding: 20px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span class="badge" style="margin:0;">{item.status}</span>
-            </div>
-            <h2 style="font-size: 1.4rem; color: #fff; margin-top: 8px;">{item.title}</h2>
-            <p style="font-size: 0.92rem; line-height: 1.5; color: var(--muted);">{item.summary}</p>
-            
-            {item.technologies && item.technologies.length > 0 && (
-              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
-                {item.technologies.map((tech: string) => (
-                  <span class="pill" style="font-size: 0.75rem; padding: 3px 8px;">{tech}</span>
-                ))}
-              </div>
-            )}
-
-            {item.milestones && item.milestones.length > 0 && (
-              <div style="margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px;">
-                <strong style="font-size: 0.82rem; color: #a5b4fc; text-transform: uppercase;">Hitos del Proyecto:</strong>
-                <ul style="margin: 6px 0 0 0; padding-left: 18px; font-size: 0.85rem; color: var(--muted); display: grid; gap: 4px;">
-                  {item.milestones.map((m: any) => (
-                    <li>
-                      <span style={m.status === 'completed' ? "text-decoration: line-through; color: var(--accent-2);" : ""}>
-                        {m.title} ({m.date})
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            <div style="margin-top: auto; padding-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;">
-              {item.github_url && (
-                <a href={item.github_url} target="_blank" rel="noopener noreferrer" class="pill" style="font-size:0.78rem; text-decoration:none; background:rgba(255,255,255,0.02); display: inline-flex; align-items: center; gap: 4px;">
-                  💻 Repositorio
-                </a>
-              )}
-              {item.demo_url && (
-                <a href={item.demo_url} target="_blank" rel="noopener noreferrer" class="pill" style="font-size:0.78rem; text-decoration:none; background:rgba(103, 232, 249, 0.05); border-color: var(--accent); color: var(--accent); display: inline-flex; align-items: center; gap: 4px;">
-                  ⚡ Demo Live
-                </a>
-              )}
-              {item.submission_url && (
-                <a href={item.submission_url} target="_blank" rel="noopener noreferrer" class="pill" style="font-size:0.78rem; text-decoration:none; background:rgba(52, 211, 153, 0.05); border-color: var(--accent-2); color: var(--accent-2); display: inline-flex; align-items: center; gap: 4px;">
-                  🏆 Submission
-                </a>
-              )}
-            </div>
+        <section class="stack portfolio-section" data-section={section}>
+          <div class="section-heading">
+            <span class="eyebrow">{section}</span>
+            <h2>{section === 'Built live in San Francisco' ? 'Destacados de San Francisco' : section}</h2>
           </div>
-        </article>
+          <div class="grid cols-2">
+            {items.map((project) => {
+              const links = [
+                link(project.event_url, 'Evento'),
+                link(project.repository_url, 'Repositorio'),
+                link(project.submission_url, 'Submission'),
+                link(project.live_demo_url, 'Demo'),
+                link(project.video_url, 'Video'),
+              ].filter(Boolean);
+              return (
+                <article
+                  class="card portfolio-card"
+                  data-platform={project.platform}
+                  data-status={project.project_status}
+                  data-year={project.event_date.slice(0, 4)}
+                >
+                  <div class="card-topline">
+                    <span class={`badge status-${project.project_status.replaceAll(' ', '-')}`}>{project.project_status}</span>
+                    <span class="pill mini">{project.platform}</span>
+                  </div>
+                  <h3>{project.canonical_project_name}</h3>
+                  <p class="meta">{project.event_name || 'Prototype / archive'} · {project.event_date} · {project.location}</p>
+                  <div class="problem-solution">
+                    <p><strong>Problema:</strong> {project.problem_statement}</p>
+                    <p><strong>Solución:</strong> {project.solution_statement}</p>
+                  </div>
+                  {project.technologies?.length > 0 && (
+                    <div class="tech-list">
+                      {project.technologies.slice(0, 8).map((tech) => <span class="pill mini">{tech}</span>)}
+                    </div>
+                  )}
+                  <div class="evidence">
+                    <strong>Evidencia:</strong> {project.evidence_source.join(' · ')}
+                    <br />
+                    <span>{project.public_disclaimer}</span>
+                  </div>
+                  {links.length > 0 && (
+                    <div class="link-row">
+                      {links.map((item: any) => (
+                        <a class="pill link-pill" href={item.href} target="_blank" rel="noopener noreferrer">{item.label}</a>
+                      ))}
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        </section>
       );
     })}
   </div>
+
+  <section class="card stack held-back" aria-labelledby="held-title">
+    <span class="eyebrow">Pendiente de reconciliación</span>
+    <h2 id="held-title">No todo se convierte en tarjeta pública todavía</h2>
+    <p>Estas entradas existen como señales, certificados o participación posible, pero no tienen todavía el mapeo completo evento → proyecto → repositorio → submission.</p>
+    <div class="grid cols-2">
+      {heldBack.map((project) => (
+        <article class="pending-item">
+          <strong>{project.canonical_project_name}</strong>
+          <span>{project.event_name || 'Evento pendiente'} · {project.project_status}</span>
+          <p>{project.public_disclaimer}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <style>
+    .portfolio-hero {
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.9fr);
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(168, 228, 223, 0.55), transparent 34%),
+        radial-gradient(circle at 78% 28%, rgba(222, 214, 255, 0.62), transparent 32%),
+        linear-gradient(135deg, rgba(255, 254, 248, 0.96), rgba(245, 241, 231, 0.9) 52%, rgba(235, 249, 242, 0.86));
+      box-shadow: 0 18px 54px rgba(54, 48, 36, 0.08), inset 0 1px 0 rgba(255,255,255,0.72);
+    }
+    .portfolio-hero::before {
+      content: "";
+      position: absolute;
+      inset: -42% -22% auto auto;
+      width: 62%;
+      height: 82%;
+      background: radial-gradient(circle, rgba(111, 90, 203, 0.12), transparent 62%);
+      pointer-events: none;
+    }
+    .hero-copy, .signal-map { position: relative; z-index: 1; }
+    .hero-copy h1 { max-width: 14ch; }
+    .hero-actions, .link-row, .tech-list, .card-topline, .filter-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill.strong { border-color: var(--accent); color: var(--accent); background: rgba(103, 232, 249, 0.08); }
+    .signal-map {
+      min-height: 360px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(111, 90, 203, 0.13), transparent 34%),
+        linear-gradient(90deg, rgba(111, 90, 203, 0.09) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(23, 33, 31, 0.045) 1px, transparent 1px),
+        rgba(255, 255, 252, 0.64);
+      background-size: 100% 100%, 48px 48px, 48px 48px, auto;
+      position: relative;
+      box-shadow: inset 0 0 90px rgba(168, 228, 223, 0.22), 0 18px 42px rgba(54,48,36,.07);
+    }
+    .signal-node {
+      position: absolute;
+      width: 132px;
+      min-height: 80px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(111, 90, 203, 0.18);
+      background: linear-gradient(145deg, rgba(255, 255, 252, 0.96), rgba(244, 240, 230, 0.82));
+      box-shadow: 0 14px 34px rgba(54, 48, 36, 0.09), 0 0 28px rgba(168, 228, 223, 0.12);
+      font-weight: 800;
+      backdrop-filter: blur(10px);
+    }
+    .signal-node small { color: var(--muted); font-weight: 600; }
+    .signal-node.core {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-color: var(--accent);
+      color: var(--accent);
+      width: 170px;
+      min-height: 104px;
+      background: linear-gradient(145deg, rgba(235, 249, 242, 0.98), rgba(222, 214, 255, 0.72));
+      box-shadow: 0 0 0 1px rgba(111, 90, 203, 0.2), 0 24px 60px rgba(111, 90, 203, 0.13);
+    }
+    .signal-node.source:nth-child(1) { left: 8%; top: 10%; }
+    .signal-node.source:nth-child(2) { left: 8%; bottom: 11%; }
+    .signal-node.source:nth-child(3) { left: 35%; top: 6%; }
+    .signal-node.target:nth-child(5) { right: 8%; top: 16%; }
+    .signal-node.target:nth-child(6) { right: 8%; bottom: 14%; }
+    .sync-grid { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; }
+    .metric-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .metric { min-width: 118px; border: 1px solid var(--line); border-radius: 16px; padding: 14px; background: rgba(255,255,255,0.025); }
+    .metric strong { display:block; color: var(--text); font-size: 1.6rem; }
+    .metric span { color: var(--muted); font-size: .78rem; }
+    .notice, .evidence {
+      border: 1px solid rgba(52, 211, 153, 0.22);
+      background: rgba(52, 211, 153, 0.055);
+      color: var(--muted);
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 0.86rem;
+      line-height: 1.55;
+    }
+    .filter-group label { display: grid; gap: 6px; color: var(--muted); font-size: 0.82rem; }
+    .filter-group select {
+      min-width: 180px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--panel-2);
+      color: var(--text);
+    }
+    .portfolio-sections { margin-top: 20px; }
+    .portfolio-section { margin-bottom: 18px; }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .portfolio-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(103, 232, 249, 0.08), transparent 28%),
+        var(--panel);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.16);
+    }
+    .portfolio-card h3 { font-size: 1.35rem; color: var(--text); }
+    .problem-solution p { margin: 0 0 8px; font-size: 0.92rem; }
+    .mini { font-size: 0.74rem; padding: 4px 8px; }
+    .link-pill { color: var(--accent); border-color: rgba(103, 232, 249, 0.3); }
+    .link-pill:first-child { color: #f8d36b; border-color: rgba(248, 211, 107, 0.34); }
+    .pending-item {
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255,255,255,0.018);
+    }
+    .pending-item span { display:block; color: var(--muted); margin-top: 4px; font-size: 0.86rem; }
+    .pending-item p { margin-bottom: 0; font-size: 0.86rem; }
+    .portfolio-card[hidden] { display: none; }
+    @media (max-width: 920px) {
+      .portfolio-hero, .sync-grid { grid-template-columns: 1fr; }
+      .signal-map { min-height: 480px; }
+      .signal-node.source:nth-child(3) { left: 52%; top: 8%; }
+    }
+  </style>
 </Base>
+
+<script>
+  const controls = Array.from(document.querySelectorAll('[data-filter]'));
+  const cards = Array.from(document.querySelectorAll('.portfolio-card'));
+  const applyFilters = () => {
+    const selected = Object.fromEntries(controls.map((control) => [control.dataset.filter, control.value]));
+    cards.forEach((card) => {
+      const platformOk = selected.platform === 'All' || card.dataset.platform === selected.platform;
+      const statusOk = selected.status === 'All' || card.dataset.status === selected.status;
+      const yearOk = selected.year === 'All' || card.dataset.year === selected.year;
+      card.hidden = !(platformOk && statusOk && yearOk);
+    });
+  };
+  controls.forEach((control) => control.addEventListener('change', applyFilters));
+</script>

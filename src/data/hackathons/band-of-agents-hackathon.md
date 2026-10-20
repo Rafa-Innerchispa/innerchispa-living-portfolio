@@ -1,6 +1,7 @@
 ---
 approved_by: rlopez
 demo_url: ''
+event_url: ''
 github_url: https://github.com/Rafa-Innerchispa/innerspark-swarm-os-cursor-local
 images:
 - caption: InnerOS IT Field Swarm
@@ -8,6 +9,7 @@ images:
   url: /visuals/zerotokens_cover.png
 published_at: '2026-07-12T12:00:00Z'
 slug: band-of-agents-hackathon
+submission_url: https://lablab.ai/ai-hackathons/band-of-agents-hackathon/innerchispa-autonomous-labs/inneros-sovereign-multi-agent-it-field-swarm
 technologies:
 - Band
 - Featherless
@@ -15,6 +17,7 @@ technologies:
 - MongoDB
 theme: default
 title: Band of Agents Hackathon
+video_url: ''
 visibility: public
 ---
 

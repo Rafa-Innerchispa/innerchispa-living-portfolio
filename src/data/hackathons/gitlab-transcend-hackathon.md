@@ -1,21 +1,23 @@
 ---
-approved_by: rlopez
+approved_by: canonical_sync
 demo_url: ''
-github_url: https://github.com/Rafa-Innerchispa/gitlab-transcend
-images:
-- caption: InnerSpark DevSecOps Swarm
-  is_cover: true
-  url: /visuals/zerotokens_cover.png
-published_at: '2026-07-06T12:00:00Z'
+event_url: https://gitlab-transcend.devpost.com/
+github_url: https://gitlab.com/rafagye/innerspark-devsecops-swarm
+images: []
+published_at: '2026-08-04T14:28:20.175546+00:00'
 slug: gitlab-transcend-hackathon
+submission_url: https://devpost.com/software/innerspark-devsecops-swarm
 technologies:
-- GitLab API
-- Qwen-14B
+- GitLab
 - FastAPI
+- Qwen
+- Ollama
 - WhatsApp
-theme: default
-title: GitLab Transcend Hackathon
+- SSE
+theme: living-lab
+title: InnerSpark DevSecOps Swarm
+video_url: https://youtu.be/ycvwOYJLza8
 visibility: public
 ---
 
-Desarrollo de InnerSpark DevSecOps Swarm, una malla de agentes autónomos que intercepta eventos de GitLab para auditar vulnerabilidades usando Qwen-14B local.
+A sovereign DevSecOps agent mesh intercepts repository events, performs local AI-assisted audits and routes findings to the operator.

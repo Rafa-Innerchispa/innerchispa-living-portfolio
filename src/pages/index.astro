@@ -1,89 +1,138 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site } from '../data/site';
-const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
-const quoteOps = site.projects.find((project) => project.name.includes('QuoteOps')) || site.projects[0];
+import { site, formatSyncDate } from '../data/site';
+const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const featuredProjects = site.projects.slice(0, 4);
+const featuredHackathons = site.hackathons.slice(0, 3);
+const syncEn = formatSyncDate(site.source.latestUpdate, 'en-US');
+const syncEs = formatSyncDate(site.source.latestUpdate, 'es-EC');
 ---
-<Base title="Home" description="InnerChispa turns human intent and observable agent work into useful, reusable systems." pageClass="home-page">
-  <section class="home-hero">
-    <div class="home-hero-copy">
-      <span class="kicker" data-en="A living technology studio" data-es="Un estudio tecnológico vivo">A living technology studio</span>
-      <h1>
-        <span data-en="Human intent." data-es="Intención humana.">Human intent.</span><br />
-        <em data-en="Agent craft." data-es="Oficio de agentes.">Agent craft.</em><br />
-        <span data-en="Real proof." data-es="Evidencia real.">Real proof.</span>
-      </h1>
-      <p
-        data-en="InnerChispa builds practical AI systems in the open: what changed, who contributed, what passed, and what comes next—without exposing the private work beneath it."
-        data-es="InnerChispa construye sistemas prácticos de IA en público: qué cambió, quién contribuyó, qué pasó pruebas y qué sigue—sin exponer el trabajo privado que hay debajo."
-      >InnerChispa builds practical AI systems in the open: what changed, who contributed, what passed, and what comes next—without exposing the private work beneath it.</p>
+<Base title="Live Systems Lab" description="Private intelligence, supervised agents, and real-world systems — live from the InnerChispa ecosystem.">
+  <section class="home-hero hero surface">
+    <div class="hero-copy">
+      <div class="eyebrow live-indicator" data-es="Ecosistema vivo · Ecuador ↔ Estados Unidos" data-en="Live ecosystem · Ecuador ↔ United States">Live ecosystem · Ecuador ↔ United States</div>
+      <h1><span data-es="La chispa se volvió" data-en="The spark became">The spark became</span><br /><span class="serif" data-es="un sistema vivo." data-en="a living system.">a living system.</span></h1>
+      <p class="hero-lead" data-es="InnerChispa conecta inteligencia privada, agentes supervisados e infraestructura física para resolver trabajo real. Cada proyecto aprobado se convierte automáticamente en una nueva pieza visible del ecosistema." data-en="InnerChispa connects private intelligence, supervised agents, and physical infrastructure to solve real work. Every approved project automatically becomes a visible new part of the ecosystem.">InnerChispa connects private intelligence, supervised agents, and physical infrastructure to solve real work. Every approved project automatically becomes a visible new part of the ecosystem.</p>
       <div class="hero-actions">
-        <a class="story-link" href={`${base}historia-en-vivo`}><span aria-hidden="true">●</span><span data-en="Enter the Live Build Story" data-es="Entrar a la Historia en Vivo">Enter the Live Build Story</span></a>
-        <a class="text-link" href={`${base}proyectos`} data-en="Explore the work" data-es="Explorar el trabajo">Explore the work</a>
+        <a class="button primary" href={`${baseUrl}proyectos`}><span data-es="Explorar sistemas" data-en="Explore systems">Explore systems</span><b>↗</b></a>
+        <a class="button secondary" href={`${baseUrl}ralphi-ia`}><span data-es="Cómo se conecta" data-en="How it connects">How it connects</span><b>→</b></a>
+      </div>
+      <div class="hero-proof">
+        <div><strong>25+</strong><span data-es="años de operación real" data-en="years of real operations">years of real operations</span></div>
+        <div><strong>{site.source.itemCount}</strong><span data-es="señales publicadas" data-en="published signals">published signals</span></div>
+        <div><strong>2</strong><span data-es="nodos soberanos" data-en="sovereign nodes">sovereign nodes</span></div>
       </div>
     </div>
-    <div class="collaboration-orbit" aria-label="Observable multi-agent collaboration">
-      <div class="orbit-ring"></div>
-      <div class="orbit-center">RalphiIA<br />build</div>
-      <span class="orbit-agent a1">Codex</span>
-      <span class="orbit-agent a2">ChatGPT</span>
-      <span class="orbit-agent a3">Antigravity</span>
-      <span class="orbit-agent a4">Gemini</span>
-      <span class="orbit-agent a5">Human</span>
-    </div>
-  </section>
-
-  <a class="live-ribbon" href={`${base}historia-en-vivo`}>
-    <span class="pulse-dot" aria-hidden="true"></span>
-    <strong data-en="Now building · RalphiIA QuoteOps for OpenAI Build Week" data-es="En construcción · RalphiIA QuoteOps para OpenAI Build Week">Now building · RalphiIA QuoteOps for OpenAI Build Week</strong>
-    <small data-en="Sanitized fallback · refreshes every 15s" data-es="Fallback sanitizado · actualiza cada 15s">Sanitized fallback · refreshes every 15s</small>
-  </a>
-
-  <section class="section editorial-split">
-    <aside class="editorial-aside">
-      <span class="kicker" data-en="The leading story" data-es="La historia principal">The leading story</span>
-      <h2 data-en="One week. One clear operational path." data-es="Una semana. Una ruta operativa clara.">One week. One clear operational path.</h2>
-    </aside>
-    <article class="build-feature">
-      <figure>
-        <img src={`${base}visuals/quoteops_cover.png`} alt="RalphiIA QuoteOps cockpit" />
-      </figure>
-      <div class="feature-meta"><span>OpenAI Build Week · 2026</span><span data-en="Building" data-es="Construyendo">Building</span></div>
-      <div class="feature-copy">
-        <h3>{quoteOps?.name || 'RalphiIA QuoteOps'}</h3>
-        <p
-          data-en="A quote begins as messy human intent. QuoteOps turns that intent into an auditable sequence: intake, tool plan, human approval, trusted identity and reconciliation."
-          data-es="Una cotización comienza como intención humana desordenada. QuoteOps la convierte en una secuencia auditable: ingreso, plan de herramientas, aprobación humana, identidad confiable y conciliación."
-        >A quote begins as messy human intent. QuoteOps turns that intent into an auditable sequence: intake, tool plan, human approval, trusted identity and reconciliation.</p>
+    <div class="hero-image-wrap">
+      <img src={`${baseUrl}hero-innerchispa.png`} alt="InnerChispa systems connecting field infrastructure, supervised AI, and business operations" />
+      <div class="image-wash"></div>
+      <div class="orbit-card">
+        <div class="orbit-stage"><div class="orbit-ring ring-one"><i></i></div><div class="orbit-ring ring-two"><i></i></div><div class="orbit-core">IC</div></div>
+        <div><strong data-es="Humano al mando" data-en="Human in command">Human in command</strong><small>MCP · MEMORY · AGENTS · EVIDENCE</small></div>
       </div>
-      <a class="text-link" href={`${base}historia-en-vivo`} data-en="See commits, tests and evidence" data-es="Ver commits, pruebas y evidencia">See commits, tests and evidence</a>
-    </article>
-  </section>
-
-  <section class="section">
-    <div class="section-heading">
-      <h2 data-en="Public progress, private boundaries." data-es="Progreso público, límites privados.">Public progress, private boundaries.</h2>
-      <p
-        data-en="The story is assembled from observable artifacts—not hidden reasoning, raw agent messages, credentials, customer data or internal infrastructure."
-        data-es="La historia se arma con artefactos observables—no con razonamiento oculto, mensajes crudos de agentes, credenciales, datos de clientes o infraestructura interna."
-      >The story is assembled from observable artifacts—not hidden reasoning, raw agent messages, credentials, customer data or internal infrastructure.</p>
-    </div>
-    <div class="principle-list">
-      <article class="principle"><b>01</b><h3 data-en="Evidence over theater" data-es="Evidencia sobre espectáculo">Evidence over theater</h3><p data-en="Commits, passing tests, reviews and milestones tell the story." data-es="Commits, pruebas aprobadas, revisiones e hitos cuentan la historia.">Commits, passing tests, reviews and milestones tell the story.</p></article>
-      <article class="principle"><b>02</b><h3 data-en="Agents with boundaries" data-es="Agentes con límites">Agents with boundaries</h3><p data-en="Each contribution is scoped, observable and attributable." data-es="Cada contribución es acotada, observable y atribuible.">Each contribution is scoped, observable and attributable.</p></article>
-      <article class="principle"><b>03</b><h3 data-en="Reusable by design" data-es="Reutilizable por diseño">Reusable by design</h3><p data-en="Future hackathons arrive as data, not another bespoke page." data-es="Los futuros hackatones llegan como datos, no como otra página a medida.">Future hackathons arrive as data, not another bespoke page.</p></article>
+      <div class="sync-float"><span class="sync-badge"><i></i><span data-es={`Última fuente: ${syncEs}`} data-en={`Source updated: ${syncEn}`}>Source updated: {syncEn}</span></span></div>
     </div>
   </section>
 
-  <section class="section">
-    <div class="section-heading">
-      <h2 data-en="Built from a real operating ecosystem." data-es="Construido desde un ecosistema operativo real.">Built from a real operating ecosystem.</h2>
-      <p data-en="PC Doctor supplies the operational reality; InnerChispa and InnerSpark turn lessons into modular products, public experiments and accessible technology." data-es="PC Doctor aporta la realidad operativa; InnerChispa e InnerSpark convierten aprendizajes en productos modulares, experimentos públicos y tecnología accesible.">PC Doctor supplies the operational reality; InnerChispa and InnerSpark turn lessons into modular products, public experiments and accessible technology.</p>
+  <section class="manifesto section">
+    <div class="section-label" data-es="01 / UNA SOLA HISTORIA TÉCNICA" data-en="01 / ONE TECHNICAL STORY">01 / ONE TECHNICAL STORY</div>
+    <div class="manifesto-grid">
+      <h2><span data-es="Del mundo físico a la" data-en="From the physical world to">From the physical world to</span> <span class="serif" data-es="inteligencia operativa." data-en="operational intelligence.">operational intelligence.</span></h2>
+      <div><p data-es="PC Doctor aporta la experiencia de campo. RalphiIA conecta memoria, herramientas y agentes. InnerChispa convierte lo aprendido en sistemas que pueden crecer y replicarse." data-en="PC Doctor brings field experience. RalphiIA connects memory, tools, and agents. InnerChispa turns what we learn into systems that can grow and be reused.">PC Doctor brings field experience. RalphiIA connects memory, tools, and agents. InnerChispa turns what we learn into systems that can grow and be reused.</p><div class="sync-badge"><i></i><span data-es="Fuente canónica: MCP + MongoDB" data-en="Canonical source: MCP + MongoDB">Canonical source: MCP + MongoDB</span></div></div>
     </div>
+    <div class="layer-row">
+      <article><span>01</span><b data-es="Operación física" data-en="Physical operations">Physical operations</b><p data-es="Redes, seguridad, dispositivos, clientes y trabajo de campo." data-en="Networks, security, devices, clients, and field work.">Networks, security, devices, clients, and field work.</p></article>
+      <article><span>02</span><b data-es="Memoria y agentes" data-en="Memory and agents">Memory and agents</b><p data-es="Contexto privado, herramientas tipadas y decisiones supervisadas." data-en="Private context, typed tools, and supervised decisions.">Private context, typed tools, and supervised decisions.</p></article>
+      <article><span>03</span><b data-es="Sistemas reutilizables" data-en="Reusable systems">Reusable systems</b><p data-es="Cada misión deja arquitectura, evidencia y bloques para el siguiente producto." data-en="Every mission leaves architecture, evidence, and building blocks for the next product.">Every mission leaves architecture, evidence, and building blocks for the next product.</p></article>
+    </div>
+  </section>
+
+  <section class="conscious-portal surface">
+    <div class="portal-copy">
+      <div class="section-label" data-es="EXPERIMENTO / MAPA DE SISTEMAS CONSCIENTES" data-en="EXPERIMENT / CONSCIOUS SYSTEMS MAP">EXPERIMENT / CONSCIOUS SYSTEMS MAP</div>
+      <h2><span data-es="La memoria encuentra patrones." data-en="Memory finds patterns.">Memory finds patterns.</span><br /><span class="serif" data-es="La persona conserva el significado." data-en="People keep the meaning.">People keep the meaning.</span></h2>
+      <p data-es="Un espacio experimental sobre memoria autorizada, contexto, bienestar y acompañamiento humano. Diseñado para ayudar a recuperar información y observar relaciones sin convertir la IA en diagnóstico ni reemplazar decisiones personales." data-en="An experimental space for authorized memory, context, wellbeing, and human support—designed to retrieve meaningful information and notice connections without turning AI into diagnosis or replacing personal decisions.">An experimental space for authorized memory, context, wellbeing, and human support—designed to retrieve meaningful information and notice connections without turning AI into diagnosis or replacing personal decisions.</p>
+      <a class="button primary" href="https://innerchispa-live-lab.innerchispa.chatgpt.site/" target="_blank" rel="noopener noreferrer"><span data-es="Abrir el mapa vivo" data-en="Open the living map">Open the living map</span><b>↗</b></a>
+    </div>
+    <div class="portal-map" aria-hidden="true"><div class="portal-orbit orbit-one"><i></i></div><div class="portal-orbit orbit-two"><i></i></div><div class="portal-core">IC<small>HUMAN</small></div><span class="map-word word-a">MEMORY</span><span class="map-word word-b">PATTERNS</span><span class="map-word word-c">CONTEXT</span><span class="map-word word-d">CARE</span></div>
+  </section>
+
+  <section class="live-section section" id="live">
+    <div class="section-head"><div><div class="section-label" data-es="02 / AHORA EN INNERCHISPA" data-en="02 / NOW AT INNERCHISPA">02 / NOW AT INNERCHISPA</div><h2 data-es="Sistemas en movimiento." data-en="Systems in motion.">Systems in motion.</h2></div><a class="button secondary" href={`${baseUrl}proyectos`}><span data-es="Ver todos" data-en="View all">View all</span><b>↗</b></a></div>
+    <div class="project-ribbon">
+      {featuredProjects.map((project, index) => {
+        const cover = project.images?.[0]?.url;
+        const coverUrl = cover ? (cover.startsWith('/') ? baseUrl + cover.slice(1) : cover) : '';
+        return <article class={`live-card live-${index % 4}`}>
+          <div class="live-card-top"><span>{String(index + 1).padStart(2,'0')}</span><span class="live-indicator" data-es="Publicado" data-en="Published">Published</span></div>
+          {coverUrl && <div class="live-card-image"><img src={coverUrl} alt={project.title_en} loading="lazy" /></div>}
+          <div class="live-card-copy"><small>{project.technologies.slice(0,3).join(' · ')}</small><h3 data-es={project.title_es} data-en={project.title_en}>{project.title_en}</h3><p data-es={project.summary_es} data-en={project.summary_en}>{project.summary_en}</p></div>
+          <div class="card-links">{project.github_url && <a href={project.github_url} target="_blank" rel="noopener noreferrer">GitHub ↗</a>}{project.demo_url && !project.demo_url.includes('192.168.') && <a href={project.demo_url} target="_blank" rel="noopener noreferrer">Live ↗</a>}</div>
+        </article>;
+      })}
+    </div>
+  </section>
+
+  <section class="flow section">
+    <div class="section-label" data-es="03 / CONEXIÓN VIVA" data-en="03 / LIVE CONNECTION">03 / LIVE CONNECTION</div>
+    <div class="flow-grid">
+      <div><h2><span data-es="Un proyecto nuevo" data-en="A new project">A new project</span><br /><span class="serif" data-es="aparece aquí." data-en="appears here.">appears here.</span></h2><p data-es="El sitio no mantiene una lista separada. Publicar en el MCP activa la exportación, la compilación de Astro y la actualización de la web." data-en="The site does not maintain a separate list. Publishing through MCP triggers data export, the Astro build, and the website update.">The site does not maintain a separate list. Publishing through MCP triggers data export, the Astro build, and the website update.</p></div>
+      <ol>
+        <li><span>01</span><div><b data-es="Registrar" data-en="Register">Register</b><p data-es="El proyecto entra a MongoDB como borrador." data-en="The project enters MongoDB as a draft.">The project enters MongoDB as a draft.</p></div></li>
+        <li><span>02</span><div><b data-es="Revisar y aprobar" data-en="Review and approve">Review and approve</b><p data-es="Solo contenido público y validado llega al sitio." data-en="Only validated public content reaches the site.">Only validated public content reaches the site.</p></div></li>
+        <li><span>03</span><div><b data-es="Exportar" data-en="Export">Export</b><p data-es="El MCP genera el índice y las fichas para Astro." data-en="MCP generates the index and content entries for Astro.">MCP generates the index and content entries for Astro.</p></div></li>
+        <li><span>04</span><div><b data-es="Publicar" data-en="Publish">Publish</b><p data-es="Astro recompila y sincroniza los nodos automáticamente." data-en="Astro rebuilds and synchronizes the nodes automatically.">Astro rebuilds and synchronizes the nodes automatically.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="hackathons section">
+    <div class="section-head"><div><div class="section-label" data-es="04 / LABORATORIO ABIERTO" data-en="04 / OPEN LABORATORY">04 / OPEN LABORATORY</div><h2 data-es="Hackatones como campo de prueba." data-en="Hackathons as a proving ground.">Hackathons as a proving ground.</h2></div><a class="button secondary" href={`${baseUrl}hackatones`}><span data-es="Ver misiones" data-en="View missions">View missions</span><b>↗</b></a></div>
     <div class="grid cols-3">
-      {site.proof.map((item, index) => (
-        <article class="card stack"><span class="kicker">0{index + 1}</span><h3>{item.title}</h3><p>{item.body}</p></article>
-      ))}
+      {featuredHackathons.map((item) => <article class="card mission-card"><span class="badge">{item.status}</span><h3 data-es={item.title_es} data-en={item.title_en}>{item.title_en}</h3><p data-es={item.summary_es} data-en={item.summary_en}>{item.summary_en}</p><div class="tag-row">{item.technologies.slice(0,4).map((tech) => <span>{tech}</span>)}</div>{item.submission_url && <a class="mission-link" href={item.submission_url} target="_blank" rel="noopener noreferrer" data-es="Abrir evidencia ↗" data-en="Open evidence ↗">Open evidence ↗</a>}</article>)}
     </div>
   </section>
+
+  <section class="closing surface">
+    <div><div class="section-label" data-es="CONSTRUIR CON PROPÓSITO" data-en="BUILD WITH PURPOSE">BUILD WITH PURPOSE</div><h2><span data-es="¿Tienes un problema real?" data-en="Have a real problem?">Have a real problem?</span><br /><span class="serif" data-es="Convirtámoslo en sistema." data-en="Let’s turn it into a system.">Let’s turn it into a system.</span></h2></div>
+    <a class="button primary" href={`${baseUrl}contacto`}><span data-es="Iniciar conversación" data-en="Start a conversation">Start a conversation</span><b>↗</b></a>
+  </section>
+
+  <style>
+    .home-hero { min-height: 720px; display: grid; grid-template-columns: 1.05fr .95fr; }
+    .hero-copy { padding: clamp(34px,5.5vw,76px); display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 2; }
+    .hero-copy h1 { margin: 28px 0; }
+    .hero-lead { font-size: 1rem; max-width: 620px; margin: 0 0 30px; }
+    .hero-actions { display: flex; gap: 9px; flex-wrap: wrap; }
+    .hero-proof { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 50px; padding-top: 22px; border-top: 1px solid var(--line); }
+    .hero-proof div { display: flex; flex-direction: column; gap: 5px; }.hero-proof strong { font: 1.5rem/1 'DM Mono',monospace; }.hero-proof span { color: var(--muted); font-size: 9px; }
+    .hero-image-wrap { min-height: 680px; position: relative; overflow: hidden; border-left: 1px solid var(--line); background: #dce8e5; }
+    .hero-image-wrap > img { width: 100%; height: 100%; object-fit: cover; object-position: 68% center; position: absolute; inset: 0; }
+    .image-wash { position: absolute; inset: 0; background: linear-gradient(140deg,rgba(243,239,229,.36),rgba(111,90,203,.03) 45%,rgba(20,34,31,.3)); mix-blend-mode: screen; }
+    .orbit-card { position: absolute; left: 24px; right: 24px; bottom: 70px; min-height: 185px; border: 1px solid rgba(255,255,255,.5); background: rgba(250,249,242,.78); backdrop-filter: blur(20px); border-radius: 22px; display: grid; grid-template-columns: 150px 1fr; align-items: center; padding: 16px 24px; gap: 20px; box-shadow: 0 25px 70px rgba(9,18,17,.2); }
+    .orbit-stage { width: 136px; height: 136px; position: relative; display: grid; place-items: center; }.orbit-core { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: white; font: 14px/1 'DM Mono',monospace; }
+    .orbit-ring { position: absolute; border: 1px solid rgba(111,90,203,.48); border-radius: 50%; animation: spin 12s linear infinite; }.ring-one { width: 100px; height: 100px; }.ring-two { width: 136px; height: 136px; animation-direction: reverse; animation-duration: 18s; }
+    .orbit-ring i { position: absolute; width: 8px; height: 8px; border-radius: 50%; top: 9px; left: 18px; background: var(--lime); box-shadow: 0 0 10px rgba(185,238,91,.8); }.ring-two i { top: auto; left: auto; bottom: 16px; right: 16px; background: var(--violet); }
+    @keyframes spin { to { transform: rotate(360deg); } }.orbit-card > div:last-child { display: flex; flex-direction: column; gap: 8px; }.orbit-card strong { font-size: 1.15rem; }.orbit-card small { color: var(--muted); font: 8px/1.5 'DM Mono',monospace; }
+    .sync-float { position: absolute; left: 24px; top: 24px; }
+    .manifesto, .live-section, .flow, .hackathons { margin-top: 22px; }
+    .conscious-portal { margin-top: 22px; min-height: 510px; border-radius: 30px; display: grid; grid-template-columns: 1fr .88fr; overflow: hidden; background: linear-gradient(135deg,rgba(23,33,31,.97),rgba(46,42,79,.96)); color: #fffef7; }
+    .portal-copy { padding: clamp(34px,5vw,68px); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+    .portal-copy .section-label { color: var(--lime); }.portal-copy h2 { margin: 20px 0; }.portal-copy p { color: rgba(255,255,247,.66); max-width: 650px; }.portal-copy .button { margin-top: 12px; background: var(--lime); color: var(--ink); border-color: var(--lime); }
+    .portal-map { min-height: 510px; position: relative; display: grid; place-items: center; overflow: hidden; border-left: 1px solid rgba(255,255,255,.12); background: radial-gradient(circle,rgba(185,238,91,.12),transparent 28%),linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:auto,42px 42px,42px 42px; }
+    .portal-orbit { position: absolute; width: 300px; height: 300px; border: 1px solid rgba(185,238,91,.38); border-radius: 50%; animation: spin 18s linear infinite; }.portal-orbit.orbit-two { width: 420px; height: 420px; border-color: rgba(222,214,255,.27); border-style: dashed; animation-duration: 31s; animation-direction: reverse; }.portal-orbit i { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: var(--lime); top: 34px; left: 45px; box-shadow: 0 0 14px var(--lime); }
+    .portal-core { width: 120px; height: 120px; border-radius: 50%; background: rgba(7,12,10,.92); border: 1px solid rgba(185,238,91,.5); display: grid; place-items: center; color: var(--lime); font: 25px/1 'DM Mono',monospace; z-index: 2; }.portal-core small { position:absolute;margin-top:62px;font-size:7px;color:rgba(255,255,255,.5);letter-spacing:.14em; }
+    .map-word { position: absolute; padding: 8px 10px; border: 1px solid rgba(255,255,255,.13); background: rgba(14,20,17,.8); font: 7px/1 'DM Mono',monospace; letter-spacing:.12em; }.word-a{left:7%;top:16%}.word-b{right:6%;top:22%}.word-c{left:8%;bottom:16%}.word-d{right:9%;bottom:14%}
+    .manifesto-grid, .flow-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(40px,8vw,120px); align-items: end; margin: 32px 0 55px; }.manifesto-grid p { margin-top: 0; }
+    .layer-row { display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid var(--line); }.layer-row article { padding: 26px 22px 10px 0; border-right: 1px solid var(--line); }.layer-row article:not(:first-child) { padding-left: 22px; }.layer-row article:last-child { border-right: 0; }.layer-row span { display: block; color: var(--violet); font: 9px/1 'DM Mono',monospace; margin-bottom: 38px; }.layer-row b { display: block; font-size: 1rem; }.layer-row p { font-size: .8rem; margin-bottom: 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 34px; }.section-head h2 { margin-top: 10px; }
+    .project-ribbon { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }.live-card { min-height: 475px; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; background: #f6d878; border: 1px solid rgba(31,40,37,.12); }.live-1 { background: #c9e9e2; }.live-2 { background: #ded6ff; }.live-3 { background: #ffd0bf; }
+    .live-card-top { display: flex; align-items: center; justify-content: space-between; font: 8px/1 'DM Mono',monospace; text-transform: uppercase; }.live-card-top .live-indicator:before { width: 5px; height: 5px; }
+    .live-card-image { height: 135px; margin: 18px -5px; border-radius: 15px; overflow: hidden; background: rgba(255,255,255,.45); }.live-card-image img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; opacity: .86; }.live-card-copy small { color: rgba(23,33,31,.58); font: 7px/1.5 'DM Mono',monospace; }.live-card-copy h3 { margin: 10px 0; }.live-card-copy p { color: rgba(23,33,31,.67); font-size: .78rem; line-height: 1.55; margin: 0; }.live-card .card-links { margin-top: auto; }
+    .flow-grid { align-items: start; }.flow-grid > div p { max-width: 480px; }.flow ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }.flow li { display: grid; grid-template-columns: 52px 1fr; gap: 14px; padding: 19px 0; border-bottom: 1px solid var(--line); }.flow li > span { color: var(--violet); font: 9px/1 'DM Mono',monospace; padding-top: 4px; }.flow li p { margin: 4px 0 0; font-size: .78rem; }
+    .mission-card { min-height: 340px; display: flex; flex-direction: column; background: linear-gradient(150deg,rgba(255,255,252,.9),rgba(222,214,255,.35)); }.mission-card h3 { margin-top: 10px; }.mission-card p { font-size: .82rem; }.mission-link { margin-top: auto; color: var(--violet); font: 9px/1 'DM Mono',monospace; padding-top: 18px; }
+    .closing { margin-top: 22px; border-radius: 30px; padding: clamp(32px,6vw,75px); display: flex; align-items: end; justify-content: space-between; gap: 45px; background: linear-gradient(120deg,rgba(185,238,91,.72),rgba(168,228,223,.72),rgba(222,214,255,.78)); }.closing h2 { margin-top: 14px; }
+    @media(max-width:1050px){.home-hero,.conscious-portal{grid-template-columns:1fr}.hero-image-wrap{min-height:600px;border-left:0;border-top:1px solid var(--line)}.portal-map{border-left:0;border-top:1px solid rgba(255,255,255,.12)}.project-ribbon{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:720px){.hero-image-wrap{min-height:520px}.orbit-card{grid-template-columns:100px 1fr;left:14px;right:14px;bottom:20px}.orbit-stage{transform:scale(.72);transform-origin:center}.hero-proof,.layer-row,.project-ribbon{grid-template-columns:1fr}.manifesto-grid,.flow-grid{grid-template-columns:1fr;gap:28px}.layer-row article,.layer-row article:not(:first-child){border-right:0;border-bottom:1px solid var(--line);padding:22px 0}.layer-row span{margin-bottom:18px}.section-head,.closing{align-items:flex-start;flex-direction:column}}
+  </style>
 </Base>

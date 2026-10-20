@@ -2,37 +2,25 @@
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
 ---
-<Base title="Contacto" description="Canales de contacto oficiales y oficinas.">
+<Base title="Contact / Contacto" description="Official contact channels and operations.">
   <section class="hero">
-    <span class="eyebrow">Contacto</span>
-    <h1>Hablemos.</h1>
-    <p>Ponte en contacto con nuestro equipo para soporte técnico corporativo, integraciones de IA o consultas de negocio.</p>
+    <span class="eyebrow" data-es="Contacto" data-en="Contact">Contact</span>
+    <h1 data-es="Hablemos." data-en="Let’s talk.">Let’s talk.</h1>
+    <p data-es="Conversa con nuestro equipo sobre soporte técnico empresarial, integraciones de IA o nuevos proyectos." data-en="Talk with our team about enterprise technical support, AI integrations, or new projects.">Talk with our team about enterprise technical support, AI integrations, or new projects.</p>
   </section>
-
   <div class="grid cols-2">
     <section class="section stack">
-      <h2>Canal Centralizado</h2>
-      <p>
-        Para consultas sobre automatizaciones con IA (Ralphi IA / Ralph AI), soporte modular o proyectos activos:
-      </p>
-      <div class="card" style="border-color: var(--accent); background: rgba(103, 232, 249, 0.02);">
-        <strong>Correo Principal:</strong>
-        <p style="margin-top: 8px;">
-          <a href={`mailto:${site.contact}`} style="color: var(--accent); font-size: 1.1rem; text-decoration: underline; font-weight: bold;">{site.contact}</a>
-        </p>
+      <h2 data-es="Canal central" data-en="Central channel">Central channel</h2>
+      <p data-es="Para automatizaciones con IA, soporte modular o proyectos activos:" data-en="For AI automation, modular support, or active projects:">For AI automation, modular support, or active projects:</p>
+      <div class="card">
+        <strong data-es="Correo principal" data-en="Primary email">Primary email</strong>
+        <p><a href={`mailto:${site.contact}`}>{site.contact}</a></p>
       </div>
     </section>
-
     <section class="section stack">
-      <h2>Presencia y Operaciones</h2>
-      <div class="card">
-        <strong>Estados Unidos (InnerChispa LLC):</strong>
-        <p>Estrategia, arquitectura modular de IA y soluciones en la nube.</p>
-      </div>
-      <div class="card">
-        <strong>Ecuador (PC Doctor S.A.):</strong>
-        <p>Operaciones técnicas de campo, CCTV, soporte empresarial y redes.</p>
-      </div>
+      <h2 data-es="Presencia y operaciones" data-en="Presence and operations">Presence and operations</h2>
+      <div class="card"><strong>InnerChispa LLC · USA</strong><p data-es="Estrategia, arquitectura modular de IA y soluciones en la nube." data-en="Strategy, modular AI architecture, and cloud solutions.">Strategy, modular AI architecture, and cloud solutions.</p></div>
+      <div class="card"><strong>PC Doctor S.A. · Ecuador</strong><p data-es="Operaciones técnicas de campo, CCTV, soporte empresarial y redes." data-en="Field operations, CCTV, enterprise support, and networking.">Field operations, CCTV, enterprise support, and networking.</p></div>
     </section>
   </div>
 </Base>

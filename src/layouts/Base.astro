@@ -1,100 +1,278 @@
 ---
+const { title, description } = Astro.props;
 import { site } from '../data/site';
-import '../styles/global.css';
-
-const { title, description, pageClass = '' } = Astro.props;
-const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
-const pathWithoutBase = Astro.url.pathname.replace(base.replace(/\/$/, ''), '') || '/';
-const pathname = pathWithoutBase.length > 1 ? pathWithoutBase.replace(/\/$/, '') : pathWithoutBase;
-const navigation = [
-  { href: '/', es: 'Inicio', en: 'Home' },
-  { href: '/historia-en-vivo', es: 'Historia en vivo', en: 'Live Build Story', featured: true },
-  { href: '/proyectos', es: 'Proyectos', en: 'Projects' },
-  { href: '/hackatones', es: 'Hackatones', en: 'Hackathons' },
-  { href: '/ralphi-ia', es: 'Ralphi IA', en: 'Ralphi IA' },
-  { href: '/contacto', es: 'Contacto', en: 'Contact' },
-];
-const hrefFor = (href) => href === '/' ? base : `${base}${href.slice(1)}`;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const currentPath = Astro.url.pathname;
+const pageTitle = title ? `${title} · ${site.brand}` : `${site.brand} · ${site.product}`;
+const pageDescription = description || site.tagline;
+const canonicalUrl = new URL(currentPath.replace(base, '/').replace(/^\/?/, ''), `${site.publicUrl}/`).toString();
+const imageUrl = new URL(site.heroImage, site.publicUrl).toString();
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': ['LocalBusiness', 'ComputerRepairService', 'ITStore'],
+  name: site.business.name,
+  alternateName: site.business.shortName,
+  image: imageUrl,
+  telephone: site.business.telephone,
+  email: site.business.email,
+  url: site.business.url,
+  priceRange: site.business.priceRange,
+  address: {
+    '@type': 'PostalAddress',
+    ...site.business.address,
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    ...site.business.geo,
+  },
+  areaServed: site.business.areaServed.map((name) => ({ '@type': 'Place', name })),
+  openingHoursSpecification: site.business.openingHours.map((item) => ({
+    '@type': 'OpeningHoursSpecification',
+    ...item,
+  })),
+  sameAs: site.business.sameAs,
+  contactPoint: [{
+    '@type': 'ContactPoint',
+    telephone: site.business.telephone,
+    email: site.business.email,
+    contactType: 'customer support',
+    areaServed: 'EC',
+    availableLanguage: ['English', 'Spanish'],
+  }],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'PC Doctor and InnerChispa service catalog',
+    itemListElement: site.business.services.map((service) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: service.name,
+        description: service.description,
+        areaServed: site.business.areaServed.join(', '),
+      },
+    })),
+  },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: site.business.faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+};
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#08110f" />
-    <meta name="color-scheme" content="dark" />
-    <title>{title ? `${title} · ${site.brand}` : site.brand}</title>
-    <meta name="description" content={description || site.tagline} />
-    <meta property="og:title" content={title ? `${title} · ${site.brand}` : site.brand} />
-    <meta property="og:description" content={description || site.tagline} />
+    <meta name="theme-color" content="#f3efe5" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content="website" />
-    <link rel="icon" href={`${base}favicon.svg`} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={imageUrl} />
+    <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    <style is:global>
+      @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;1,6..72,500&display=swap');
+      :root {
+        color-scheme: light;
+        --bg: #f3efe5;
+        --paper: rgba(255,255,252,.76);
+        --paper-solid: #fffef8;
+        --ink: #17211f;
+        --muted: #64706c;
+        --line: rgba(28,43,39,.14);
+        --violet: #6f5acb;
+        --violet-soft: #ded6ff;
+        --lime: #b9ee5b;
+        --aqua: #a8e4df;
+        --coral: #ff9b79;
+        --sun: #f7d36b;
+        --shadow: 0 24px 70px rgba(54,48,36,.1);
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif; overflow-x: hidden; }
+      body:before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: -3; background-image: linear-gradient(rgba(23,33,31,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(23,33,31,.035) 1px, transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(to bottom, rgba(0,0,0,.8), transparent 84%); }
+      a { color: inherit; text-decoration: none; }
+      button, input, select { font: inherit; }
+      img { max-width: 100%; }
+      .shell { min-height: 100vh; display: flex; flex-direction: column; position: relative; isolation: isolate; }
+      .ambient { position: fixed; pointer-events: none; z-index: -2; border-radius: 999px; filter: blur(12px); opacity: .58; }
+      .ambient.a { width: 46vw; height: 46vw; min-width: 420px; min-height: 420px; left: -14vw; top: -18vw; background: radial-gradient(circle, rgba(168,228,223,.8), rgba(168,228,223,0) 68%); animation: drift-a 18s ease-in-out infinite alternate; }
+      .ambient.b { width: 50vw; height: 50vw; min-width: 460px; min-height: 460px; right: -16vw; top: 18vh; background: radial-gradient(circle, rgba(222,214,255,.95), rgba(222,214,255,0) 68%); animation: drift-b 22s ease-in-out infinite alternate; }
+      .ambient.c { width: 42vw; height: 42vw; min-width: 380px; min-height: 380px; left: 26vw; bottom: -22vw; background: radial-gradient(circle, rgba(247,211,107,.52), rgba(247,211,107,0) 70%); animation: drift-c 20s ease-in-out infinite alternate; }
+      @keyframes drift-a { to { transform: translate(12vw, 12vh) scale(1.13); } }
+      @keyframes drift-b { to { transform: translate(-10vw, 17vh) scale(.86); } }
+      @keyframes drift-c { to { transform: translate(14vw, -13vh) scale(1.08); } }
+      .topbar { position: sticky; top: 0; z-index: 30; background: rgba(243,239,229,.72); border-bottom: 1px solid var(--line); backdrop-filter: blur(20px) saturate(1.3); }
+      .topbar-inner, .container { width: min(1220px, calc(100% - 40px)); margin: 0 auto; }
+      .topbar-inner { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+      .brand { display: inline-flex; align-items: center; gap: 12px; }
+      .brand-orbit { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--violet); position: relative; display: grid; place-items: center; }
+      .brand-orbit:before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--violet); box-shadow: 0 0 0 5px rgba(111,90,203,.12); }
+      .brand-orbit:after { content: ''; position: absolute; width: 5px; height: 5px; border-radius: 50%; background: var(--lime); right: -2px; top: 5px; box-shadow: 0 0 10px rgba(185,238,91,.8); }
+      .brand-copy { display: flex; flex-direction: column; }
+      .brand-copy strong { letter-spacing: .08em; font-size: 13px; }
+      .brand-copy small { font: 8px/1.5 'DM Mono', monospace; letter-spacing: .12em; color: var(--muted); }
+      .nav { display: flex; align-items: center; gap: 3px; }
+      .nav a { padding: 9px 11px; color: var(--muted); border-radius: 999px; font-size: 11px; transition: .2s ease; }
+      .nav a:hover, .nav a[aria-current='page'] { color: var(--ink); background: rgba(255,255,255,.7); }
+      .language-wrap { display: flex; align-items: center; gap: 6px; margin-left: 8px; }
+      .language-wrap label { font: 8px/1 'DM Mono', monospace; color: var(--muted); text-transform: uppercase; }
+      #lang-select { background: rgba(255,255,255,.72); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 8px 10px; cursor: pointer; font: 10px/1 'DM Mono', monospace; outline: none; }
+      .menu-toggle { display: none; border: 1px solid var(--line); background: rgba(255,255,255,.68); border-radius: 999px; padding: 9px 12px; color: var(--ink); }
+      main { flex: 1; }
+      .container { padding: 34px 0 80px; }
+      .surface, .card, .section { border: 1px solid var(--line); background: var(--paper); box-shadow: 0 12px 40px rgba(58,49,35,.045); backdrop-filter: blur(16px); }
+      .hero { border-radius: 30px; margin-bottom: 22px; position: relative; overflow: hidden; }
+      .eyebrow, .section-label { color: var(--violet); font: 9px/1.5 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .14em; }
+      .live-indicator { display: inline-flex; align-items: center; gap: 8px; }
+      .live-indicator:before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #79b61f; box-shadow: 0 0 0 5px rgba(121,182,31,.12); animation: pulse 2s ease-in-out infinite; }
+      @keyframes pulse { 50% { opacity: .35; } }
+      h1, h2, h3 { margin: 0; line-height: 1.08; }
+      h1, .display { font-size: clamp(3rem, 7vw, 6.8rem); letter-spacing: -.065em; font-weight: 550; }
+      h2 { font-size: clamp(2rem, 4.2vw, 4.2rem); letter-spacing: -.05em; font-weight: 560; }
+      h3 { font-size: 1.18rem; letter-spacing: -.025em; }
+      .serif { font-family: 'Newsreader', Georgia, serif; font-style: italic; font-weight: 500; }
+      p { color: var(--muted); line-height: 1.7; }
+      .grid { display: grid; gap: 16px; }
+      .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .card, .section { border-radius: 22px; padding: 22px; }
+      .section { margin-top: 20px; padding: clamp(24px,4vw,46px); }
+      .stack { display: flex; flex-direction: column; gap: 10px; }
+      .meta { color: var(--muted); font-size: .82rem; }
+      .pill, .badge { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; color: var(--muted); font: 9px/1 'DM Mono', monospace; width: fit-content; background: rgba(255,255,255,.45); }
+      .badge { color: #52409f; border-color: rgba(111,90,203,.22); background: rgba(222,214,255,.52); text-transform: uppercase; letter-spacing: .08em; }
+      .button { display: inline-flex; align-items: center; justify-content: space-between; gap: 22px; padding: 14px 17px; border: 1px solid var(--ink); border-radius: 999px; font-size: 11px; transition: .22s ease; }
+      .button.primary { background: var(--ink); color: #fffef7; }
+      .button.secondary { background: rgba(255,255,255,.55); border-color: var(--line); }
+      .button:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(35,40,34,.1); }
+      .sync-badge { display: inline-flex; align-items: center; gap: 9px; padding: 9px 12px; border: 1px solid rgba(87,127,31,.24); background: rgba(232,248,198,.64); border-radius: 999px; color: #486b19; font: 8px/1 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .08em; }
+      .sync-badge i { width: 6px; height: 6px; border-radius: 50%; background: #79b61f; box-shadow: 0 0 10px #79b61f; }
+      .content-card { overflow: hidden; padding: 0; transition: transform .25s ease, box-shadow .25s ease; }
+      .content-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+      .content-card-media { aspect-ratio: 16/9; overflow: hidden; border-bottom: 1px solid var(--line); position: relative; background: linear-gradient(135deg,var(--violet-soft),var(--aqua)); }
+      .content-card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s ease; }
+      .content-card:hover .content-card-media img { transform: scale(1.035); }
+      .content-card-body { padding: 22px; display: flex; flex-direction: column; gap: 12px; min-height: 250px; }
+      .content-card-body p { font-size: .86rem; margin: 0; }
+      .card-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 10px; }
+      .card-links a { font: 9px/1 'DM Mono', monospace; padding-bottom: 3px; border-bottom: 1px solid var(--line); }
+      .tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
+      .tag-row span { padding: 5px 7px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font: 8px/1 'DM Mono', monospace; }
+      .page-heading { padding: clamp(28px,6vw,70px); min-height: 390px; display: flex; flex-direction: column; justify-content: flex-end; gap: 18px; background: linear-gradient(135deg,rgba(255,255,252,.76),rgba(222,214,255,.46)); }
+      .page-heading h1 { max-width: 12ch; }
+      .page-heading p { max-width: 650px; font-size: 1rem; margin: 0; }
+      .filter-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 13px; margin: 20px 0; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.5); }
+      .search { min-width: 280px; flex: .45; border: 0; background: rgba(255,255,255,.72); border-radius: 999px; padding: 11px 15px; color: var(--ink); outline: 1px solid var(--line); }
+      .footer { border-top: 1px solid var(--line); background: rgba(255,255,252,.45); }
+      .footer .container { padding: 42px 0; display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 40px; align-items: start; }
+      .footer p { margin: 8px 0 0; font-size: 11px; max-width: 330px; }
+      .footer-links { display: flex; flex-direction: column; gap: 8px; font-size: 11px; color: var(--muted); }
+      .footer-links a:hover { color: var(--violet); }
+      .site-faq { margin-top: 24px; padding: 24px; border: 1px solid var(--line); border-radius: 24px; background: rgba(255,255,252,.62); box-shadow: 0 12px 40px rgba(58,49,35,.045); }
+      .site-faq h2 { font-size: clamp(1.6rem, 3vw, 2.8rem); }
+      .site-faq-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; margin-top: 16px; }
+      .site-faq article { border: 1px solid var(--line); border-radius: 18px; padding: 16px; background: rgba(255,255,255,.52); }
+      .site-faq h3 { font-size: 1rem; }
+      .site-faq p { font-size: .9rem; margin-bottom: 0; }
+      @media (max-width: 980px) { .grid.cols-3, .grid.cols-4 { grid-template-columns: repeat(2,minmax(0,1fr)); } .nav { display: none; position: absolute; top: 70px; left: 20px; right: 20px; padding: 18px; border: 1px solid var(--line); background: rgba(255,254,248,.96); border-radius: 20px; flex-direction: column; align-items: stretch; box-shadow: var(--shadow); } .nav.open { display: flex; } .menu-toggle { display: block; } .nav a { padding: 10px 12px; } .language-wrap { margin: 8px 0 0; justify-content: space-between; } }
+      @media (max-width: 720px) { .topbar-inner, .container { width: min(100% - 28px,1220px); } .grid.cols-2, .grid.cols-3, .grid.cols-4, .site-faq-grid { grid-template-columns: 1fr; } h1, .display { font-size: clamp(2.8rem,15vw,4.6rem); } .page-heading { min-height: 340px; } .filter-row { align-items: stretch; flex-direction: column; } .search { min-width: 0; width: 100%; } .footer .container { grid-template-columns: 1fr; } }
+      @media (prefers-reduced-motion: reduce) { *, *:before, *:after { animation-duration: .01ms!important; animation-iteration-count: 1!important; scroll-behavior: auto!important; } }
+    </style>
   </head>
-  <body class={pageClass}>
-    <a class="skip-link" href="#main-content" data-es="Saltar al contenido" data-en="Skip to content">Skip to content</a>
-    <div class="site-shell">
-      <header class="site-header">
-        <div class="header-inner">
-          <a class="brand-lockup" href={base} aria-label="InnerChispa home">
-            <span class="brand-spark" aria-hidden="true"><i></i><i></i><i></i></span>
-            <span><strong>InnerChispa</strong><small>Human intent · agent craft</small></span>
+  <body>
+    <div class="shell">
+      <div class="ambient a"></div><div class="ambient b"></div><div class="ambient c"></div>
+      <header class="topbar">
+        <div class="topbar-inner">
+          <a class="brand" href={base} aria-label="InnerChispa home">
+            <span class="brand-orbit"></span>
+            <span class="brand-copy"><strong>INNERCHISPA</strong><small>LIVE SYSTEMS LAB</small></span>
           </a>
-          <nav class="main-nav" aria-label="Primary navigation">
-            {navigation.map((item) => (
-              <a
-                href={hrefFor(item.href)}
-                class:list={{ active: pathname === item.href, featured: item.featured }}
-                aria-current={pathname === item.href ? 'page' : undefined}
-                data-es={item.es}
-                data-en={item.en}
-              >{item.en}</a>
-            ))}
+          <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+          <nav class="nav" id="primary-nav" aria-label="Primary navigation">
+            {site.navigation.map(([label, href]) => {
+              const target = href.startsWith('/') ? href.slice(1) : href;
+              const navI18n = {
+                Home: ['Inicio','Home'], Proyectos: ['Proyectos','Projects'], Hackatones: ['Hackatones','Hackathons'], Tecnología: ['Tecnología','Technology'], Contacto: ['Contacto','Contact'], Privacy: ['Privacidad','Privacy'], 'Ralphi IA / Ralph AI': ['Ralphi IA / Ralph AI','Ralphi IA / Ralph AI']
+              };
+              const [es,en] = navI18n[label] || [label,label];
+              const resolved = base + target;
+              const active = currentPath === resolved || (resolved !== base && currentPath.startsWith(resolved));
+              return <a href={resolved} aria-current={active ? 'page' : undefined} data-es={es} data-en={en}>{en}</a>;
+            })}
+            <div class="language-wrap">
+              <label for="lang-select" data-es="Idioma" data-en="Language">Language</label>
+              <select id="lang-select" aria-label="Language">
+                <option value="en">English</option><option value="es">Español</option>
+              </select>
+            </div>
           </nav>
-          <label class="language-control">
-            <span class="sr-only" data-es="Idioma" data-en="Language">Language</span>
-            <select id="lang-select" aria-label="Language">
-              <option value="en">EN</option>
-              <option value="es">ES</option>
-            </select>
-          </label>
         </div>
       </header>
-      <main id="main-content">
-        <div class="page-frame">
+      <main>
+        <div class="container">
           <slot />
+          <section class="site-faq" aria-labelledby="site-faq-title" itemscope itemtype="https://schema.org/FAQPage">
+            <span class="eyebrow" data-es="Preguntas frecuentes" data-en="FAQ">FAQ</span>
+            <h2 id="site-faq-title" data-es="Respuestas claras para personas y motores de IA" data-en="Clear answers for people and AI search engines">Clear answers for people and AI search engines</h2>
+            <div class="site-faq-grid">
+              {site.business.faqs.map((faq) => (
+                <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                  <h3 itemprop="name">{faq.question}</h3>
+                  <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <p itemprop="text">{faq.answer}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
         </div>
       </main>
-      <footer class="site-footer">
-        <div class="footer-inner">
-          <div class="footer-statement">
-            <span class="kicker">InnerChispa · 2026</span>
-            <p data-en="Building useful systems in public—without making private work public." data-es="Construimos sistemas útiles en público—sin hacer público el trabajo privado.">
-              Building useful systems in public—without making private work public.
-            </p>
-          </div>
-          <div class="footer-links">
-            <a href={`${base}privacy`} data-en="Privacy boundary" data-es="Límite de privacidad">Privacy boundary</a>
-            <a href="https://github.com/Rafa-Innerchispa" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-            <a href={`mailto:${site.contact}`} data-en="Human contact" data-es="Contacto humano">Human contact</a>
-          </div>
+      <footer class="footer">
+        <div class="container">
+          <div><a class="brand" href={base}><span class="brand-orbit"></span><span class="brand-copy"><strong>INNERCHISPA</strong><small>PRIVATE AI · REAL-WORLD SYSTEMS</small></span></a><p data-es="Sistemas de inteligencia privada, agentes supervisados y automatización conectada con operaciones reales." data-en="Private intelligence systems, supervised agents, and automation connected to real-world operations.">Private intelligence systems, supervised agents, and automation connected to real-world operations.</p></div>
+          <div class="footer-links"><strong data-es="Explorar" data-en="Explore">Explore</strong><a href={base} data-es="Inicio" data-en="Home">Home</a><a href={`${base}proyectos`} data-es="Proyectos" data-en="Projects">Projects</a><a href={`${base}hackatones`} data-es="Hackatones" data-en="Hackathons">Hackathons</a></div>
+          <div class="footer-links"><strong data-es="Conectar" data-en="Connect">Connect</strong><a href={`mailto:${site.contact}`}>{site.contact}</a><a href="https://github.com/Rafa-Innerchispa" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/company/innerchispa" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></div>
         </div>
       </footer>
     </div>
     <script is:inline>
-      const languageSelect = document.getElementById('lang-select');
-      const supportedLanguages = new Set(['en', 'es']);
-      function applyLanguage(requested) {
-        const language = supportedLanguages.has(requested) ? requested : 'en';
-        document.documentElement.lang = language;
-        document.querySelectorAll(`[data-${language}]`).forEach((element) => {
-          element.textContent = element.getAttribute(`data-${language}`);
+      const select = document.getElementById('lang-select');
+      const menu = document.getElementById('primary-nav');
+      const toggle = document.getElementById('menu-toggle');
+      function applyLocalLanguage(lang) {
+        document.querySelectorAll(`[data-${lang}]`).forEach((element) => {
+          const value = element.getAttribute(`data-${lang}`);
+          if (value !== null) element.textContent = value;
         });
-        languageSelect.value = language;
-        localStorage.setItem('preferred-lang', language);
-        window.dispatchEvent(new CustomEvent('innerchispa:language', { detail: { language } }));
+        document.documentElement.lang = lang;
+        localStorage.setItem('preferred-lang', lang);
+        select.value = lang;
       }
-      languageSelect.addEventListener('change', (event) => applyLanguage(event.target.value));
-      applyLanguage(localStorage.getItem('preferred-lang') || 'en');
+      select.addEventListener('change', (event) => applyLocalLanguage(event.target.value));
+      toggle?.addEventListener('click', () => { const open = menu.classList.toggle('open'); toggle.setAttribute('aria-expanded', String(open)); });
+      const saved = localStorage.getItem('preferred-lang');
+      const browserLanguage = navigator.language?.toLowerCase().startsWith('es') ? 'es' : 'en';
+      applyLocalLanguage(saved === 'es' || saved === 'en' ? saved : browserLanguage);
     </script>
   </body>
 </html>

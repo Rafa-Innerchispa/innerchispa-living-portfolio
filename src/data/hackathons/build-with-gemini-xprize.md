@@ -1,21 +1,21 @@
 ---
-approved_by: rlopez
+approved_by: rafael
 demo_url: ''
-github_url: https://github.com/Rafa-Innerchispa/innerspark-swarm-os-cursor-local
-images:
-- caption: Gemini XPRIZE Integration
-  is_cover: true
-  url: /visuals/quoteops_cover.png
-published_at: '2026-06-08T12:00:00Z'
+event_url: https://xprize.devpost.com/
+github_url: https://github.com/Rafa-Innerchispa/pcdoctor-ai-xprize
+images: []
+published_at: '2026-08-29T00:29:16.825201+00:00'
 slug: build-with-gemini-xprize
+submission_url: https://devpost.com/software/1365759
 technologies:
-- Gemini Pro
-- MongoDB
-- Node.js
-- Python
-theme: default
-title: Build with Gemini XPRIZE
+- Gemini
+- Vertex AI
+- Google Cloud
+- TypeScript
+theme: living-lab
+title: FieldSpark AI / Build with Gemini XPRIZE project
+video_url: ''
 visibility: public
 ---
 
-Desarrollo de sistemas multi-agente e integraciones cognitivas utilizando Gemini Pro y mallas de datos distribuidas con persistencia local MongoDB.
+FieldSpark AI is a staging foundation for AI-operated customer continuity and lead-to-cash workflows.

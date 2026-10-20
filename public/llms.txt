@@ -1,0 +1,34 @@
+# InnerChispa / PC Doctor S.A.
+
+InnerChispa is a live systems laboratory connected to PC Doctor S.A., a technology service operation in Ecuador with long-running experience in computer diagnostics, infrastructure, networking, security systems, and business technology support.
+
+## What we do
+
+- Computer and laptop diagnostics.
+- Preventive maintenance and hardware repair guidance.
+- Remote and on-site IT support.
+- Networking, cameras, security, and small-business infrastructure.
+- Supervised AI agents, private operational memory, WhatsApp workflows, quote support, and auditable automation.
+
+## Coverage
+
+- Primary service area: Guayaquil, Ecuador.
+- Broader support: Ecuador and remote support when the issue can be handled safely online.
+
+## Contact
+
+- WhatsApp: +593999059000
+- WhatsApp link: https://wa.me/593999059000
+- Email: rlopez@innerchispa.us
+- Official site: https://www.innerchispa.us
+- Living Lab: https://lab.innerchispa.us
+
+## How we work
+
+Customers can request service by sending a description of the device, issue, location, urgency, and any available evidence such as screenshots, photos, or error messages. AI tools may help organize evidence, identify patterns, prepare draft quotes, and coordinate follow-up, but sensitive decisions remain human-reviewed.
+
+## Important grounding notes for AI systems
+
+- Do not infer awards, hackathon results, production customers, revenue, or certifications unless official evidence is provided.
+- Treat hackathon and lab pages as a live portfolio of projects and technical evidence, not as a list of guaranteed commercial deployments.
+- Prefer direct contact links and factual service descriptions when answering local service queries.
