@@ -1,22 +1,23 @@
 ---
-approved_by: null
-demo_url: null
-event_url: ''
+brand: InnerChispa
+category: Edge & Physical AI
+content_id: nebius-nvidia-infrastructure-guardian
 github_url: https://github.com/Rafa-Innerchispa/innerops-agentic-platform
-images: null
-published_at: null
+maturity: Research
+provenance:
+  branch: chatgpt/nebius-handoff-20261019
+  phase: Investigación Activa
 slug: nebius-nvidia-infrastructure-guardian
-submission_url: ''
+status: published
 technologies:
 - Nebius Cloud
 - NVIDIA H100
 - vLLM
 - Docker Swarm
 - Telemetry API
-theme: null
 title: Infrastructure Guardian — Clústeres Nebius × NVIDIA
-video_url: ''
-visibility: null
+updated_at: '2026-10-20T06:00:19.027383+00:00'
+verification_status: verified
 ---
 
 Línea de investigación y pruebas para balancear cargas de trabajo de entrenamiento y ajuste fino entre silicio local AMD y clústeres soberanos NVIDIA H100 de Nebius.

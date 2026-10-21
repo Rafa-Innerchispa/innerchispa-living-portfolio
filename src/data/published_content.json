@@ -21,12 +21,12 @@
       }
     ],
     "demo_url": "http://192.168.1.4:2026",
-    "github_url": "https://github.com/Rafa-Innerchispa/innerspark-smart-quoter",
+    "github_url": "https://github.com/Rafa-Innerchispa/innerspark-swarm-os-cursor-local",
     "visibility": "public",
     "theme": "purple-neon",
     "status": "published",
     "created_at": "2026-07-14T15:00:00Z",
-    "updated_at": "2026-10-20T06:00:19.027383+00:00",
+    "updated_at": "2026-10-21T18:26:07.599665+00:00",
     "approved_by": "rlopez",
     "published_at": "2026-07-15T03:00:00Z",
     "brand": "InnerSpark",
@@ -35,7 +35,8 @@
       "port": 2026,
       "system": "PC Doctor Quoting Core"
     },
-    "verification_status": "Active Production"
+    "verification_status": "verified",
+    "maturity": "In Development"
   },
   {
     "content_id": "proj_ralphiia_mcp",
@@ -58,14 +59,16 @@
       }
     ],
     "demo_url": "https://mcp.innerchispa.us",
-    "github_url": "https://github.com/Rafa-Innerchispa/raphiia-openai",
+    "github_url": "https://github.com/Rafa-Innerchispa/innerops-agentic-platform",
     "visibility": "public",
     "theme": "grayscale",
     "status": "published",
     "created_at": "2026-07-14T15:00:00Z",
-    "updated_at": "2026-07-15T03:00:00Z",
+    "updated_at": "2026-10-21T18:26:07.602690+00:00",
     "approved_by": "rlopez",
-    "published_at": "2026-07-15T03:00:00Z"
+    "published_at": "2026-07-15T03:00:00Z",
+    "maturity": "Active Production",
+    "verification_status": "verified"
   },
   {
     "content_id": "proj_funding_registry",
@@ -88,14 +91,16 @@
       }
     ],
     "demo_url": "https://sworn-profusely-alongside.ngrok-free.dev/funding/ui",
-    "github_url": "https://github.com/Rafa-Innerchispa/raphiia-openai",
+    "github_url": "https://github.com/Rafa-Innerchispa/ralphiia-founderos-openai",
     "visibility": "public",
     "theme": "dark-glass",
     "status": "published",
     "created_at": "2026-07-15T01:00:00Z",
-    "updated_at": "2026-07-15T03:00:00Z",
+    "updated_at": "2026-10-21T18:26:07.603416+00:00",
     "approved_by": "rlopez",
-    "published_at": "2026-07-15T03:00:00Z"
+    "published_at": "2026-07-15T03:00:00Z",
+    "maturity": "Active Production",
+    "verification_status": "verified"
   },
   {
     "content_id": "proj_quoteops",
@@ -103,7 +108,7 @@
     "created_at": "2026-07-15T01:00:00Z",
     "demo_url": "https://sworn-profusely-alongside.ngrok-free.dev/funding/ui",
     "description": "Repositorio independiente para la OpenAI Build Week. Cuenta con FastAPI, análisis de intake inteligente, planificación de herramientas con aprobación humana, y flujo de RUC trust-anchor reconciliado con Contífico en staging de forma idempotente.",
-    "github_url": "https://github.com/Rafa-Innerchispa/ralphiia-quoteops",
+    "github_url": "https://github.com/Rafa-Innerchispa/ralphiia-founderos-openai",
     "images": [
       {
         "url": "/visuals/quoteops_cover.png",
@@ -124,8 +129,10 @@
     "theme": "purple-neon",
     "title": "RalphiIA QuoteOps",
     "type": "project",
-    "updated_at": "2026-07-15T05:00:00Z",
-    "visibility": "public"
+    "updated_at": "2026-10-21T18:26:07.603995+00:00",
+    "visibility": "public",
+    "maturity": "In Development",
+    "verification_status": "verified"
   },
   {
     "content_id": "hack_amd_act_ii",
@@ -227,13 +234,13 @@
       }
     ],
     "demo_url": "https://sworn-profusely-alongside.ngrok-free.dev/staging-web/proyectos",
-    "github_url": "https://github.com/Rafa-Innerchispa/innerspark-smart-quoter",
+    "github_url": "https://github.com/Rafa-Innerchispa/innerspark-swarm-os-cursor-local",
     "submission_url": "https://ollama-challenge.lablab.ai/",
     "visibility": "public",
     "theme": "default",
     "status": "published",
     "created_at": "2026-06-30T10:00:00Z",
-    "updated_at": "2026-07-15T06:30:00Z",
+    "updated_at": "2026-10-21T18:26:07.610277+00:00",
     "approved_by": "rlopez",
     "published_at": "2026-06-30T12:00:00Z",
     "milestones": [
@@ -311,13 +318,13 @@
       }
     ],
     "demo_url": "",
-    "github_url": "https://github.com/Rafa-Innerchispa/raphiia-openai",
+    "github_url": "https://github.com/Rafa-Innerchispa/ralphiia-founderos-openai",
     "submission_url": "https://openai.devpost.com/",
     "visibility": "public",
     "theme": "default",
     "status": "published",
     "created_at": "2026-07-13T10:00:00Z",
-    "updated_at": "2026-07-15T06:30:00Z",
+    "updated_at": "2026-10-21T18:26:07.610903+00:00",
     "approved_by": "rlopez",
     "published_at": "2026-07-13T12:00:00Z",
     "milestones": [
@@ -422,13 +429,13 @@
       }
     ],
     "demo_url": "",
-    "github_url": "https://github.com/Rafa-Innerchispa/gitlab-transcend",
+    "github_url": "https://github.com/Rafa-Innerchispa/gitlab-contributorops-agent",
     "submission_url": "https://devpost.com/software/innerspark-devsecops-swarm",
     "visibility": "public",
     "theme": "default",
     "status": "published",
     "created_at": "2026-07-06T10:00:00Z",
-    "updated_at": "2026-07-15T06:30:00Z",
+    "updated_at": "2026-10-21T18:26:07.608942+00:00",
     "approved_by": "rlopez",
     "published_at": "2026-07-06T12:00:00Z",
     "milestones": [
@@ -524,7 +531,7 @@
     "created_at": "2026-07-15T07:20:00Z",
     "demo_url": "",
     "description": "Edición virtual del GitLab Contributor Hackathon. Oportunidad de abrir merge requests (MRs) en la comunidad para ganar puntos, premios y licencias de GitLab Duo Enterprise.",
-    "github_url": "https://github.com/Rafa-Innerchispa/gitlab-transcend",
+    "github_url": "https://github.com/Rafa-Innerchispa/gitlab-contributorops-agent",
     "images": [
       {
         "url": "/visuals/google_startups.png",
@@ -562,7 +569,7 @@
     "theme": "default",
     "title": "GitLab Contributor Hackathon",
     "type": "hackathon",
-    "updated_at": "2026-07-15T07:20:00Z",
+    "updated_at": "2026-10-21T18:26:07.609565+00:00",
     "visibility": "public"
   },
   {
@@ -671,14 +678,14 @@
     ],
     "images": [],
     "demo_url": "",
-    "github_url": "https://gitlab.com/rafagye/innerspark-devsecops-swarm",
+    "github_url": "https://github.com/Rafa-Innerchispa/gitlab-contributorops-agent",
     "event_url": "https://gitlab-transcend.devpost.com/",
     "submission_url": "https://devpost.com/software/innerspark-devsecops-swarm",
     "video_url": "https://youtu.be/ycvwOYJLza8",
     "visibility": "public",
     "theme": "living-lab",
     "source": "canonical_hackathons_portfolio",
-    "updated_at": "2026-08-04T14:28:20.175546+00:00",
+    "updated_at": "2026-10-21T18:26:07.608942+00:00",
     "status": "published",
     "created_at": "2026-08-04T14:28:20.175546+00:00",
     "approved_by": "canonical_sync",
@@ -766,7 +773,7 @@
     "visibility": "public",
     "theme": "living-lab",
     "source": "canonical_hackathons_portfolio",
-    "updated_at": "2026-08-04T14:28:20.180460+00:00",
+    "updated_at": "2026-10-21T18:26:07.610903+00:00",
     "status": "published",
     "created_at": "2026-08-04T14:28:20.180460+00:00",
     "approved_by": "canonical_sync",
@@ -1057,7 +1064,8 @@
     "title": "InnerOS — Plataforma de Enjambre Agéntico Soberano",
     "type": "project",
     "updated_at": "2026-10-20T06:00:19.027383+00:00",
-    "verification_status": "Active Production"
+    "verification_status": "verified",
+    "maturity": "Active Production"
   },
   {
     "slug": "physical-guardian-ai-infra",
@@ -1085,7 +1093,8 @@
     "title": "Physical Guardian — AI Infra Summit Santa Clara",
     "type": "hackathon",
     "updated_at": "2026-10-20T06:00:19.027383+00:00",
-    "verification_status": "Verified Evidence"
+    "verification_status": "verified",
+    "maturity": "Hackathon Submission"
   },
   {
     "slug": "hyperloom-r9700-rocm",
@@ -1094,7 +1103,7 @@
     "content_id": "hyperloom-r9700-rocm",
     "demo_url": "http://192.168.1.5:11435",
     "description": "Pila de aceleración de inferencia local sobre silicio AMD Radeon RX 9700 utilizando ROCm 10 y vLLM. Proporciona servicio de generación de código (Qwen3-Coder 30B AWQ) sin envío de tokens a nubes externas.",
-    "github_url": "https://github.com/Rafa-Innerchispa/innerops-agentic-platform",
+    "github_url": "https://github.com/Rafa-Innerchispa/hyperloom-r9700-experimental",
     "provenance": {
       "repository": "https://github.com/Rafa-Innerchispa/innerops-agentic-platform",
       "commit_sha": "d9eee4cf",
@@ -1111,8 +1120,9 @@
     ],
     "title": "Hyperloom R9700 — Inferencia Soberana AMD ROCm 10",
     "type": "project",
-    "updated_at": "2026-10-20T06:00:19.027383+00:00",
-    "verification_status": "Active Production"
+    "updated_at": "2026-10-21T18:26:07.607139+00:00",
+    "verification_status": "verified",
+    "maturity": "Research & Prototype"
   },
   {
     "slug": "infralens-network-intelligence",
@@ -1120,7 +1130,7 @@
     "category": "Autonomous Operations",
     "content_id": "infralens-network-intelligence",
     "description": "Cartografía viva de red multi-marca y correlación de anomalías de hardware en tiempo real. Unifica telemetría de conmutadores Grandstream GWN, Ruijie Reyee Cloud OpenAPI, UniFi y control de acceso ZKTeco.",
-    "github_url": "https://github.com/Rafa-Innerchispa/innerops-agentic-platform",
+    "github_url": "https://github.com/Rafa-Innerchispa/infralens-ocr-amd",
     "provenance": {
       "repository": "https://github.com/Rafa-Innerchispa/innerops-agentic-platform",
       "commit_sha": "11ff5f27"
@@ -1136,8 +1146,9 @@
     ],
     "title": "InfraLens — Observabilidad Causal y Device Fabric",
     "type": "project",
-    "updated_at": "2026-10-20T06:00:19.027383+00:00",
-    "verification_status": "Active Production"
+    "updated_at": "2026-10-21T18:26:07.607721+00:00",
+    "verification_status": "verified",
+    "maturity": "In Development"
   },
   {
     "slug": "personal-brain-memory-curator",
@@ -1145,7 +1156,7 @@
     "category": "Core Platform",
     "content_id": "personal-brain-memory-curator",
     "description": "Capa de memoria persistente a largo plazo con recuperación jerárquica: registros episódicos en MongoDB y grafo semántico vectorizado en Qdrant con Cognee.",
-    "github_url": "https://github.com/Rafa-Innerchispa/innerops-agentic-platform",
+    "github_url": "https://github.com/Rafa-Innerchispa/inneros-personal-brain",
     "provenance": {
       "event": "Battle of the Personal Brains 2026",
       "collection": "ralfia_memory_items"
@@ -1161,8 +1172,9 @@
     ],
     "title": "InnerOS Personal Brain — Memoria Viva y Curación Epistémica",
     "type": "project",
-    "updated_at": "2026-10-20T06:00:19.027383+00:00",
-    "verification_status": "Active Production"
+    "updated_at": "2026-10-21T18:26:07.608312+00:00",
+    "verification_status": "verified",
+    "maturity": "In Development"
   },
   {
     "slug": "voiceops-assemblyai-hackathon",
@@ -1170,7 +1182,7 @@
     "category": "Autonomous Operations",
     "content_id": "voiceops-assemblyai-hackathon",
     "description": "Módulo agéntico de telefonía SIP/PBX conectado con AssemblyAI para comprensión de habla e intenciones operativas, y fallback de alta fidelidad con Whisper local para resiliencia sin conexión.",
-    "github_url": "https://github.com/Rafa-Innerchispa/innerops-agentic-platform",
+    "github_url": "https://github.com/Rafa-Innerchispa/inneros-voiceops-assemblyai",
     "provenance": {
       "event": "AssemblyAI Hackathon 2026",
       "service": "VoiceOps Core"
@@ -1186,8 +1198,9 @@
     ],
     "title": "InnerOS VoiceOps — Telefonía e Inteligencia de Audio",
     "type": "hackathon",
-    "updated_at": "2026-10-20T06:00:19.027383+00:00",
-    "verification_status": "Verified Evidence"
+    "updated_at": "2026-10-21T18:26:07.606500+00:00",
+    "verification_status": "verified",
+    "maturity": "Hackathon Submission"
   },
   {
     "slug": "ambient-guardian-alexa-iot",
@@ -1195,7 +1208,7 @@
     "category": "Edge & Physical AI",
     "content_id": "ambient-guardian-alexa-iot",
     "description": "Puente entre el asistente físico del entorno (Alexa, Home Assistant) y la inteligencia de razonamiento de InnerOS para consulta del enjambre y disparo de órdenes.",
-    "github_url": "https://github.com/Rafa-Innerchispa/inneros_core/workspaces/inneros-alexa-owner-mcp",
+    "github_url": "https://github.com/Rafa-Innerchispa/inneros-ambient-guardian-amazon-2026",
     "provenance": {
       "commit_sha": "4fa18807",
       "profile": "chatgpt_compact"
@@ -1210,8 +1223,9 @@
     ],
     "title": "Ambient Guardian — Interfaz Contextual Alexa & Home Control",
     "type": "project",
-    "updated_at": "2026-10-20T06:00:19.027383+00:00",
-    "verification_status": "Active Production"
+    "updated_at": "2026-10-21T18:26:07.604648+00:00",
+    "verification_status": "verified",
+    "maturity": "In Development"
   },
   {
     "slug": "vigilos-perimeter-security-ai",
@@ -1219,7 +1233,7 @@
     "category": "Edge & Physical AI",
     "content_id": "vigilos-perimeter-security-ai",
     "description": "Pasarela autónoma de seguridad física, control de acceso biométrico e inspección perimetral con Cloudflare Zero Trust para activos críticos de telecomunicaciones y nodos solares.",
-    "github_url": "https://github.com/Rafa-Innerchispa/vigilos-core",
+    "github_url": "https://github.com/Rafa-Innerchispa/VigilOS_Cursor",
     "provenance": {
       "event": "LabLab AI Hackathon Track 3: Security & Compliance (Julio 2026)",
       "official_url": "https://lablab.ai/event/ai-hackathon-security"
@@ -1235,8 +1249,9 @@
     ],
     "title": "VigilOS — Pasarela Autónoma de Seguridad Perimetral",
     "type": "hackathon",
-    "updated_at": "2026-10-20T06:00:19.027383+00:00",
-    "verification_status": "Verified Evidence"
+    "updated_at": "2026-10-21T18:26:07.605277+00:00",
+    "verification_status": "verified",
+    "maturity": "In Development"
   },
   {
     "slug": "aegis-forkguard-jachacks-sf",
@@ -1244,7 +1259,7 @@
     "category": "Hackathons & Research",
     "content_id": "aegis-forkguard-jachacks-sf",
     "description": "Investigación aplicada sobre seguridad de la cadena de suministro de software con lenguaje Jac. Caminantes sobre grafos semánticos para detectar derivas de políticas en bifurcaciones de código.",
-    "github_url": "https://github.com/Rafa-Innerchispa/aegis-forkguard-jachacks",
+    "github_url": "https://github.com/Rafa-Innerchispa/aegis-forkguard",
     "provenance": {
       "event": "JacHacks San Francisco 2026",
       "location": "San Francisco, California"
@@ -1259,8 +1274,9 @@
     ],
     "title": "AEGIS ForkGuard — JacHacks San Francisco",
     "type": "hackathon",
-    "updated_at": "2026-10-20T06:00:19.027383+00:00",
-    "verification_status": "Verified Evidence"
+    "updated_at": "2026-10-21T18:26:07.605906+00:00",
+    "verification_status": "verified",
+    "maturity": "Hackathon Submission"
   },
   {
     "slug": "ralphiia-liveops-intelligence-sf",
@@ -1286,7 +1302,8 @@
     "title": "RalphiIA LiveOps Intelligence — You.com Hackathon SF",
     "type": "project",
     "updated_at": "2026-10-20T06:00:19.027383+00:00",
-    "verification_status": "Verified Evidence"
+    "verification_status": "verified",
+    "maturity": "Hackathon Submission"
   },
   {
     "slug": "nebius-nvidia-infrastructure-guardian",
@@ -1310,6 +1327,7 @@
     "title": "Infrastructure Guardian — Clústeres Nebius × NVIDIA",
     "type": "project",
     "updated_at": "2026-10-20T06:00:19.027383+00:00",
-    "verification_status": "Laboratory Research"
+    "verification_status": "verified",
+    "maturity": "Research"
   }
 ]

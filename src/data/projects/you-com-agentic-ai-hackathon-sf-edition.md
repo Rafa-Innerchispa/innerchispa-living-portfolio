@@ -1,11 +1,15 @@
 ---
 approved_by: canonical_sync
+content_id: canonical_youcom-liveops-intelligence
+created_at: '2026-08-04T14:28:20.183701+00:00'
 demo_url: https://ralphiia-liveops-intelligence.onrender.com
 event_url: ''
 github_url: https://github.com/Rafa-Innerchispa/ralphiia-liveops-intelligence
 images: []
 published_at: '2026-08-04T14:28:20.183701+00:00'
 slug: you-com-agentic-ai-hackathon-sf-edition
+source: canonical_hackathons_portfolio
+status: published
 submission_url: ''
 technologies:
 - You.com Search API
@@ -17,6 +21,7 @@ technologies:
 - One
 theme: living-lab
 title: RalphiIA LiveOps Intelligence
+updated_at: '2026-08-04T14:28:20.183701+00:00'
 video_url: https://youtu.be/3CfD1fJ5_zY
 visibility: public
 ---

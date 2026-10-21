@@ -1,12 +1,13 @@
 ---
 approved_by: null
+content_id: proj_qwen_society
+created_at: '2026-07-17T18:31:46.720967+00:00'
 demo_url: ''
-event_url: ''
 github_url: ''
 images: []
 published_at: '2026-07-17T18:31:46.720983+00:00'
 slug: qwen-agent-society
-submission_url: ''
+status: published
 technologies:
 - Qwen-Max
 - Qwen-Plus
@@ -15,7 +16,7 @@ technologies:
 - TailwindCSS
 theme: default
 title: Sovereign Multi-Agent DevOps (Qwen Society)
-video_url: ''
+updated_at: '2026-07-17T18:31:46.720978+00:00'
 visibility: public
 ---
 

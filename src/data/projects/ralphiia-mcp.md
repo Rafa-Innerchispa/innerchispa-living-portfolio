@@ -1,15 +1,17 @@
 ---
 approved_by: rlopez
+content_id: proj_ralphiia_mcp
+created_at: '2026-07-14T15:00:00Z'
 demo_url: https://mcp.innerchispa.us
-event_url: ''
-github_url: https://github.com/Rafa-Innerchispa/raphiia-openai
+github_url: https://github.com/Rafa-Innerchispa/innerops-agentic-platform
 images:
 - caption: Diagrama de arquitectura del puente MCP
   is_cover: true
   url: /visuals/mcp_architecture.png
+maturity: Active Production
 published_at: '2026-07-15T03:00:00Z'
 slug: ralphiia-mcp
-submission_url: ''
+status: published
 technologies:
 - Python
 - FastMCP
@@ -18,7 +20,8 @@ technologies:
 - Cloudflare Tunnels
 theme: grayscale
 title: RalphiIA MCP
-video_url: ''
+updated_at: '2026-10-21T18:26:07.602690+00:00'
+verification_status: verified
 visibility: public
 ---
 

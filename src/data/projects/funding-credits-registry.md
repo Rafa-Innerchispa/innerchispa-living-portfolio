@@ -1,15 +1,17 @@
 ---
 approved_by: rlopez
+content_id: proj_funding_registry
+created_at: '2026-07-15T01:00:00Z'
 demo_url: https://sworn-profusely-alongside.ngrok-free.dev/funding/ui
-event_url: ''
-github_url: https://github.com/Rafa-Innerchispa/raphiia-openai
+github_url: https://github.com/Rafa-Innerchispa/ralphiia-founderos-openai
 images:
 - caption: Dashboard de control de créditos y fondos
   is_cover: true
   url: /visuals/funding_cover.png
+maturity: Active Production
 published_at: '2026-07-15T03:00:00Z'
 slug: funding-credits-registry
-submission_url: ''
+status: published
 technologies:
 - HTML5
 - FastAPI
@@ -18,7 +20,8 @@ technologies:
 - IMAP-Monitor
 theme: dark-glass
 title: Funding & Credits Registry Portal
-video_url: ''
+updated_at: '2026-10-21T18:26:07.603416+00:00'
+verification_status: verified
 visibility: public
 ---
 

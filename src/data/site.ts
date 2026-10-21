@@ -45,7 +45,7 @@ export const site = {
   product: 'Live Systems Lab',
   tagline: 'Private intelligence, supervised agents, and real-world systems.',
   contact: 'rlopez@innerchispa.us',
-  publicUrl: 'https://lab.innerchispa.us',
+  publicUrl: 'https://lab.pcdoctor.ai',
   heroImage: '/hero-innerchispa.png',
   business: {
     name: 'PC Doctor S.A. · InnerChispa Live Systems Lab',
@@ -54,7 +54,7 @@ export const site = {
     whatsapp: 'https://wa.me/593999059000',
     email: 'rlopez@innerchispa.us',
     url: 'https://www.innerchispa.us',
-    labUrl: 'https://lab.innerchispa.us',
+    labUrl: 'https://lab.pcdoctor.ai',
     priceRange: '$$',
     areaServed: ['Guayaquil, Ecuador', 'Ecuador', 'Remote support'],
     address: {

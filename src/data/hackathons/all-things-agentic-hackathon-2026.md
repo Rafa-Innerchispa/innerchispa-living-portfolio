@@ -1,12 +1,13 @@
 ---
 approved_by: owner
+content_id: canonical_all-things-agentic-2026
+created_at: '2026-08-31T23:58:02.299989+00:00'
 demo_url: https://inneros.creatorcore.ai/app/judge
-event_url: ''
 github_url: https://github.com/Rafa-Innerchispa/innerops-agentic-platform/tree/hackathon-freeze-20260831
 images: []
 published_at: '2026-08-31T23:58:08.119831+00:00'
 slug: all-things-agentic-hackathon-2026
-submission_url: ''
+status: published
 technologies:
 - Gemini 3.5+
 - Google ADK
@@ -26,7 +27,7 @@ technologies:
 - Qdrant
 theme: living-lab
 title: InnerOS — All Things Agentic Hackathon 2026
-video_url: ''
+updated_at: '2026-08-31T23:58:08.119805+00:00'
 visibility: public
 ---
 

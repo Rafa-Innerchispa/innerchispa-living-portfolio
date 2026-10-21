@@ -1,22 +1,23 @@
 ---
-approved_by: null
-demo_url: null
-event_url: ''
-github_url: https://github.com/Rafa-Innerchispa/inneros_core/workspaces/inneros-alexa-owner-mcp
-images: null
-published_at: null
+brand: InnerSpark
+category: Edge & Physical AI
+content_id: ambient-guardian-alexa-iot
+github_url: https://github.com/Rafa-Innerchispa/inneros-ambient-guardian-amazon-2026
+maturity: In Development
+provenance:
+  commit_sha: 4fa18807
+  profile: chatgpt_compact
 slug: ambient-guardian-alexa-iot
-submission_url: ''
+status: published
 technologies:
 - Alexa Skills
 - OAuth 2.0
 - Home Assistant
 - Matter / Zigbee
 - MQTT
-theme: null
 title: Ambient Guardian — Interfaz Contextual Alexa & Home Control
-video_url: ''
-visibility: null
+updated_at: '2026-10-21T18:26:07.604648+00:00'
+verification_status: verified
 ---
 
 Puente entre el asistente físico del entorno (Alexa, Home Assistant) y la inteligencia de razonamiento de InnerOS para consulta del enjambre y disparo de órdenes.

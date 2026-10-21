@@ -1,12 +1,13 @@
 ---
 approved_by: rafael
+content_id: funding_web_surface_registry_20260806
+created_at: '2026-08-06T16:57:18.763593+00:00'
 demo_url: https://innerchispa-live-lab.innerchispa.chatgpt.site/
-event_url: ''
 github_url: ''
 images: []
 published_at: '2026-08-31T01:19:03.817550+00:00'
 slug: funding-evidence-web-surfaces
-submission_url: ''
+status: published
 technologies:
 - Astro
 - ChatGPT Sites
@@ -14,7 +15,7 @@ technologies:
 - Web audit
 theme: living-lab
 title: Funding Evidence Web Surfaces
-video_url: ''
+updated_at: '2026-08-31T01:19:03.817537+00:00'
 visibility: private
 ---
 

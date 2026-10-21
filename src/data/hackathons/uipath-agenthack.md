@@ -1,11 +1,15 @@
 ---
 approved_by: canonical_sync
+content_id: canonical_uipath-maestro-copilot
+created_at: '2026-08-04T14:28:20.178833+00:00'
 demo_url: ''
 event_url: https://uipath-agenthack.devpost.com/
 github_url: https://github.com/Rafa-Innerchispa/uipath-copilot
 images: []
 published_at: '2026-08-04T14:28:20.178833+00:00'
 slug: uipath-agenthack
+source: canonical_hackathons_portfolio
+status: published
 submission_url: https://devpost.com/software/pc-doctor-maestro-copilot-sovereign-field-case-ai
 technologies:
 - UiPath Maestro
@@ -16,6 +20,7 @@ technologies:
 - Python
 theme: living-lab
 title: PC Doctor Maestro Copilot — Sovereign Field Case AI
+updated_at: '2026-08-04T14:28:20.178833+00:00'
 video_url: https://youtu.be/vN97SHaFBU4
 visibility: public
 ---
