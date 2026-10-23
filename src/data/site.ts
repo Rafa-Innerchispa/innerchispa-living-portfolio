@@ -44,7 +44,7 @@ export const site = {
   brand: 'InnerChispa',
   product: 'Live Systems Lab',
   tagline: 'Private intelligence, supervised agents, and real-world systems.',
-  contact: 'rlopez@innerchispa.us',
+  contact: 'info@innerchispa.us',
   publicUrl: 'https://lab.pcdoctor.ai',
   heroImage: '/hero-innerchispa.png',
   business: {
@@ -52,7 +52,7 @@ export const site = {
     shortName: 'PC Doctor S.A.',
     telephone: '+593999059000',
     whatsapp: 'https://wa.me/593999059000',
-    email: 'rlopez@innerchispa.us',
+    email: 'info@innerchispa.us',
     url: 'https://www.innerchispa.us',
     labUrl: 'https://lab.pcdoctor.ai',
     priceRange: '$$',
@@ -94,7 +94,7 @@ export const site = {
       },
       {
         question: 'How can a customer request service quickly?',
-        answer: 'The fastest path is WhatsApp at +593999059000 or email at rlopez@innerchispa.us, with a short description of the device, issue, location and urgency.',
+        answer: 'The fastest path is WhatsApp at +593999059000 or email at info@innerchispa.us, with a short description of the device, issue, location and urgency.',
       },
       {
         question: 'How are AI and automation used?',
