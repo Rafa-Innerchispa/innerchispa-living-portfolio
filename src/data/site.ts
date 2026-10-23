@@ -19,6 +19,25 @@ const englishDescriptions: Record<string, string> = {
   hack_gemini_xprize: 'Research and development of multi-agent systems and cognitive integrations using Gemini and distributed, locally persisted data meshes.',
 };
 
+const publicEnglishSummaries: Record<string, string> = {
+  "innerspark-smart-quoter": "A privacy-first quoting assistant that transcribes voice requests locally, extracts structured requirements, and prepares reviewable estimates.",
+  "proj_innerchispa_conscious_map": "An experimental map of memory, meaningful context, and responsible AI-assisted pattern discovery, with human agency at its center.",
+  "canonical_youcom-liveops-intelligence": "A multi-agent investigation and research workflow combining live evidence, independent safety review, and approval-gated actions.",
+  "canonical_vigilos-lablab-security": "An exploratory security gateway for perimeter events, remote auditing, and human-reviewed AI-assisted investigations.",
+  "funding_web_surface_registry_20260806": "Internal inventory of digital surfaces used to document funding and program applications. Not intended as a public product.",
+  "inneros-agentic-platform": "A local-first agent orchestration platform connecting governed tasks, persistent memory, MCP tools, message routing, and evidence-based operations.",
+  "hyperloom-r9700-rocm": "A local AMD Radeon AI inference research stack using ROCm, vLLM, and Qwen coding models to keep sensitive processing on owned hardware.",
+  "infralens-network-intelligence": "Multi-vendor network observability research correlating device telemetry, topology, and operational anomalies across managed infrastructure.",
+  "personal-brain-memory-curator": "Persistent, privacy-conscious agent memory combining episodic records, semantic retrieval, and a knowledge graph.",
+  "ambient-guardian-alexa-iot": "An experimental interface connecting voice assistants and home devices to supervised InnerOS queries and authorized actions.",
+  "nebius-nvidia-infrastructure-guardian": "Research into governed hybrid AI infrastructure, combining local AMD execution with cloud NVIDIA resources where authorized.",
+  "proj_qwen_society": "An agent-to-agent research mesh for distributed DevOps investigation and evidence reconciliation.",
+  "proj_ralphiia_mcp": "An MCP integration layer providing governed connections among memory, business applications, and specialized AI agents.",
+  "proj_funding_registry": "A registry for tracking grant and program applications, credits, approvals, and supporting evidence.",
+  "proj_quoteops": "An assisted B2B quotation workflow that structures incoming requests and routes estimates through human review.",
+  "canonical_underwriting-os-prototype": "An early research concept for human-reviewed AI underwriting workflows and persistent decision context."
+};
+
 const items = [...(publishedContent as any[])].sort((a, b) => String(b.updated_at || b.published_at || '').localeCompare(String(a.updated_at || a.published_at || '')));
 const latestUpdate = items.reduce((latest, item) => String(item.updated_at || item.published_at || '') > latest ? String(item.updated_at || item.published_at || '') : latest, '');
 
@@ -30,7 +49,7 @@ const localize = (item: any) => ({
   title_en: item.translations?.en?.title || item.title_en || item.title,
   status: item.status,
   summary_es: item.translations?.es?.description || item.description_es || item.description,
-  summary_en: item.translations?.en?.description || item.description_en || englishDescriptions[item.content_id] || item.description,
+  summary_en: item.translations?.en?.description || item.description_en || publicEnglishSummaries[item.content_id] || englishDescriptions[item.content_id] || item.description,
   technologies: item.technologies || [],
   images: item.images || [],
   github_url: item.github_url || '',
@@ -44,7 +63,7 @@ export const site = {
   brand: 'InnerChispa',
   product: 'Live Systems Lab',
   tagline: 'Private intelligence, supervised agents, and real-world systems.',
-  contact: 'rlopez@innerchispa.us',
+  contact: 'info@innerchispa.us',
   publicUrl: 'https://lab.pcdoctor.ai',
   heroImage: '/hero-innerchispa.png',
   business: {
@@ -52,7 +71,7 @@ export const site = {
     shortName: 'PC Doctor S.A.',
     telephone: '+593999059000',
     whatsapp: 'https://wa.me/593999059000',
-    email: 'rlopez@innerchispa.us',
+    email: 'info@innerchispa.us',
     url: 'https://www.innerchispa.us',
     labUrl: 'https://lab.pcdoctor.ai',
     priceRange: '$$',
@@ -94,7 +113,7 @@ export const site = {
       },
       {
         question: 'How can a customer request service quickly?',
-        answer: 'The fastest path is WhatsApp at +593999059000 or email at rlopez@innerchispa.us, with a short description of the device, issue, location and urgency.',
+        answer: 'The fastest path is WhatsApp at +593999059000 or email at info@innerchispa.us, with a short description of the device, issue, location and urgency.',
       },
       {
         question: 'How are AI and automation used?',
